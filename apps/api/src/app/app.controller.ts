@@ -1,15 +1,13 @@
+import { Course } from '@golf-planning/api-interfaces';
 import { Controller, Get } from '@nestjs/common';
-
-import { Message } from '@golf-planning/api-interfaces';
-
-import { AppService } from './app.service';
+import { CoursesService } from './courses/courses.service';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(private readonly _coursesService: CoursesService) {}
 
-  @Get('hello')
-  getData(): Message {
-    return this.appService.getData();
+  @Get('courses')
+  getData(): Course[] {
+    return this._coursesService.getData();
   }
 }
