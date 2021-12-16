@@ -1,0 +1,174 @@
+<nav class="bg-primary-default sticky top-0 z-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16">
+      <div class="flex items-center">
+        <!-- Icon -->
+        <div class="flex-shrink-0">
+          <svg class="h-8 w-8 fill-secondary-light stroke-secondary-light">
+            <use xlink:href="assets/img/symbol-defs.svg#golf2"></use>
+          </svg>
+        </div>
+        <!-- Menu horizontal gauche-->
+        <div class="hidden md:block">
+          <div class="ml-10 flex items-baseline space-x-4">
+            <a
+              *ngFor="let link of links"
+              routerLink="{{ link.path }}"
+              class="px-3 py-2 rounded-md text-lg flex focus:outline-none focus:ring-2 focus:ring-offset-0 focus:ring-primary-light"
+              [class.text-secondary-light]="link.selected"
+              [class.font-bold]="link.selected"
+              [class.text-primary-light]="!link.selected"
+              [class.font-medium]="!link.selected"
+              [class.hover:text-secondary-light]="!link.selected"
+            >
+              <svg
+                *ngIf="link.icon"
+                class="h-6 w-6 mx-2"
+                [class.fill-secondary-light]="link.selected"
+                [class.stroke-secondary-light]="link.selected"
+                [class.fill-primary-light]="!link.selected"
+                [class.stroke-primary-light]="!link.selected"
+              >
+                <use [attr.xlink:href]="getIconAttr(link.icon)"></use>
+              </svg>
+              <span>{{ link.label }}</span>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="hidden md:block">
+        <!-- Menu horizontal droite -->
+        <div class="ml-4 flex items-center md:ml-6">
+          <div class="ml-3 relative">
+            <div>
+              <button type="button" class="max-w-xs rounded-full items-center focus:outline-none focus:ring-2 focus:ring-offset-0 focus:ring-primary-light" (click)="showUserMenu = !showUserMenu">
+                <svg class="h-8 w-8 mx-2 fill-primary-light stroke-primary-light">
+                  <use [attr.xlink:href]="getIconAttr('user')"></use>
+                </svg>
+              </button>
+            </div>
+            <!-- Menu utilisateur -->
+            <div
+              *ngIf="showUserMenu"
+              @enterAnimationHorizontal
+              class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-primary-default ring-1 ring-primary-light ring-opacity-50 focus:outline-none"
+              role="menu"
+              aria-orientation="vertical"
+              aria-labelledby="user-menu-button"
+              tabindex="-1"
+            >
+              <a
+                *ngFor="let link of linksUser"
+                routerLink="{{ link.path }}"
+                class="flex px-3 py-2 text-primary-light"
+                [class.text-secondary-light]="link.selected"
+                [class.font-bold]="link.selected"
+                [class.text-primary-light]="!link.selected"
+                [class.font-medium]="!link.selected"
+                [class.hover:text-secondary-light]="!link.selected"
+                role="menuitem"
+                tabindex="-1"
+                (click)="showUserMenu = !showUserMenu"
+              >
+                <svg
+                  *ngIf="link.icon"
+                  class="h-6 w-6 mr-2"
+                  [class.fill-secondary-light]="link.selected"
+                  [class.stroke-secondary-light]="link.selected"
+                  [class.fill-primary-light]="!link.selected"
+                  [class.stroke-primary-light]="!link.selected"
+                >
+                  <use [attr.xlink:href]="getIconAttr(link.icon)"></use>
+                </svg>
+                <span>{{ link.label }}</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="-mr-2 flex md:hidden">
+        <!-- Mobile menu button -->
+        <button
+          type="button"
+          class="inline-flex items-center justify-center p-2 rounded-md hover:text-secondary-light focus:outline-none "
+          (click)="showMobileMenu = !showMobileMenu"
+          aria-controls="mobile-menu"
+          aria-expanded="false"
+        >
+          <span class="sr-only">Open main menu</span>
+          <svg *ngIf="!showMobileMenu" class="h-8 w-8 mx-2 fill-primary-light stroke-primary-light">
+            <use [attr.xlink:href]="getIconAttr('menu')"></use>
+          </svg>
+          <svg *ngIf="showMobileMenu" class="h-8 w-8 mx-2 fill-primary-light stroke-primary-light">
+            <use [attr.xlink:href]="getIconAttr('close')"></use>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+  <!-- Menu mobile -->
+  <div *ngIf="showMobileMenu" @enterAnimationVertical class="origin-top absolute left-0 right-0 rounded-b-md shadow-lg py-1 bg-primary-default" role="menu" id="mobile-menu">
+    <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+      <a
+        *ngFor="let link of links"
+        routerLink="{{ link.path }}"
+        class="px-3 py-2 text-primary-light flex"
+        [class.text-secondary-light]="link.selected"
+        [class.font-bold]="link.selected"
+        [class.text-primary-light]="!link.selected"
+        [class.font-medium]="!link.selected"
+        [class.hover:text-secondary-light]="!link.selected"
+        role="menuitem"
+        tabindex="-1"
+        (click)="showMobileMenu = !showMobileMenu"
+      >
+        <svg
+          *ngIf="link.icon"
+          class="h-6 w-6 mr-2"
+          [class.fill-secondary-light]="link.selected"
+          [class.stroke-secondary-light]="link.selected"
+          [class.fill-primary-light]="!link.selected"
+          [class.stroke-primary-light]="!link.selected"
+        >
+          <use [attr.xlink:href]="getIconAttr(link.icon)"></use>
+        </svg>
+        <span>{{ link.label }}</span>
+      </a>
+    </div>
+    <div class="pt-4 pb-3 border-t border-primary-light">
+      <div class="flex items-center px-5">
+        <svg class="h-8 w-8 mx-2 fill-primary-light stroke-primary-light">
+          <use [attr.xlink:href]="getIconAttr('user')"></use>
+        </svg>
+      </div>
+      <div class="mt-3 px-2 space-y-1">
+        <a
+          *ngFor="let link of linksUser"
+          routerLink="{{ link.path }}"
+          class="px-3 py-2 text-primary-light flex"
+          [class.text-secondary-light]="link.selected"
+          [class.font-bold]="link.selected"
+          [class.text-primary-light]="!link.selected"
+          [class.font-medium]="!link.selected"
+          [class.hover:text-secondary-light]="!link.selected"
+          role="menuitem"
+          tabindex="-1"
+          (click)="showMobileMenu = !showMobileMenu"
+        >
+          <svg
+            *ngIf="link.icon"
+            class="h-6 w-6 mr-2"
+            [class.fill-secondary-light]="link.selected"
+            [class.stroke-secondary-light]="link.selected"
+            [class.fill-primary-light]="!link.selected"
+            [class.stroke-primary-light]="!link.selected"
+          >
+            <use [attr.xlink:href]="getIconAttr(link.icon)"></use>
+          </svg>
+          <span>{{ link.label }}</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</nav>
+<header></header>

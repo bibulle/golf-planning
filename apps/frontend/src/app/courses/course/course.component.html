@@ -1,7 +1,16 @@
-<div class="course">
-    <div class="title">{{course.title}}</div>
-    <div class="date">{{course.date | date:'fullDate'}}</div>
-    <div class="hour">{{course.hour}}</div>
-    <div class="prof">{{course.prof}}</div>
-    <div class="places">{{course.places}}</div>
+<div
+  class="m-2 p-2 w-60 
+         shadow-lg rounded-md 
+         {{ course.places > 1 ? 'bg-primary-light' : 'bg-neutral-light' }}
+         {{ course.places === 0 ? ' opacity-50' : '' }}
+         {{ course.places === 1 ? ' opacity-75' : '' }}"
+>
+  <div class="flex justify-between">
+    <div class="text-left">{{ course.hour }}</div>
+    <div class="text-right text-sm">{{ course.prof }}</div>
+  </div>
+  <div class="pt-0 text-xl h-14 text-center">{{ course.title }}</div>
+  <div *ngIf="course.places > 1" class="text-sm">{{ course.places }} places restantes</div>
+  <div *ngIf="course.places === 1" class="text-sm">{{ course.places }} place restante</div>
+  <div *ngIf="course.places === 0" class="text-sm">Plus de place restante</div>
 </div>

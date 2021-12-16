@@ -20,4 +20,13 @@ export class CourseListComponent implements OnInit {
     })
   }
 
+  isFirstCourseOfDay(index: number): boolean {
+    if (index <= 0) {
+      return true
+    }
+
+    //console.log(`${this.courses[index].date.toLocaleString()} <-> ${this.courses[index+1].date.toLocaleString()} => ${this.courses[index].date.getDay() !== this.courses[index+1].date.getDay()}`);
+    return this.courses[index-1].date.getDay() !== this.courses[index].date.getDay();
+  }
+
 }

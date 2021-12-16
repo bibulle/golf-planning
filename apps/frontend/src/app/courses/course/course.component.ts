@@ -4,15 +4,15 @@ import { Course } from '@golf-planning/api-interfaces';
 @Component({
   selector: 'golf-planning-course',
   templateUrl: './course.component.html',
-  styleUrls: ['./course.component.scss']
+  styleUrls: ['./course.component.scss'],
 })
 export class CourseComponent implements OnInit {
+  @Input() course!: Course;
 
-  @Input()
-  course!:Course;
-  
+  @Input() firstCourseOfDay = true;
+
   ngOnInit(): void {
     console.log(this.course);
+    console.log(this.firstCourseOfDay);
   }
-
 }

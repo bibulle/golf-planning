@@ -2,6 +2,7 @@
 
 # developpement files
 .env
+icones-tmp
 
 # compiled output
 /dist
