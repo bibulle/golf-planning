@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Course } from '@golf-planning/api-interfaces';
+import { ApiReturn, Course } from '@golf-planning/api-interfaces';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { EventsService } from '../services/events.service';
 
@@ -21,7 +21,9 @@ export class CourseService {
 
   private _fetch() {
     console.log('fetch');
-    this._http.get<Course[]>('/api/courses').subscribe((courses) => {
+    this._http.get<ApiReturn>('/api/courses').subscribe((data) => {
+
+      const courses = data.data as Course[];
       //console.log(courses);
       this._coursesSubject.next(
         courses.map(c => {

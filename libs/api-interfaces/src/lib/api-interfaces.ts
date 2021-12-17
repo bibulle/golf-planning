@@ -1,5 +1,19 @@
 
 /**
+ * API content
+ */
+export interface ApiReturn {
+  //version: Version;
+  data: Course[] | MyToken;
+  refreshToken: string;
+}
+
+export interface MyToken {
+  id_token: string;
+}
+
+
+/**
  * Courses
  */
 export class Course {
@@ -22,15 +36,25 @@ export class Course {
  * Users
  */
  export class User {
-  academiergolf_login: string;
-  academiergolf_password: string;
+  displayName: string;
 
-  courses: void | Course[] = undefined;
+  given_name?: string;
+  family_name?: string;
+  locale?: string;
+  name?: string;
+  picture?: string;
+  provider?: string;
+  providerId?: string;
+  isAdmin = false;
 
-  constructor(login: string, password: string) {
-    this.academiergolf_login = login;
-    this.academiergolf_password = password;
-  }
+  academiergolf_login?: string;
+  academiergolf_password?: string;
+
+  courses?: void | Course[] = undefined;
+
+  constructor(displayName: string) {
+      this.displayName = displayName ;
+    }
 
 }
 

@@ -6,6 +6,7 @@ import { ToBeDefinedModule } from './to-be-defined/to-be-defined.module';
 import { NotFoundModule } from './not-found/not-found.module';
 import { ToBeDefinedComponent } from './to-be-defined/to-be-defined.component';
 import { NotFoundComponent } from './not-found/not-found.component';
+import { AuthGuard } from './authent/authent.guard';
 
 const routes: Routes = [
   {
@@ -16,36 +17,46 @@ const routes: Routes = [
   {
     path: 'planning',
     component: CourseListComponent,
-    //canActivate: [AuthGuard],
+    canActivate: [AuthGuard],
     data: {
       label: 'Planning',
       menu: true,
-      iconType: 'icon',
       icon: 'home',
+      authenticate: true,
       onlyAdmin: false,
     },
   },
   {
     path: 'courses',
     component: ToBeDefinedComponent,
-    //canActivate: [AuthGuard],
+    canActivate: [AuthGuard],
     data: {
       label: 'Cours',
       menu: true,
-      iconType: 'icon',
       icon: 'academic-cap',
+      authenticate: true,
       onlyAdmin: false,
     },
   },
   {
     path: 'profile',
     component: ToBeDefinedComponent,
-    //canActivate: [AuthGuard],
+    canActivate: [AuthGuard],
     data: {
       label: 'Profile',
       userMenu: true,
-      //iconType: 'icon',
-      //icon: 'academic-cap',
+      authenticate: true,
+      onlyAdmin: false,
+    },
+  },
+  {
+    path: 'login',
+    redirectTo: '/planning',
+    pathMatch: 'full',
+    data: {
+      label: 'Login',
+      userMenu: true,
+      authenticate: false,
       onlyAdmin: false,
     },
   },

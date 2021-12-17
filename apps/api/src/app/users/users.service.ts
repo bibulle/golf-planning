@@ -1,40 +1,68 @@
 import { User } from '@golf-planning/api-interfaces';
 import { Injectable, Logger } from '@nestjs/common';
-import { ConfigService} from '@nestjs/config';
-
+import { ConfigService } from '@nestjs/config';
+import { Provider } from '../authentication/authentication.service';
 
 @Injectable()
 export class UsersService {
-    private readonly logger = new Logger(UsersService.name);
+  private readonly logger = new Logger(UsersService.name);
 
+  users: { [id: string]: User } = {};
 
-    constructor(private configService: ConfigService) {
-
-    }
+  constructor(private configService: ConfigService) {}
 
   /**
    * Read users from environment
-   * @returns 
+   * @returns
    */
   readFromEnv(): User[] {
     const users: User[] = [];
-  
+
     let cpt = 0;
     do {
       cpt++;
+      const given_name = this.configService.get(`GOLF_USER_${cpt}`);
       const login = this.configService.get(`GOLF_LOGIN_${cpt}`);
       const password = this.configService.get(`GOLF_PASSWORD_${cpt}`);
-      if (login && password) {
-        users.push(new User(login, password));
+      if (given_name && login && password) {
+        users.push(this.setAcademieGolfToUser(given_name, login, password));
         //debug(cpt, login);
       }
     } while (users[cpt - 1]);
-  
+
     if (!users[0]) {
-        this.logger.error("At least user 1 should be defined");
+      this.logger.error('At least user 1 should be defined');
       //process.exit(-1);
     }
-  
+
     return users;
-  }  
+  }
+
+  getUser(displayName: string) {
+    if (!this.users[displayName]) {
+      this.users[displayName] = new User(displayName);
+    }
+    return this.users[displayName];
+  }
+
+  setAcademieGolfToUser(displayName: string, login: string, password: string): User {
+    this.getUser(displayName).academiergolf_login = login;
+    this.getUser(displayName).academiergolf_password = password;
+
+    return this.getUser(displayName);
+  }
+  setGoogletoUser(displayName: string, given_name: string, family_name: string, locale: string, name: string, picture: string, provider: Provider, providerId: string, isAdmin: boolean): User {
+    this.logger.debug(`setGoogletoUser : '${displayName}'`);
+    this.getUser(displayName).displayName = displayName;
+    this.getUser(displayName).family_name = family_name;
+    this.getUser(displayName).given_name = given_name;
+    this.getUser(displayName).locale = locale;
+    this.getUser(displayName).name = name;
+    this.getUser(displayName).picture = picture;
+    this.getUser(displayName).provider = provider;
+    this.getUser(displayName).providerId = providerId;
+    this.getUser(displayName).isAdmin = isAdmin;
+
+    return this.getUser(displayName);
+  }
 }

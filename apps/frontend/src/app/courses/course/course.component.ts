@@ -6,13 +6,13 @@ import { Course } from '@golf-planning/api-interfaces';
   templateUrl: './course.component.html',
   styleUrls: ['./course.component.scss'],
 })
-export class CourseComponent implements OnInit {
+export class CourseComponent {
   @Input() course!: Course;
 
   @Input() firstCourseOfDay = true;
 
-  ngOnInit(): void {
-    console.log(this.course);
-    console.log(this.firstCourseOfDay);
-  }
+  // ngOnInit(): void {
+    // console.log(this.course);
+    // console.log(this.firstCourseOfDay);
+  // }
 }
