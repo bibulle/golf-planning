@@ -15,4 +15,11 @@ export class CourseComponent {
     // console.log(this.course);
     // console.log(this.firstCourseOfDay);
   // }
+
+  isUser(index:number): boolean {
+    return this.course.users.some(u => {
+      return u.academiergolf_index === index
+    });
+  }
+
 }

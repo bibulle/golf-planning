@@ -25,7 +25,7 @@ export class UsersService {
       const login = this.configService.get(`GOLF_LOGIN_${cpt}`);
       const password = this.configService.get(`GOLF_PASSWORD_${cpt}`);
       if (given_name && login && password) {
-        users.push(this.setAcademieGolfToUser(given_name, login, password));
+        users.push(this.setAcademieGolfToUser(given_name, cpt, login, password));
         //debug(cpt, login);
       }
     } while (users[cpt - 1]);
@@ -45,7 +45,8 @@ export class UsersService {
     return this.users[displayName];
   }
 
-  setAcademieGolfToUser(displayName: string, login: string, password: string): User {
+  setAcademieGolfToUser(displayName: string, index: number, login: string, password: string): User {
+    this.getUser(displayName).academiergolf_index = index;
     this.getUser(displayName).academiergolf_login = login;
     this.getUser(displayName).academiergolf_password = password;
 

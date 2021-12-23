@@ -1,201 +1,110 @@
-import { Course } from "..";
+import { Course } from '..';
 
-export const COUSES_MOCK: Course[] =   [
-        {
-            "date": new Date("2021-12-13T10:30:00.008Z"),
-            "hour": "12:00",
-            "title": "SWING 4U BRONZE",
-            "prof": "Abdou",
-            "places": 2
-        },
-        {
-            "date": new Date("2021-12-13T10:30:00.008Z"),
-            "hour": "14:00",
-            "title": "SWING 4U ARGENT",
-            "prof": "Baptiste",
-            "places": 1
-        },
-        {
-            "date": new Date("2021-12-13T10:30:00.008Z"),
-            "hour": "15:00",
-            "title": "SWING 4U PARCOURS",
-            "prof": "Abdou",
-            "places": 0
-        },
-        {
-            "date": new Date("2021-12-13T10:30:00.008Z"),
-            "hour": "19:00",
-            "title": "SWING 4U BRONZE",
-            "prof": "Abdou",
-            "places": 1
-        },
-        {
-            "date": new Date("2021-12-14T10:30:03.223Z"),
-            "hour": "9:00",
-            "title": "SWING 4U COMPACT",
-            "prof": "Abdou",
-            "places": 1
-        },
-        {
-            "date": new Date("2021-12-14T10:30:03.223Z"),
-            "hour": "10:00",
-            "title": "SWING 4U OR",
-            "prof": "Abdou",
-            "places": 0
-        },
-        {
-            "date": new Date("2021-12-14T10:30:03.223Z"),
-            "hour": "11:00",
-            "title": "SWING 4U BRONZE",
-            "prof": "Baptiste",
-            "places": 1
-        },
-        {
-            "date": new Date("2021-12-14T10:30:03.223Z"),
-            "hour": "12:00",
-            "title": "LECON INDIVIDUELLE 30MIN",
-            "prof": "Abdou",
-            "places": 0
-        },
-        {
-            "date": new Date("2021-12-14T10:30:03.223Z"),
-            "hour": "14:00",
-            "title": "SWING 4U COMPACT",
-            "prof": "Baptiste",
-            "places": 1
-        },
-        {
-            "date": new Date("2021-12-14T10:30:03.223Z"),
-            "hour": "15:00",
-            "title": "SWING 4U BRONZE",
-            "prof": "Abdou",
-            "places": 1
-        },
-        {
-            "date": new Date("2021-12-14T10:30:03.223Z"),
-            "hour": "17:30",
-            "title": "SWING 4U ARGENT",
-            "prof": "Baptiste",
-            "places": 0
-        },
-        {
-            "date": new Date("2021-12-14T10:30:03.223Z"),
-            "hour": "18:30",
-            "title": "SWING 4U OR",
-            "prof": "Baptiste",
-            "places": 0
-        },
-        {
-            "date": new Date("2021-12-15T10:30:04.535Z"),
-            "hour": "9:00",
-            "title": "SWING 4U COMPACT",
-            "prof": "Cédric",
-            "places": 3
-        },
-        {
-            "date": new Date("2021-12-15T10:30:04.535Z"),
-            "hour": "11:00",
-            "title": "SWING 4U BRONZE",
-            "prof": "Baptiste",
-            "places": 4
-        },
-        {
-            "date": new Date("2021-12-15T10:30:04.535Z"),
-            "hour": "12:00",
-            "title": "SWING 4U BRONZE",
-            "prof": "Abdou",
-            "places": 1
-        },
-        {
-            "date": new Date("2021-12-15T10:30:04.535Z"),
-            "hour": "14:00",
-            "title": "SWING 4U COMPACT",
-            "prof": "Abdou",
-            "places": 1
-        },
-        {
-            "date": new Date("2021-12-15T10:30:04.535Z"),
-            "hour": "15:30",
-            "title": "SWING 4U COMPACT",
-            "prof": "Cédric",
-            "places": 0
-        },
-        {
-            "date": new Date("2021-12-16T10:30:05.836Z"),
-            "hour": "10:00",
-            "title": "SWING 4U ARGENT",
-            "prof": "Florent",
-            "places": 4
-        },
-        {
-            "date": new Date("2021-12-16T10:30:05.836Z"),
-            "hour": "11:00",
-            "title": "SWING 4U COMPACT",
-            "prof": "Florent",
-            "places": 0
-        },
-        {
-            "date": new Date("2021-12-16T10:30:05.836Z"),
-            "hour": "14:00",
-            "title": "SWING 4U OR",
-            "prof": "Florent",
-            "places": 0
-        },
-        {
-            "date": new Date("2021-12-16T10:30:05.836Z"),
-            "hour": "15:00",
-            "title": "SWING 4U ARGENT",
-            "prof": "Florent",
-            "places": 3
-        },
-        {
-            "date": new Date("2021-12-16T10:30:05.836Z"),
-            "hour": "16:00",
-            "title": "SWING 4U COMPACT",
-            "prof": "Cédric",
-            "places": 1
-        },
-        {
-            "date": new Date("2021-12-16T10:30:05.836Z"),
-            "hour": "17:30",
-            "title": "SWING 4U ARGENT",
-            "prof": "Cédric",
-            "places": 4
-        },
-        {
-            "date": new Date("2021-12-17T10:30:07.512Z"),
-            "hour": "9:00",
-            "title": "SWING 4U OR",
-            "prof": "Cédric",
-            "places": 0
-        },
-        {
-            "date": new Date("2021-12-17T10:30:07.512Z"),
-            "hour": "10:00",
-            "title": "SWING 4U COMPACT",
-            "prof": "Cédric",
-            "places": 0
-        },
-        {
-            "date": new Date("2021-12-17T10:30:07.512Z"),
-            "hour": "11:00",
-            "title": "SWING 4U BRONZE",
-            "prof": "Cédric",
-            "places": 4
-        },
-        {
-            "date": new Date("2021-12-17T10:30:07.512Z"),
-            "hour": "14:00",
-            "title": "SWING 4U BRONZE",
-            "prof": "Cédric",
-            "places": 0
-        },
-        {
-            "date": new Date("2021-12-17T10:30:07.512Z"),
-            "hour": "19:00",
-            "title": "SWING 4U OR",
-            "prof": "Florent",
-            "places": 0
-        }
-    ]
-    
+export const PLANNING_MOCK: any[] = [
+  { date: '2021-12-18T11:00:00.000Z', hour: '9:00', title: 'LECON INDIVIDUELLE 30MIN', prof: 'Abdou', places: 0, users: [] },
+  { date: '2021-12-18T11:00:00.000Z', hour: '9:00', title: 'SWING 4U ARGENT', prof: 'Baptiste', places: 2, users: [] },
+  { date: '2021-12-18T11:00:00.000Z', hour: '9:00', title: 'SWING 4U BRONZE', prof: 'Charles', places: 1, users: [] },
+  { date: '2021-12-18T11:00:00.000Z', hour: '10:00', title: 'SWING 4U OR', prof: 'Baptiste', places: 0, users: [] },
+  { date: '2021-12-18T11:00:00.000Z', hour: '10:00', title: 'SWING 4U ARGENT', prof: 'Charles', places: 8, users: [] },
+  { date: '2021-12-18T11:00:00.000Z', hour: '11:00', title: 'LECON INDIVIDUELLE 30MIN', prof: 'Baptiste', places: 0, users: [] },
+  { date: '2021-12-18T11:00:00.000Z', hour: '11:30', title: 'LECON INDIVIDUELLE 30MIN', prof: 'Baptiste', places: 0, users: [] },
+  { date: '2021-12-18T11:00:00.000Z', hour: '12:00', title: 'REGLES 1H', prof: 'Abdou', places: 14, users: [] },
+  { date: '2021-12-18T11:00:00.000Z', hour: '12:00', title: 'SWING 4U BRONZE', prof: 'Baptiste', places: 0, users: [] },
+  { date: '2021-12-18T11:00:00.000Z', hour: '12:00', title: 'SWING 4U OR', prof: 'Florent', places: 0, users: [] },
+  { date: '2021-12-18T11:00:00.000Z', hour: '14:00', title: 'SWING 4U BRONZE', prof: 'Charles', places: 0, users: [{ isAdmin: false, displayName: 'Bibulle Martin', academiergolf_index: 1 }, { isAdmin: false, displayName: 'Nathalie Martin', academiergolf_index: 2 }] },
+  { date: '2021-12-18T11:00:00.000Z', hour: '14:00', title: 'SWING 4U ARGENT', prof: 'Florent', places: 0, users: [] },
+  { date: '2021-12-18T11:00:00.000Z', hour: '15:00', title: 'SWING 4U OR', prof: 'Cédric', places: 0, users: [] },
+  { date: '2021-12-18T11:00:00.000Z', hour: '16:00', title: 'SWING 4U OR', prof: 'Abdou', places: 0, users: [] },
+  { date: '2021-12-18T11:00:00.000Z', hour: '16:00', title: 'LECON INDIVIDUELLE 30MIN', prof: 'Cédric', places: 0, users: [] },
+  { date: '2021-12-19T11:00:00.000Z', hour: '9:00', title: 'SWING 4U BRONZE', prof: 'Baptiste', places: 0, users: [] },
+  { date: '2021-12-19T11:00:00.000Z', hour: '9:00', title: 'SWING 4U ARGENT', prof: 'Cédric', places: 7, users: [] },
+  { date: '2021-12-19T11:00:00.000Z', hour: '12:00', title: 'SWING 4U ARGENT', prof: 'Baptiste', places: 2, users: [] },
+  { date: '2021-12-19T11:00:00.000Z', hour: '12:00', title: 'SWING 4U COMPACT', prof: 'Cédric', places: 0, users: [] },
+  { date: '2021-12-19T11:00:00.000Z', hour: '12:30', title: 'LECON INDIVIDUELLE 30MIN', prof: 'Abdou', places: 0, users: [] },
+  { date: '2021-12-19T11:00:00.000Z', hour: '14:00', title: 'SWING 4U OR', prof: 'Abdou', places: 0, users: [] },
+  { date: '2021-12-19T11:00:00.000Z', hour: '14:00', title: 'REGLES 1H', prof: 'Baptiste', places: 7, users: [] },
+  { date: '2021-12-19T11:00:00.000Z', hour: '14:00', title: 'SWING 4U BRONZE', prof: 'Cédric', places: 2, users: [] },
+  { date: '2021-12-19T11:00:00.000Z', hour: '15:00', title: 'SWING 4U BRONZE', prof: 'Baptiste', places: 0, users: [] },
+  { date: '2021-12-19T11:00:00.000Z', hour: '15:00', title: 'SWING 4U COMPACT', prof: 'Cédric', places: 1, users: [] },
+  { date: '2021-12-19T11:00:00.000Z', hour: '16:00', title: 'SWING 4U ARGENT', prof: 'Florent', places: 0, users: [] },
+  { date: '2021-12-20T11:00:00.000Z', hour: '10:00', title: 'SWING 4U COMPACT', prof: 'Charles', places: 0, users: [] },
+  { date: '2021-12-20T11:00:00.000Z', hour: '11:00', title: 'SWING 4U BRONZE', prof: 'Charles', places: 1, users: [] },
+  { date: '2021-12-20T11:00:00.000Z', hour: '12:00', title: 'SWING 4U OR', prof: 'Charles', places: 0, users: [] },
+  { date: '2021-12-20T11:00:00.000Z', hour: '14:00', title: 'SWING 4U ARGENT', prof: 'Charles', places: 1, users: [] },
+  { date: '2021-12-20T11:00:00.000Z', hour: '16:00', title: 'SWING 4U BRONZE', prof: 'Charles', places: 8, users: [] },
+  { date: '2021-12-20T11:00:00.000Z', hour: '17:00', title: 'SWING 4U OR', prof: 'Charles', places: 0, users: [] },
+  { date: '2021-12-21T11:00:00.000Z', hour: '11:00', title: 'SWING 4U BRONZE', prof: 'Charles', places: 2, users: [] },
+  { date: '2021-12-21T11:00:00.000Z', hour: '12:00', title: 'SWING 4U ARGENT', prof: 'Charles', places: 1, users: [] },
+  { date: '2021-12-21T11:00:00.000Z', hour: '14:30', title: 'SWING 4U OR', prof: 'Charles', places: 0, users: [] },
+  { date: '2021-12-21T11:00:00.000Z', hour: '15:30', title: 'LECON INDIVIDUELLE 30MIN', prof: 'Charles', places: 0, users: [] },
+  { date: '2021-12-21T11:00:00.000Z', hour: '16:00', title: 'SWING 4U BRONZE', prof: 'Charles', places: 6, users: [] },
+  { date: '2021-12-21T11:00:00.000Z', hour: '17:30', title: 'SWING 4U ARGENT', prof: 'Charles', places: 4, users: [] },
+  { date: '2021-12-21T11:00:00.000Z', hour: '18:30', title: 'SWING 4U OR', prof: 'Charles', places: 0, users: [] },
+  { date: '2021-12-22T11:00:00.000Z', hour: '10:00', title: 'SWING 4U COMPACT', prof: 'Florent', places: 0, users: [{ isAdmin: false, displayName: 'Bibulle Martin', academiergolf_index: 1 }] },
+  { date: '2021-12-22T11:00:00.000Z', hour: '11:00', title: 'SWING 4U OR', prof: 'Alexandre', places: 0, users: [{ isAdmin: false, displayName: 'Nathalie Martin', academiergolf_index: 2 }] },
+  { date: '2021-12-22T11:00:00.000Z', hour: '12:00', title: 'SWING 4U BRONZE', prof: 'Alexandre', places: 0, users: [] },
+  { date: '2021-12-22T11:00:00.000Z', hour: '13:00', title: 'SWING 4U ARGENT', prof: 'Florent', places: 5, users: [] },
+  { date: '2021-12-22T11:00:00.000Z', hour: '14:00', title: 'SWING 4U OR', prof: 'Cédric', places: 0, users: [] },
+  { date: '2021-12-22T11:00:00.000Z', hour: '14:00', title: 'SWING 4U BRONZE', prof: 'Florent', places: 3, users: [] },
+  { date: '2021-12-22T11:00:00.000Z', hour: '15:00', title: 'SWING 4U COMPACT', prof: 'Florent', places: 0, users: [] },
+  { date: '2021-12-22T11:00:00.000Z', hour: '16:00', title: 'SWING 4U BRONZE', prof: 'Alexandre', places: 5, users: [] },
+  { date: '2021-12-22T11:00:00.000Z', hour: '16:00', title: 'LECON INDIVIDUELLE 1 HEURE', prof: 'Florent', places: 0, users: [] },
+  { date: '2021-12-22T11:00:00.000Z', hour: '17:00', title: 'SWING 4U ARGENT', prof: 'Florent', places: 6, users: [] },
+  { date: '2021-12-22T11:00:00.000Z', hour: '17:30', title: 'SWING 4U OR', prof: 'Alexandre', places: 0, users: [] },
+  { date: '2021-12-22T11:00:00.000Z', hour: '18:30', title: 'SWING 4U ARGENT', prof: 'Alexandre', places: 6, users: [] },
+  { date: '2021-12-23T11:00:00.000Z', hour: '9:00', title: 'SWING 4U COMPACT', prof: 'Alexandre', places: 1, users: [] },
+  { date: '2021-12-23T11:00:00.000Z', hour: '10:00', title: 'SWING 4U ARGENT', prof: 'Florent', places: 5, users: [] },
+  { date: '2021-12-23T11:00:00.000Z', hour: '11:00', title: 'SWING 4U BRONZE', prof: 'Alexandre', places: 7, users: [] },
+  { date: '2021-12-23T11:00:00.000Z', hour: '12:00', title: 'SWING 4U ARGENT', prof: 'Florent', places: 7, users: [] },
+  { date: '2021-12-23T11:00:00.000Z', hour: '14:00', title: 'REGLES 1H', prof: 'Florent', places: 16, users: [] },
+  { date: '2021-12-23T11:00:00.000Z', hour: '15:00', title: 'LECON INDIVIDUELLE 30MIN', prof: 'Alexandre', places: 0, users: [] },
+  { date: '2021-12-23T11:00:00.000Z', hour: '15:00', title: 'SWING 4U BRONZE', prof: 'Florent', places: 3, users: [] },
+  { date: '2021-12-23T11:00:00.000Z', hour: '16:00', title: 'SWING 4U COMPACT', prof: 'Cédric', places: 3, users: [] },
+  { date: '2021-12-23T11:00:00.000Z', hour: '17:30', title: 'SWING 4U ARGENT', prof: 'Cédric', places: 5, users: [] },
+  { date: '2021-12-24T11:00:00.000Z', hour: '9:00', title: 'SWING 4U ARGENT', prof: 'Alexandre', places: 6, users: [] },
+  { date: '2021-12-24T11:00:00.000Z', hour: '10:00', title: 'SWING 4U BRONZE', prof: 'Alexandre', places: 5, users: [] },
+  { date: '2021-12-24T11:00:00.000Z', hour: '12:00', title: 'SWING 4U OR', prof: 'Alexandre', places: 0, users: [] },
+  { date: '2021-12-24T11:00:00.000Z', hour: '13:00', title: 'SWING 4U ARGENT', prof: 'Charles', places: 4, users: [] },
+  { date: '2021-12-24T11:00:00.000Z', hour: '14:00', title: 'SWING 4U BRONZE', prof: 'Alexandre', places: 5, users: [] },
+  { date: '2021-12-24T11:00:00.000Z', hour: '14:00', title: 'SWING 4U OR', prof: 'Charles', places: 0, users: [] },
+  { date: '2021-12-24T11:00:00.000Z', hour: '15:00', title: 'LECON INDIVIDUELLE 1 HEURE', prof: 'Charles', places: 0, users: [] },
+  { date: '2021-12-26T11:00:00.000Z', hour: '10:00', title: 'SWING 4U ARGENT', prof: 'Alexandre', places: 4, users: [] },
+  { date: '2021-12-26T11:00:00.000Z', hour: '11:00', title: 'SWING 4U BRONZE', prof: 'Alexandre', places: 4, users: [] },
+  { date: '2021-12-26T11:00:00.000Z', hour: '12:00', title: 'SWING 4U OR', prof: 'Alexandre', places: 0, users: [] },
+  { date: '2021-12-26T11:00:00.000Z', hour: '14:00', title: 'SWING 4U BRONZE', prof: 'Alexandre', places: 8, users: [] },
+  { date: '2021-12-26T11:00:00.000Z', hour: '15:00', title: 'SWING 4U ARGENT', prof: 'Alexandre', places: 6, users: [] },
+  { date: '2021-12-28T11:00:00.000Z', hour: '11:00', title: 'SWING 4U OR', prof: 'Baptiste', places: 0, users: [] },
+  { date: '2021-12-28T11:00:00.000Z', hour: '12:00', title: 'SWING 4U ARGENT', prof: 'Baptiste', places: 5, users: [] },
+  { date: '2021-12-28T11:00:00.000Z', hour: '14:00', title: 'SWING 4U BRONZE', prof: 'Baptiste', places: 3, users: [] },
+  { date: '2021-12-28T11:00:00.000Z', hour: '15:00', title: 'SWING 4U OR', prof: 'Baptiste', places: 0, users: [] },
+  { date: '2021-12-28T11:00:00.000Z', hour: '16:00', title: 'SWING 4U BRONZE', prof: 'Baptiste', places: 8, users: [] },
+  { date: '2021-12-28T11:00:00.000Z', hour: '17:30', title: 'SWING 4U OR', prof: 'Baptiste', places: 0, users: [] },
+  { date: '2021-12-29T11:00:00.000Z', hour: '9:00', title: 'SWING 4U ARGENT', prof: 'Baptiste', places: 6, users: [] },
+  { date: '2021-12-29T11:00:00.000Z', hour: '10:00', title: 'SWING 4U BRONZE', prof: 'Baptiste', places: 7, users: [] },
+  { date: '2021-12-29T11:00:00.000Z', hour: '11:30', title: 'LECON INDIVIDUELLE 30MIN', prof: 'Baptiste', places: 0, users: [] },
+  { date: '2021-12-29T11:00:00.000Z', hour: '12:00', title: 'SWING 4U OR', prof: 'Alexandre', places: 0, users: [] },
+  { date: '2021-12-29T11:00:00.000Z', hour: '12:00', title: 'SWING 4U COMPACT', prof: 'Baptiste', places: 0, users: [] },
+  { date: '2021-12-29T11:00:00.000Z', hour: '14:00', title: 'SWING 4U BRONZE', prof: 'Alexandre', places: 3, users: [] },
+  { date: '2021-12-29T11:00:00.000Z', hour: '14:00', title: 'SWING 4U OR', prof: 'Baptiste', places: 0, users: [] },
+  { date: '2021-12-29T11:00:00.000Z', hour: '15:00', title: 'SWING 4U ARGENT', prof: 'Alexandre', places: 8, users: [] },
+  { date: '2021-12-29T11:00:00.000Z', hour: '16:00', title: 'SWING 4U OR', prof: 'Alexandre', places: 0, users: [] },
+  { date: '2021-12-29T11:00:00.000Z', hour: '18:30', title: 'SWING 4U BRONZE', prof: 'Alexandre', places: 7, users: [] },
+  { date: '2021-12-30T11:00:00.000Z', hour: '9:00', title: 'SWING 4U BRONZE', prof: 'Alexandre', places: 8, users: [] },
+  { date: '2021-12-30T11:00:00.000Z', hour: '11:00', title: 'SWING 4U ARGENT', prof: 'Alexandre', places: 3, users: [] },
+  { date: '2021-12-31T11:00:00.000Z', hour: '10:00', title: 'SWING 4U ARGENT', prof: 'Alexandre', places: 7, users: [] },
+  { date: '2021-12-31T11:00:00.000Z', hour: '12:00', title: 'SWING 4U BRONZE', prof: 'Alexandre', places: 4, users: [] },
+  { date: '2021-12-31T11:00:00.000Z', hour: '15:00', title: 'SWING 4U ARGENT', prof: 'Alexandre', places: 6, users: [] },
+];
+
+export const COURSE_MOCK: any[] = [
+  { date: '2021-11-13T11:00:00.000Z', hour: '15:00', title: 'INITIATION 2H', prof: 'Florent', places: 0, users: [{ isAdmin: false, displayName: 'Bibulle Martin' }] },
+  { date: '2021-11-22T11:00:00.000Z', hour: '19:00', title: 'SWING 4U ARGENT', prof: 'Abdou', places: 0, users: [{ isAdmin: false, displayName: 'Bibulle Martin' }] },
+  { date: '2021-11-26T11:00:00.000Z', hour: '12:00', title: 'SWING 4U BRONZE', prof: 'Alexandre', places: 0, users: [{ isAdmin: false, displayName: 'Bibulle Martin' }] },
+  { date: '2021-11-29T11:00:00.000Z', hour: '19:00', title: 'SWING 4U ARGENT', prof: 'Abdou', places: 0, users: [{ isAdmin: false, displayName: 'Bibulle Martin' }] },
+  { date: '2021-12-03T11:00:00.000Z', hour: '13:00', title: 'SWING 4U BRONZE', prof: 'Alexandre', places: 0, users: [{ isAdmin: false, displayName: 'Bibulle Martin' }] },
+  { date: '2021-12-06T11:00:00.000Z', hour: '18:30', title: 'SWING 4U ARGENT', prof: 'Abdou', places: 0, users: [{ isAdmin: false, displayName: 'Bibulle Martin' }] },
+  { date: '2021-12-10T11:00:00.000Z', hour: '13:00', title: 'SWING 4U ARGENT', prof: 'Alexandre', places: 0, users: [{ isAdmin: false, displayName: 'Bibulle Martin' }] },
+  { date: '2021-12-13T11:00:00.000Z', hour: '19:00', title: 'SWING 4U BRONZE', prof: 'Abdou', places: 0, users: [{ isAdmin: false, displayName: 'Bibulle Martin' }] },
+  { date: '2021-12-18T11:00:00.000Z', hour: '14:00', title: 'SWING 4U BRONZE', prof: 'Charles', places: 0, users: [{ isAdmin: false, displayName: 'Bibulle Martin' }] },
+  { date: '2021-12-22T11:00:00.000Z', hour: '10:00', title: 'SWING 4U COMPACT', prof: 'Florent', places: 0, users: [{ isAdmin: false, displayName: 'Bibulle Martin' }] },
+];

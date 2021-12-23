@@ -23,13 +23,22 @@ export class Course {
   prof: string;
   places: number;
 
+  users: User[];
+
   constructor(date: Date, hour: string, title: string, prof: string, places: number) {
     this.date = date;
     this.hour = hour;
     this.title = title;
     this.prof = prof;
     this.places = places; 
+
+    this.users = [];
   }
+
+  getKey() {
+    return `${this.date.toISOString().replace(/T.*/,'')} ${this.hour.padStart(5,'0')} ${this.prof}`;
+  }
+
 }
 
 /**
@@ -47,10 +56,9 @@ export class Course {
   providerId?: string;
   isAdmin = false;
 
+  academiergolf_index?: number;
   academiergolf_login?: string;
   academiergolf_password?: string;
-
-  courses?: void | Course[] = undefined;
 
   constructor(displayName: string) {
       this.displayName = displayName ;
@@ -63,6 +71,7 @@ export class Course {
  */
  export enum EventType {
   NEW_COURSE = 'NEW_COURSE',
+  NEW_PLANNING = 'NEW_PLANNING',
   UNKNOWN = 'UNKNOWN',
 }
 

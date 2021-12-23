@@ -45,7 +45,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
       }
     });
     this._currentUserSubscription = this._userService.userObservable().subscribe((user) => {
-      console.log(user);
+      // console.log(user);
       this.user = user;
       this.calculateMenus();
     });

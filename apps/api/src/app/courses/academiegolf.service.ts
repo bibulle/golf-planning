@@ -35,29 +35,29 @@ export class AcademiegolfService {
     const cookieJar = this.getCookieJar(user.academiergolf_login);
 
     // Fetch the url
-    this.logger.debug('Fetch : ' + url);
+    //this.logger.debug('Fetch : ' + url);
     const response = await got(url, { cookieJar }).catch((reason) => {
       this.logger.error(reason);
       return Promise.reject('Cannot connect to Academie Golf!!');
     });
-    this.logger.debug('Fetch : ' + url + '  done');
+    //this.logger.debug('Fetch : ' + url + '  done');
 
     let dom = new JSDOM(response.body);
 
     // if auth button found, try to authenticate
     if (dom.window.document.querySelector('#auth')) {
-      this.logger.debug('Authentification');
+      //this.logger.debug('Authentification');
       await this.authenticate(user);
-      this.logger.debug('Authentification done');
+      //this.logger.debug('Authentification done');
 
       // refetch the URL
-      this.logger.debug('Fetch : ' + url);
+      //this.logger.debug('Fetch : ' + url);
       const response = await got(url, { cookieJar }).catch((reason) => {
         this.logger.error('ERROR');
         this.logger.error(reason);
         return Promise.reject('Cannot connect to Academie Golf!!');
       });
-      this.logger.debug('Fetch : ' + url + '  done');
+      //this.logger.debug('Fetch : ' + url + '  done');
 
       dom = new JSDOM(response.body);
     }
@@ -112,7 +112,7 @@ export class AcademiegolfService {
     const cookieJar = this.getCookieJar(user.academiergolf_login);
 
     // Fetch the connection URL
-    this.logger.debug('Fetch : ' + AcademiegolfService.URL_CON);
+    //this.logger.debug('Fetch : ' + AcademiegolfService.URL_CON);
     const response = await got.post(AcademiegolfService.URL_CON, {
       followRedirect: true,
       cookieJar,
@@ -138,7 +138,7 @@ export class AcademiegolfService {
         // ],
       },
     });
-    this.logger.debug('Fetch : ' + AcademiegolfService.URL_CON + '  done');
+    //this.logger.debug('Fetch : ' + AcademiegolfService.URL_CON + '  done');
 
     //   debug(cookieJar.getCookiesSync("https://academiegolf.com/"));
     //   debug(`${response.statusCode} -> ${response.headers.location}`);
@@ -150,7 +150,7 @@ export class AcademiegolfService {
     const lessons: Course[] = [];
 
     // Look in the planning
-    dom.window.document.querySelectorAll('.r-lessons').forEach((lesson) => {
+    dom.window.document.querySelectorAll('.r-lessons .r-lessons-list .r-lesson-block').forEach((lesson) => {
       const hour = this.getTagContent(lesson, '.r-info-hours').replace(/ .*$/, '');
       const title = this.getTagContent(lesson, '.r-info-title');
       const prof = this.getTagContent(lesson, '.r-pro-title');
@@ -158,23 +158,32 @@ export class AcademiegolfService {
 
       if (hour) {
         lessons.push(new Course(date, hour, title, prof, +place));
+        //this.logger.debug(lessons[lessons.length-1].getKey())
       }
 
-      // debug(`${date.toLocaleDateString()} ${hour} : ${title} ${prof} (${place} place)`);
+      //this.logger.debug(`${date.toLocaleDateString()} ${hour} : ${title} ${prof} (${place} place)`);
     });
 
     // Look in "my course"
     dom.window.document.querySelectorAll('.r-lesson-block').forEach((lesson) => {
       let date: Date;
-      if (lesson.querySelector('.r-block-info a')) {
+      let hour = "";
+      let prof = "";
+      if (lesson.querySelector('.r-block-info.col-lg-8 a')) {
         const dateStr = lesson.querySelector('.r-block-info a')['href'].replace(/^.*\/([^\/]*)$/, '$1');
         const dateTab = dateStr.split('-');
-        date = new Date(dateTab[2], dateTab[1] - 1, dateTab[0]);
+        date = new Date(dateTab[2], dateTab[1] - 1, dateTab[0], 12, 0, 0);
+        hour = this.getTagContent(lesson, '.r-info-hours').replace(/ .*$/, '');
+        prof = this.getTagContent(lesson, '.r-pro-title');
+      } else if (lesson.querySelector('.r-content-title')) {
+        date = this.parseDate(this.getTagContent(lesson, '.r-content-title'));
+        hour = this.parseHour(this.getTagContent(lesson, '.r-content-title'));
+        prof = this.getTagContent(lesson, '.r-info-hours').replace(/.*: /, '');
       }
 
-      const hour = this.getTagContent(lesson, '.r-info-hours').replace(/ .*$/, '');
+      
       const title = this.getTagContent(lesson, '.r-info-title');
-      const prof = this.getTagContent(lesson, '.r-pro-title');
+     
       const place = this.getTagContent(lesson, '.r-info-remaining span');
 
       if (date && !isNaN(date.getTime())) {
@@ -208,4 +217,21 @@ export class AcademiegolfService {
 
     return this.cookiesJars[name];
   }
+
+  private parseDate(str: string): Date {
+    const parts = str.split(' ');
+
+    const day = +parts[1];
+    const month = this.MONTHS.indexOf(parts[2].toLocaleLowerCase());
+    const year = 2000 + +parts[3];
+
+    return new Date(year, month, day, 12, 0, 0);
+  }
+  private parseHour(str: string): string {
+    const parts = str.split(' ');
+
+    return parts[5].replace(/h/,":");
+  }
+
+  private MONTHS = ['janvier', 'fevrier', 'mars', 'avril', 'mai', 'juin', 'juillet', 'aout', 'septembre', 'octobre', 'novembre', 'decembre'];
 }

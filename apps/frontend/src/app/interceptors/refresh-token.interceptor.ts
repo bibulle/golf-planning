@@ -8,14 +8,14 @@ import { UserService } from '../user/user.service';
 export class RefreshTokenInterceptor implements HttpInterceptor {
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    console.log('RefreshTokenInterceptor intercept');
+    // console.log('RefreshTokenInterceptor intercept');
 
     return next.handle(req).pipe(
       tap((event: HttpEvent<any>) => {
         if (event instanceof HttpResponse) {
           const data = event.body;
           if (data && data['refreshToken']) {
-            console.log(data['refreshToken']);
+            // console.log(data['refreshToken']);
             UserService.tokenSetter(data['refreshToken']);
             //this._userService.checkAuthentication();
           }

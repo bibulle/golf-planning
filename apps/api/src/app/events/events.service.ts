@@ -10,4 +10,7 @@ export class EventsService {
     courseUpdated() {
         this.eventsGateway.emiteEvent(EventType.NEW_COURSE);
     }
+    planningUpdated() {
+        this.eventsGateway.emiteEvent(EventType.NEW_PLANNING);
+    }
 }

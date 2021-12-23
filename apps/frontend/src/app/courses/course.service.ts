@@ -16,12 +16,12 @@ export class CourseService {
   constructor(private _http: HttpClient, private _eventService: EventsService) {
     this._fetch();
 
-    this._eventService.getEventNewCourse().subscribe(() => this._fetch());
+    this._eventService.getEventNewPlanning().subscribe(() => this._fetch());
   }
-
+ 
   private _fetch() {
-    console.log('fetch');
-    this._http.get<ApiReturn>('/api/courses').subscribe((data) => {
+    // console.log('fetch');
+    this._http.get<ApiReturn>('/api/planning').subscribe((data) => {
 
       const courses = data.data as Course[];
       //console.log(courses);

@@ -35,6 +35,21 @@ module.exports = {
         default: '#CBD5E0' /* gray.400 */,
         dark: '#4A5568' /* gray.700 */,
       },
+      green: {
+        light: '#C6F6D5' /* green.200 */,
+        default: '#68D391' /* green.400 */,
+        dark: '#2F855A' /* green.700 */,
+      },
+      pink: {
+        light: '#FED7E2' /* pink.200 */,
+        default: '#F687B3' /* pink.400 */,
+        dark: '#B83280' /* pink.700 */,
+      },
+      blue: {
+        light: '#BEE3F8' /* blue.200 */,
+        default: '#63B3ED' /* blue.400 */,
+        dark: '#2B6CB0' /* blue.700 */,
+      },
     },
   },
   variants: {

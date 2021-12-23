@@ -72,11 +72,11 @@ export class EventsService {
   }
 
 
-  public getEventNewCourse() {
+  public getEventNewPlanning() {
     this.connect();
     return this.event$
       .asObservable()
       //.pipe(tap((e) => console.log(`${e} (${e === EventType.NEW_COURSE})`)))
-      .pipe(filter((e: EventType) => e === EventType.NEW_COURSE));
+      .pipe(filter((e: EventType) => e === EventType.NEW_PLANNING));
   }
 }

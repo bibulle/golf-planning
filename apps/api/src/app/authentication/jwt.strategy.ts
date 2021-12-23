@@ -11,8 +11,6 @@ class RealJwtStrategy extends PassportStrategy(Strategy, 'jwt') {
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       secretOrKey: jwtSecret
     });
-    this.logger.debug(jwtSecret);
-
   }
 
   //noinspection JSMethodCanBeStatic
