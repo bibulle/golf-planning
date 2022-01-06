@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
+import { FilterModule } from '../filter/filter.module';
 import { UserModule } from '../user/user.module';
 import { NavbarComponent } from './navbar.component';
 
@@ -8,7 +9,8 @@ import { NavbarComponent } from './navbar.component';
   imports: [
     BrowserModule,
     RouterModule,
-    UserModule
+    UserModule,
+    FilterModule
   ],
   declarations: [
     NavbarComponent

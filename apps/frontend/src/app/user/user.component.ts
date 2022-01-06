@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { User } from '@golf-planning/api-interfaces';
 
 @Component({
@@ -6,14 +6,14 @@ import { User } from '@golf-planning/api-interfaces';
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.scss']
 })
-export class UserComponent implements OnInit {
+export class UserComponent {
 
   @Input()
   user: User|null = null;
 
-  constructor() { }
+  // constructor() { }
 
-  ngOnInit(): void {
-  }
+  // ngOnInit(): void {
+  // }
 
 }

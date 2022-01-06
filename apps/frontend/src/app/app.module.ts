@@ -15,6 +15,7 @@ import { RefreshTokenInterceptor } from './interceptors/refresh-token.intercepto
 import { VersionInterceptor } from './interceptors/version.interceptor';
 import { JwtModule } from '@auth0/angular-jwt';
 import { UserService } from './user/user.service';
+import { FilterModule } from './filter/filter.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -33,7 +34,8 @@ import { UserService } from './user/user.service';
         ],
       },
     }),
-    NavbarModule
+    NavbarModule,
+    FilterModule
   ],
   providers: [
     AuthGuard,

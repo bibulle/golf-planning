@@ -40,6 +40,10 @@
         <!-- Menu horizontal droite -->
         <div class="ml-4 flex items-center md:ml-6">
           <div class="ml-3 relative">
+            <golf-planning-filter></golf-planning-filter>
+          </div>
+
+          <div class="ml-3 relative">
             <golf-planning-user [user]="user" (click)="showUserMenu = !showUserMenu" class="text-primary-light"></golf-planning-user>
             <div
               *ngIf="showUserMenu && linksUser.length > 0"
@@ -81,6 +85,7 @@
       </div>
 
       <div class="-mr-2 flex md:hidden">
+        <golf-planning-filter></golf-planning-filter>
         <!-- Mobile menu button -->
         <button
           type="button"
@@ -91,10 +96,10 @@
         >
           <span class="sr-only">Open main menu</span>
           <svg *ngIf="!showMobileMenu" class="h-8 w-8 mx-2 fill-primary-light stroke-primary-light">
-            <use [attr.xlink:href]="getIconAttr('menu')"></use>
+            <use xlink:href="assets/img/symbol-defs.svg#menu"></use>
           </svg>
           <svg *ngIf="showMobileMenu" class="h-8 w-8 mx-2 fill-primary-light stroke-primary-light">
-            <use [attr.xlink:href]="getIconAttr('close')"></use>
+            <use xlink:href="assets/img/symbol-defs.svg#close"></use>
           </svg>
         </button>
       </div>

@@ -1,5 +1,5 @@
 <div class="flex items-stretch flex-wrap justify-items-start justify-center">
-  <ng-container *ngFor="let c of courses; index as i" class="flex">
+  <ng-container *ngFor="let c of filtredCourses; index as i" class="flex">
     <div *ngIf="isFirstCourseOfDay(i)" class="basis-full text-left mx-1 px-3 mt-3 text-2xl border-t-2 border-t-neutral-light text-neutral-dark">{{ c.date | date: 'fullDate' }}</div>
     <golf-planning-course [course]="c"></golf-planning-course>
   </ng-container>

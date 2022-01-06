@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { MyToken, User } from '@golf-planning/api-interfaces';
+import { Config, Filter, MyToken, User } from '@golf-planning/api-interfaces';
 import { BehaviorSubject, distinctUntilChanged, Observable, timer } from 'rxjs';
 import { WindowService } from '../utils/window/window.service';
 import { ApiReturn } from '@golf-planning/api-interfaces';
@@ -25,16 +26,15 @@ export class JwtHelperServiceService {
   providedIn: 'root',
 })
 export class UserService {
-  private static KEY_TOKEN_LOCAL_STORAGE = 'id_token';
+  private static readonly KEY_TOKEN_LOCAL_STORAGE = 'id_token';
 
-  private static KEY_CONFIG_LOCAL_STORAGE = 'config';
+  private static readonly KEY_CONFIG_LOCAL_STORAGE: string = 'config';
 
   private userSubject: BehaviorSubject<User>;
-
   private user = {} as User;
 
-  // private readonly config: Config;
-  // private readonly configSubject: BehaviorSubject<Config>;
+  private config: Config;
+  private readonly configSubject: BehaviorSubject<Config>;
 
   private loopCount = 600;
   private intervalLength = 100;
@@ -44,14 +44,10 @@ export class UserService {
 
   timer1;
 
-  constructor(
-    private readonly _http: HttpClient, 
-    private readonly _jwtHelperServiceService: JwtHelperServiceService 
-    // TODO: Work on notification service
-    // private readonly _notificationService: NotificationService,
-    // private readonly logger: NGXLogger,
-    // private readonly _translateService: TranslateService
-    )
+  constructor(private readonly _http: HttpClient, private readonly _jwtHelperServiceService: JwtHelperServiceService) 
+  // TODO: Work on notification service
+  // private readonly _notificationService: NotificationService,
+  // private readonly logger: NGXLogger,
   {
     this.userSubject = new BehaviorSubject<User>(this.user);
 
@@ -62,16 +58,23 @@ export class UserService {
       this.checkAuthentication();
     });
 
-    //   try {
-    //     this.config = JSON.parse(localStorage.getItem(UserService.KEY_CONFIG_LOCAL_STORAGE));
-    //     if (!this.config) {
-    //       this.config = new Config();
-    //     }
-    //   } catch {
-    //     this.config = new Config();
-    //   }
-    //   this._translateService.use(this.config.language);
-    //   this.configSubject = new BehaviorSubject<Config>(this.config);
+    try {
+      this.config = new Config();
+      const l = localStorage.getItem(UserService.KEY_CONFIG_LOCAL_STORAGE);
+      if (l) {
+        const newConfig: Config = JSON.parse(l);
+        const table:{[id:string]: Filter } = newConfig.filters.reduce((a,f) => ({...a, [f.id]: f}), {}) ;
+        this.config.filters.forEach(f => {
+          if (table[f.id]) {
+              f.selected = table[f.id].selected;
+          } 
+        });
+      }
+    } catch {
+      this.config = new Config();
+    }
+    this.configSubject = new BehaviorSubject<Config>(this.config);
+
   }
 
   /**
@@ -309,7 +312,7 @@ export class UserService {
             console.error('Weird data ...');
             return reject('login error');
           }
-          console.log("-----------");
+          console.log('-----------');
           console.log(data);
           const value = data.data as MyToken;
           console.log(value);
@@ -321,6 +324,7 @@ export class UserService {
             resolve('');
           }
         })
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         .catch((error) => {
           this.checkAuthentication();
 
@@ -379,10 +383,17 @@ export class UserService {
     }, {});
   }
 
-  // // Configuration management
-  // configObservable(): Observable<Config> {
-  //   return this.configSubject;
-  // }
+  // Configuration management
+  configObservable(): Observable<Config> {
+    return this.configSubject;
+  }
+
+  updateConfig(config: Config) {
+    this.config = config;
+    localStorage.setItem(UserService.KEY_CONFIG_LOCAL_STORAGE, JSON.stringify(this.config));
+    this.configSubject.next(this.config);
+  }
+
 
   // changeLanguage(language: string) {
   //   // this.setSearch('');
