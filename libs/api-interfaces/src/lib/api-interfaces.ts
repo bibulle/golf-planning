@@ -143,10 +143,10 @@ export class Filter {
   }
 
   isVisible(c: Course): boolean {
-    if (this.id === "reservé" ) {
-      console.log(`${c.title} (${c.users.length}) -> ${this.selected && (this.match === null || this.match(c))} ${c.users.length > 0}`);
+    // if (this.id === "reservé" ) {
+    //   console.log(`${c.title} (${c.users.length}) -> ${this.selected && (this.match === null || this.match(c))} ${c.users.length > 0}`);
       
-    }    
+    // }    
     if (this.type === FilterType.MATCH) {
       return this.selected || this.match === null || !this.match(c) ;
     } else {
