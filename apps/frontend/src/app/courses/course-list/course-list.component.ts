@@ -40,7 +40,7 @@ export class CourseListComponent implements OnInit, OnDestroy {
     if (index <= 0) {
       return true;
     }
-    return this.filtredCourses[index - 1].date.getDay() !== this.filtredCourses[index].date.getDay();
+    return this.filtredCourses[index - 1].date.toLocaleDateString() !== this.filtredCourses[index].date.toLocaleDateString();
   }
 
   doFilter() {
