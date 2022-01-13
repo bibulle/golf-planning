@@ -1,6 +1,6 @@
 import { trigger, transition, style, animate } from '@angular/animations';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Filter } from '@golf-planning/api-interfaces';
+import { Config, Filter } from '@golf-planning/api-interfaces';
 import { Subscription } from 'rxjs';
 import { FilterService } from './filter.service';
 
@@ -22,8 +22,8 @@ import { FilterService } from './filter.service';
 export class FilterComponent implements OnInit, OnDestroy {
   showFilterMenu = false;
 
-  filters: Filter[] = [];
-  private _currentFilterSubscription: Subscription | null = null;
+  config: Config|null = null;
+  private _currentConfigSubscription: Subscription | null = null;
 
 
   constructor(private readonly _filterService: FilterService) { 
@@ -31,22 +31,29 @@ export class FilterComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this._currentFilterSubscription = this._filterService.filterObservable().subscribe((filters) => {
+    this._currentConfigSubscription = this._filterService.configObservable().subscribe((config) => {
       // console.log(filters);
-      this.filters = filters;
+      this.config = config;
     });
 
   }
 
   ngOnDestroy() {
-    if (this._currentFilterSubscription) {
-      this._currentFilterSubscription.unsubscribe();
+    if (this._currentConfigSubscription) {
+      this._currentConfigSubscription.unsubscribe();
     }
   }
 
-  selectChange(filter: Filter) {
+  selectFilterChange(filter: Filter) {
     // console.log(filter);
     filter.selected = !filter.selected;
     this._filterService.updateFilter(filter);
+  }
+  sortChange() {
+    // console.log(filter);
+    if (this.config)  {
+      this.config.ascendingSort = !this.config.ascendingSort;
+      this._filterService.updateSortOrder(this.config.ascendingSort);
+      }
   }
 }

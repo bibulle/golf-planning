@@ -51,6 +51,12 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
                 </symbol>
+                <symbol id="sort-ascending" fill="none" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12" />
+                </symbol>
+                <symbol id="sort-descending" fill="none" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h13M3 8h9m-9 4h9m5-4v12m0 0l-4-4m4 4l4-4" />
+                </symbol>
                 <symbol id="medal1" viewBox="0 0 491.768 491.768">
                         <path d="M174.048,136.543l39.925-83.12l18.234-37.966l-2.938-6.131C226.54,3.628,220.778,0,214.453,0H98.137 c-5.651,0-10.899,2.906-13.918,7.689c-3.001,4.783-3.338,10.772-0.898,15.859l72.508,150.957L174.048,136.543z" />
 	                <path d="M174.048,136.543l39.925-83.12l18.234-37.966l-2.938-6.131C226.54,3.628,220.778,0,214.453,0H98.137 c-5.651,0-10.899,2.906-13.918,7.689c-3.001,4.783-3.338,10.772-0.898,15.859l72.508,150.957L174.048,136.543z" />

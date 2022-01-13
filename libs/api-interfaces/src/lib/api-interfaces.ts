@@ -33,9 +33,26 @@ export class Course {
     this.users = [];
   }
 
-  getKey() {
-    return `${this.date.toISOString().replace(/T.*/, '')} ${this.hour.padStart(5, '0')} ${this.prof}`;
+  static getKey(cousre: Course) {
+    return `${cousre.date.toISOString().replace(/T.*/, '')} ${cousre.hour.padStart(5, '0')} ${cousre.prof}`;
   }
+}
+
+/**
+ * Calendar Event (comming from Google)
+ */
+export interface CalendarEvent {
+  title: string; 
+  startDate: Date; 
+  endDate: Date
+}
+
+/**
+ * Google tokens
+ */
+export interface GoogleToken {
+  accessToken: string; 
+  refreshToken: string
 }
 
 /**
@@ -63,7 +80,7 @@ export class User {
 }
 
 /**
- * Events
+ * Events betwen API and frontend
  */
 export enum EventType {
   NEW_COURSE = 'NEW_COURSE',
@@ -83,6 +100,7 @@ export class Event {
  * Config (only use on frontend)
  */
 export class Config {
+  ascendingSort = false;
   filters: Filter[];
 
   constructor() {

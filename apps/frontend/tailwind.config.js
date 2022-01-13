@@ -50,6 +50,16 @@ module.exports = {
         default: '#63B3ED' /* blue.400 */,
         dark: '#2B6CB0' /* blue.700 */,
       },
+      amber: {
+        light: '#fde68a' /* amber.200 */,
+        default: '#fbbf24' /* amber.400 */,
+        dark: '#b45309' /* amber.700 */,
+      },
+      violet: {
+        light: '#e9d5ff' /* violet.200 */,
+        default: '#c084fc' /* violet.400 */,
+        dark: '#7e22ce' /* violet.700 */,
+      },
     },
   },
   variants: {

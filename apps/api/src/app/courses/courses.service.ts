@@ -17,17 +17,24 @@ export class CoursesService {
 
   constructor(private userService: UsersService, private acadeliegolfService: AcademiegolfService, private eventService: EventsService, private configService: ConfigService) {
     this.handleCronPlanning();
+
   }
 
   getPlanning(): Course[] {
-     return this.planning;
-  }
+    return this.planning;
+ }
+ getCourse(user?: string): Course[] {
+  return this.courses.filter(c => {
+    return !user || c.users.some(u => u.displayName===user)
+  });
+}
 
-  @Cron('0 */10 * * * *')
   //@Cron(CronExpression.EVERY_30_SECONDS)
-  //@Interval(10000)
+  @Cron(CronExpression.EVERY_10_MINUTES)
   handleCronPlanning() {
-    this.logger.debug('Called every 10 minutes');
+    this.logger.debug('handleCronPlanning');
+
+    // Get academigolf users
     const users: User[] = this.userService.readFromEnv();
     this.logger.debug(`Found ${users.length} users`);
 
@@ -42,7 +49,7 @@ export class CoursesService {
       const planningTabs: { [key: string]: Course } = {};
       const coursesTabs: { [key: string]: Course } = {};
 
-      // get planning
+      // get courses catalogue from the golfs
       for (let i = 0; i < this.NB_DAYS_PLANNING; i++) {
         const date = new Date();
         date.setHours(12);
@@ -60,7 +67,7 @@ export class CoursesService {
         }
 
         lessons.forEach((c) => {
-          planningTabs[c.getKey()] = c;
+          planningTabs[Course.getKey(c)] = c;
         });
       }
 
@@ -74,28 +81,28 @@ export class CoursesService {
           if (lessons) {
             lessons.forEach((l) => {
               // add users to course in planning
-              if (planningTabs[l.getKey()]) {
+              if (planningTabs[Course.getKey(l)]) {
                 const nu = new User(u.displayName);
                 nu.academiergolf_index = u.academiergolf_index;
-                planningTabs[l.getKey()].users.push(nu);
+                planningTabs[Course.getKey(l)].users.push(nu);
                 //this.logger.debug(`${l.getKey()} -> ${u.displayName}`);
                 //this.logger.debug(JSON.stringify(planningTabs[l.getKey()], null, 2));
                 //this.logger.debug(`${l.getKey()} ${JSON.stringify(planningTabs[l.getKey()])}`)
               }
 
-              if (!coursesTabs[l.getKey()]) {
-                coursesTabs[l.getKey()] = l;
+              if (!coursesTabs[Course.getKey(l)]) {
+                coursesTabs[Course.getKey(l)] = l;
               }
-              coursesTabs[l.getKey()].users.push(new User(u.displayName));
+              coursesTabs[Course.getKey(l)].users.push(new User(u.displayName));
             });
           }
         })
       );
       const newPlanning: Course[] = Object.values(planningTabs).sort((a, b) => {
-        return a.getKey().localeCompare(b.getKey());
+        return Course.getKey(a).localeCompare(Course.getKey(b));
       });
       const newCourses: Course[] = Object.values(coursesTabs).sort((a, b) => {
-        return a.getKey().localeCompare(b.getKey());
+        return Course.getKey(a).localeCompare(Course.getKey(b));
       });
 
       // test differences
@@ -113,6 +120,7 @@ export class CoursesService {
       // planning.forEach((p) => {
       //   this.logger.debug(`${p.title} : ${p.date.toLocaleDateString()} ${p.hour} (${p.prof})`);
       // });
+
     })();
   }
 

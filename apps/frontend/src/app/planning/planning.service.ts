@@ -1,16 +1,16 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ApiReturn, Course } from '@golf-planning/api-interfaces';
+import { Course, ApiReturn } from '@golf-planning/api-interfaces';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { EventsService } from '../services/events.service';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
-export class CourseService {
-  private _courses: Course[] = [];
-  private _coursesSubject: BehaviorSubject<Course[]> = new BehaviorSubject(
-    this._courses
+export class PlanningService {
+  private _planning: Course[] = [];
+  private _planningSubject: BehaviorSubject<Course[]> = new BehaviorSubject(
+    this._planning
   );
 
   constructor(private _http: HttpClient, private _eventService: EventsService) {
@@ -23,10 +23,10 @@ export class CourseService {
     // console.log('fetch');
     this._http.get<ApiReturn>('/api/planning').subscribe((data) => {
 
-      const courses = data.data as Course[];
+      const planning = data.data as Course[];
       //console.log(courses);
-      this._coursesSubject.next(
-        courses.map(c => {
+      this._planningSubject.next(
+        planning.map(c => {
           c.date = new Date(c.date)
           return c
         })
@@ -34,7 +34,7 @@ export class CourseService {
     });
   }
 
-  getCourses(): Observable<Course[]> {
-    return this._coursesSubject.asObservable();
+  getPlanning(): Observable<Course[]> {
+    return this._planningSubject.asObservable();
   }
 }

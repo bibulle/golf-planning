@@ -1,21 +1,20 @@
+import { registerLocaleData } from '@angular/common';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import localeFr from '@angular/common/locales/fr';
 import { LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { JwtModule } from '@auth0/angular-jwt';
+import { AppRoutingModule } from './app-routing.module';
+import { AppComponent } from './app.component';
+import { AuthGuard, AuthGuardAdmin } from './authent/authent.guard';
+import { FilterModule } from './filter/filter.module';
+import { RefreshTokenInterceptor } from './interceptors/refresh-token.interceptor';
+import { NavbarModule } from './navbar/navbar.module';
+import { UserService } from './user/user.service';
 
-import { registerLocaleData } from '@angular/common';
-import localeFr from '@angular/common/locales/fr';
 registerLocaleData(localeFr);
 
-import { AppComponent } from './app.component';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { AppRoutingModule } from './app-routing.module';
-import { NavbarModule } from './navbar/navbar.module';
-import { AuthGuard, AuthGuardAdmin } from './authent/authent.guard';
-import { RefreshTokenInterceptor } from './interceptors/refresh-token.interceptor';
-import { VersionInterceptor } from './interceptors/version.interceptor';
-import { JwtModule } from '@auth0/angular-jwt';
-import { UserService } from './user/user.service';
-import { FilterModule } from './filter/filter.module';
 
 @NgModule({
   declarations: [AppComponent],

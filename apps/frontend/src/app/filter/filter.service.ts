@@ -8,7 +8,7 @@ import { UserService } from '../user/user.service';
 })
 export class FilterService {
 
-  private filterSubject: BehaviorSubject<Filter[]>;
+  private configSubject: BehaviorSubject<Config | null>;
 
   config: Config | null = null;
   private _currentConfigSubscription: Subscription | null = null;
@@ -16,18 +16,18 @@ export class FilterService {
 
   constructor(private readonly _userService: UserService) {
 
-    this.filterSubject = new BehaviorSubject<Filter[]>([]);
+    this.configSubject = new BehaviorSubject<Config | null>(null);
 
     this._currentConfigSubscription = _userService.configObservable().subscribe((config) => {
       this.config = config;
-      this.filterSubject.next(config.filters);
+      this.configSubject.next(config);
     });
 
   }
 
   // Configuration management
-  filterObservable(): Observable<Filter[]> {
-    return this.filterSubject;
+  configObservable(): Observable<Config | null> {
+    return this.configSubject;
   }
 
   updateFilter(filter: Filter) {
@@ -35,6 +35,12 @@ export class FilterService {
       this.config.filters = this.config?.filters.map((f) => {
         return f.id === filter.id ? filter : f;
       });
+      this._userService.updateConfig(this.config);
+    }
+  }
+  updateSortOrder(ascendingSort: boolean) {
+    if (this.config) {
+      this.config.ascendingSort = ascendingSort;
       this._userService.updateConfig(this.config);
     }
   }

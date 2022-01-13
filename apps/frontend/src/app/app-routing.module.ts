@@ -1,12 +1,14 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router'; // CLI imports router
-import { CourseListComponent } from './courses/course-list/course-list.component';
-import { CourseModule } from './courses/courses.module';
-import { ToBeDefinedModule } from './to-be-defined/to-be-defined.module';
-import { NotFoundModule } from './not-found/not-found.module';
-import { ToBeDefinedComponent } from './to-be-defined/to-be-defined.component';
-import { NotFoundComponent } from './not-found/not-found.component';
+import { RouterModule, Routes } from '@angular/router'; // CLI imports router
 import { AuthGuard } from './authent/authent.guard';
+import { NotFoundComponent } from './not-found/not-found.component';
+import { NotFoundModule } from './not-found/not-found.module';
+import { PlanningUserComponent } from './planning-user/planning-user.component';
+import { PlanningUserModule } from './planning-user/planning-user.module';
+import { PlanningComponent } from './planning/planning.component';
+import { PlanningModule } from './planning/planning.module';
+import { ToBeDefinedComponent } from './to-be-defined/to-be-defined.component';
+import { ToBeDefinedModule } from './to-be-defined/to-be-defined.module';
 
 const routes: Routes = [
   {
@@ -16,7 +18,7 @@ const routes: Routes = [
   },
   {
     path: 'planning',
-    component: CourseListComponent,
+    component: PlanningComponent,
     canActivate: [AuthGuard],
     data: {
       label: 'Planning',
@@ -28,7 +30,7 @@ const routes: Routes = [
   },
   {
     path: 'courses',
-    component: ToBeDefinedComponent,
+    component: PlanningUserComponent,
     canActivate: [AuthGuard],
     data: {
       label: 'Cours',
@@ -73,7 +75,7 @@ const routes: Routes = [
 
 // configures NgModule imports and exports
 @NgModule({
-  imports: [RouterModule.forRoot(routes), CourseModule, ToBeDefinedModule, NotFoundModule],
+  imports: [RouterModule.forRoot(routes), PlanningModule, PlanningUserModule, ToBeDefinedModule, NotFoundModule],
   exports: [RouterModule],
 })
 export class AppRoutingModule {}

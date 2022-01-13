@@ -312,10 +312,10 @@ export class UserService {
             console.error('Weird data ...');
             return reject('login error');
           }
-          console.log('-----------');
-          console.log(data);
+          // console.log('-----------');
+          // console.log(data);
           const value = data.data as MyToken;
-          console.log(value);
+          // console.log(value);
           if (value && value.id_token) {
             UserService.tokenSetter(value.id_token);
             this.checkAuthentication();

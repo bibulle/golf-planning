@@ -1,4 +1,4 @@
-import { Course } from '..';
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 export const PLANNING_MOCK: any[] = [
   { date: '2021-12-18T11:00:00.000Z', hour: '9:00', title: 'LECON INDIVIDUELLE 30MIN', prof: 'Abdou', places: 0, users: [] },
@@ -97,14 +97,14 @@ export const PLANNING_MOCK: any[] = [
 ];
 
 export const COURSE_MOCK: any[] = [
-  { date: '2021-11-13T11:00:00.000Z', hour: '15:00', title: 'INITIATION 2H', prof: 'Florent', places: 0, users: [{ isAdmin: false, displayName: 'Bibulle Martin' }] },
-  { date: '2021-11-22T11:00:00.000Z', hour: '19:00', title: 'SWING 4U ARGENT', prof: 'Abdou', places: 0, users: [{ isAdmin: false, displayName: 'Bibulle Martin' }] },
-  { date: '2021-11-26T11:00:00.000Z', hour: '12:00', title: 'SWING 4U BRONZE', prof: 'Alexandre', places: 0, users: [{ isAdmin: false, displayName: 'Bibulle Martin' }] },
-  { date: '2021-11-29T11:00:00.000Z', hour: '19:00', title: 'SWING 4U ARGENT', prof: 'Abdou', places: 0, users: [{ isAdmin: false, displayName: 'Bibulle Martin' }] },
-  { date: '2021-12-03T11:00:00.000Z', hour: '13:00', title: 'SWING 4U BRONZE', prof: 'Alexandre', places: 0, users: [{ isAdmin: false, displayName: 'Bibulle Martin' }] },
-  { date: '2021-12-06T11:00:00.000Z', hour: '18:30', title: 'SWING 4U ARGENT', prof: 'Abdou', places: 0, users: [{ isAdmin: false, displayName: 'Bibulle Martin' }] },
-  { date: '2021-12-10T11:00:00.000Z', hour: '13:00', title: 'SWING 4U ARGENT', prof: 'Alexandre', places: 0, users: [{ isAdmin: false, displayName: 'Bibulle Martin' }] },
-  { date: '2021-12-13T11:00:00.000Z', hour: '19:00', title: 'SWING 4U BRONZE', prof: 'Abdou', places: 0, users: [{ isAdmin: false, displayName: 'Bibulle Martin' }] },
-  { date: '2021-12-18T11:00:00.000Z', hour: '14:00', title: 'SWING 4U BRONZE', prof: 'Charles', places: 0, users: [{ isAdmin: false, displayName: 'Bibulle Martin' }] },
-  { date: '2021-12-22T11:00:00.000Z', hour: '10:00', title: 'SWING 4U COMPACT', prof: 'Florent', places: 0, users: [{ isAdmin: false, displayName: 'Bibulle Martin' }] },
+  { date: '2021-11-13T11:00:00.000Z', hour: '15:00', title: 'INITIATION 2H', prof: 'Florent', places: 0, users: [{ isAdmin: false, displayName: 'Bibulle Martin' , academiergolf_index: 1}, { isAdmin: false, displayName: 'Nathalie M' , academiergolf_index: 2}] },
+  { date: '2021-11-22T11:00:00.000Z', hour: '19:00', title: 'SWING 4U ARGENT', prof: 'Abdou', places: 0, users: [{ isAdmin: false, displayName: 'Bibulle Martin' , academiergolf_index: 1 }] },
+  { date: '2021-11-26T11:00:00.000Z', hour: '12:00', title: 'SWING 4U BRONZE', prof: 'Alexandre', places: 0, users: [{ isAdmin: false, displayName: 'Nathalie M' , academiergolf_index: 2 }] },
+  { date: '2021-11-29T11:00:00.000Z', hour: '19:00', title: 'SWING 4U ARGENT', prof: 'Abdou', places: 0, users: [{ isAdmin: false, displayName: 'Bibulle Martin' , academiergolf_index: 1 }] },
+  { date: '2021-12-03T11:00:00.000Z', hour: '13:00', title: 'SWING 4U BRONZE', prof: 'Alexandre', places: 0, users: [{ isAdmin: false, displayName: 'Bibulle Martin' , academiergolf_index: 1 }] },
+  { date: '2021-12-06T11:00:00.000Z', hour: '18:30', title: 'SWING 4U ARGENT', prof: 'Abdou', places: 0, users: [{ isAdmin: false, displayName: 'Bibulle Martin' , academiergolf_index: 1 }] },
+  { date: '2021-12-10T11:00:00.000Z', hour: '13:00', title: 'SWING 4U ARGENT', prof: 'Alexandre', places: 0, users: [{ isAdmin: false, displayName: 'Bibulle Martin' , academiergolf_index: 1 }] },
+  { date: '2021-12-13T11:00:00.000Z', hour: '19:00', title: 'SWING 4U BRONZE', prof: 'Abdou', places: 0, users: [{ isAdmin: false, displayName: 'Bibulle Martin' , academiergolf_index: 1 }] },
+  { date: '2021-12-18T11:00:00.000Z', hour: '14:00', title: 'SWING 4U BRONZE', prof: 'Charles', places: 0, users: [{ isAdmin: false, displayName: 'Bibulle Martin' , academiergolf_index: 1 }] },
+  { date: '2021-12-22T11:00:00.000Z', hour: '10:00', title: 'SWING 4U COMPACT', prof: 'Florent', places: 0, users: [{ isAdmin: false, displayName: 'Bibulle Martin' , academiergolf_index: 1 }] },
 ];
