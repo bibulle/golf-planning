@@ -1,7 +1,7 @@
 import { GoogleEvent, GoogleInfos } from '@golf-planning/api-interfaces';
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Cron, CronExpression } from '@nestjs/schedule';
+import { Cron } from '@nestjs/schedule';
 import { readFile, writeFile } from 'fs';
 import { calendar_v3, google } from 'googleapis';
 import { CoursesService } from '../courses/courses.service';
@@ -19,7 +19,7 @@ export class CalendarService {
       if (err) return;
       CalendarService.users = JSON.parse(tokens.toString());
 
-      this.handleCronCalendar();
+      setTimeout(this.handleCronCalendar.bind(this), 15 * 1000);
     });
   }
 
@@ -73,7 +73,8 @@ export class CalendarService {
   }
 
   //@Cron(CronExpression.EVERY_MINUTE)
-  @Cron(CronExpression.EVERY_10_MINUTES)
+  //@Cron(CronExpression.EVERY_10_MINUTES)
+  @Cron("15 */10 * * * *")
   handleCronCalendar() {
     CalendarService.logger.debug('handleCronCalendar');
 
