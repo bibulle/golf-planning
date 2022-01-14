@@ -72,8 +72,8 @@ export class CalendarService {
     });
   }
 
-  @Cron(CronExpression.EVERY_MINUTE)
-  //@Cron(CronExpression.EVERY_10_MINUTES)
+  //@Cron(CronExpression.EVERY_MINUTE)
+  @Cron(CronExpression.EVERY_10_MINUTES)
   handleCronCalendar() {
     CalendarService.logger.debug('handleCronCalendar');
 
@@ -157,11 +157,11 @@ export class CalendarService {
         summary: `Cours golf : ${c.title} (${c.prof})`,
         location: 'Golf de Toulouse La Ramée, Av. du Général Eisenhower, 31170 Tournefeuille, France',
         start: {
-          dateTime: startDate.toISOString().substring(0, 11) + startDate.toLocaleTimeString() + '+01:00',
+          dateTime: this.formatDateToGoogleDate(startDate),
           timeZone: 'Europe/Paris',
         },
         end: {
-          dateTime: endDate.toISOString().substring(0, 11) + endDate.toLocaleTimeString() + '+01:00',
+          dateTime: this.formatDateToGoogleDate(endDate),
           timeZone: 'Europe/Paris',
         },
       };
@@ -278,6 +278,8 @@ export class CalendarService {
    * @param event
    */
   async addGoogleEvent(event: GoogleEvent, googleInfos: GoogleInfos) {
+    CalendarService.logger.log(`Adding to google : ${event.summary} ${event.start.dateTime}`);
+
     const calendar = google.calendar({
       version: 'v3',
       headers: {
@@ -292,14 +294,14 @@ export class CalendarService {
       CalendarService.logger.error(`Error adding to google : ${event.summary} ${event.start.dateTime} ${err}`);
     }).then(() => {
       CalendarService.logger.log(`Added to google : ${event.summary} ${event.start.dateTime}`);
-    });;
+    });
   }
   /**
    * Remove a google event from the golf calendar
    * @param event
    */
   async removeGoogleEvent(event: GoogleEvent, googleInfos: GoogleInfos) {
-    // CalendarService.logger.debug('Removed from google' + JSON.stringify(event));
+    CalendarService.logger.debug(`Removed from google : ${event.summary} ${event.start.dateTime}`);
 
     const calendar = google.calendar({
       version: 'v3',
@@ -316,5 +318,13 @@ export class CalendarService {
     }).then(() => {
       CalendarService.logger.log(`Removed from google : ${event.summary} ${event.start.dateTime}`);
     });
+  }
+
+  formatDateToGoogleDate(date: Date): string {
+
+    let res = "";
+    res += `${date.getFullYear()}-${(1+date.getMonth()).toPrecision().padStart(2,'0')}-${date.getDate().toPrecision().padStart(2,'0')}`;
+    res += `T${date.getHours().toPrecision().padStart(2,'0')}:${date.getMinutes().toPrecision().padStart(2,'0')}:${date.getSeconds().toPrecision().padStart(2,'0')}+01:00`;
+    return res;
   }
 }
