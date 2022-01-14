@@ -1,3 +1,5 @@
+import { calendar_v3} from 'googleapis';
+
 /**
  * API content
  */
@@ -41,18 +43,39 @@ export class Course {
 /**
  * Calendar Event (comming from Google)
  */
-export interface CalendarEvent {
-  title: string; 
-  startDate: Date; 
-  endDate: Date
-}
+export type GoogleEvent = calendar_v3.Schema$Event;
+
+// export interface GoogleEvent {
+//   // title: string; 
+//   // startDate: Date; 
+//   // endDate: Date;
+//   summary: string;
+//   location: 'Golf de Toulouse La Ramée, Av. du Général Eisenhower, 31170 Tournefeuille, France';
+//   description: string;
+//   start: {
+//     dateTime: string;
+//     timeZone: string;
+//   };
+//   end: {
+//     dateTime: string;
+//     timeZone: string;
+//   },
+//   recurrence: string[];
+//   attendees: string[];
+//   reminders: {
+//     useDefault: true,
+//     overrides: [],
+//   }
+// }
 
 /**
- * Google tokens
+ * Google infos
  */
-export interface GoogleToken {
+export interface GoogleInfos {
   accessToken: string; 
-  refreshToken: string
+  refreshToken: string;
+
+  golfCalendarId: string;
 }
 
 /**

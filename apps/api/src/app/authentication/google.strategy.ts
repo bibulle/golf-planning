@@ -27,7 +27,7 @@ class RealGoogleStrategy extends PassportStrategy(Strategy, 'google') {
       // this.logger.debug(refreshToken);
       // this.logger.debug(profile.displayName);
 
-      this.calendarService.addUserTokens(profile.displayName, { accessToken: accessToken, refreshToken: refreshToken });
+      this.calendarService.addUserGoogleInfos(profile.displayName, { accessToken: accessToken, refreshToken: refreshToken, golfCalendarId: null });
 
       // if (refreshToken) {
       //   this.logger.warn(`refresh token found for ${profile.displayName}`);
