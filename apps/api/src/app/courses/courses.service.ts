@@ -82,10 +82,10 @@ export class CoursesService {
             lessons.forEach((l) => {
               // add users to course in planning
               if (planningTabs[Course.getKey(l)]) {
-                const nu = new User(u.displayName);
+                const nu = new User(u.displayName, u.academiergolf_index);
                 nu.academiergolf_index = u.academiergolf_index;
                 planningTabs[Course.getKey(l)].users.push(nu);
-                //this.logger.debug(`${l.getKey()} -> ${u.displayName}`);
+                //this.logger.debug(`${Course.getKey(l)} -> ${u.academiergolf_index} ${u.displayName}`);
                 //this.logger.debug(JSON.stringify(planningTabs[l.getKey()], null, 2));
                 //this.logger.debug(`${l.getKey()} ${JSON.stringify(planningTabs[l.getKey()])}`)
               }
@@ -93,7 +93,7 @@ export class CoursesService {
               if (!coursesTabs[Course.getKey(l)]) {
                 coursesTabs[Course.getKey(l)] = l;
               }
-              coursesTabs[Course.getKey(l)].users.push(new User(u.displayName));
+              coursesTabs[Course.getKey(l)].users.push(new User(u.displayName, u.academiergolf_index));
             });
           }
         })

@@ -97,8 +97,9 @@ export class User {
   academiergolf_login?: string;
   academiergolf_password?: string;
 
-  constructor(displayName: string) {
+  constructor(displayName: string, academiergolf_index?: number) {
     this.displayName = displayName;
+    this.academiergolf_index = academiergolf_index;
   }
 }
 
