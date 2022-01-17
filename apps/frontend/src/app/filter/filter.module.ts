@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MatMenuModule } from '@angular/material/menu';
 import { FilterComponent } from './filter.component';
 
 
@@ -9,7 +10,8 @@ import { FilterComponent } from './filter.component';
     FilterComponent
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    MatMenuModule
   ],
   exports: [
     FilterComponent

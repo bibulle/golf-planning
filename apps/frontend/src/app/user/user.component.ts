@@ -11,9 +11,14 @@ export class UserComponent {
   @Input()
   user: User|null = null;
 
+  @Input()
+  linksUser: { path?: string; label: string; icon: string; selected: boolean }[] = [];
+
+
   // constructor() { }
 
   // ngOnInit(): void {
+  //   console.log(this.linksUser);
   // }
 
 }

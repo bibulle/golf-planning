@@ -1,7 +1,13 @@
-<div *ngIf="user" class="flex items-center">
-  <span>{{user.given_name}}</span>
-  <img *ngIf="user.picture" src="{{user.picture}}" alt="user picture"
-  class="rounded-full h-8 w-8 mx-2">
+<div *ngIf="user && linksUser.length === 0" class="flex items-center">
+  <span>{{ user.given_name }}</span>
+  <img *ngIf="user.picture" src="{{ user.picture }}" alt="user picture" class="rounded-full h-8 w-8 mx-2" />
+  <svg *ngIf="!user.picture" class="h-8 w-8 mx-2 fill-primary-light stroke-primary-light">
+    <use xlink:href="assets/img/symbol-defs.svg#user"></use>
+  </svg>
+</div>
+<div *ngIf="user && linksUser.length !== 0" class="flex items-center" [matMenuTriggerFor]="userMenu">
+  <span>{{ user.given_name }}</span>
+  <img *ngIf="user.picture" src="{{ user.picture }}" alt="user picture" class="rounded-full h-8 w-8 mx-2" />
   <svg *ngIf="!user.picture" class="h-8 w-8 mx-2 fill-primary-light stroke-primary-light">
     <use xlink:href="assets/img/symbol-defs.svg#user"></use>
   </svg>
@@ -13,3 +19,29 @@
     </svg>
   </button>
 </div>
+<mat-menu #userMenu="matMenu" class="bg-primary-default shadow-md shadow-primary-dark border border-opacity-10 border-primary-dark">
+  <button
+    *ngFor="let link of linksUser"
+    routerLink="{{ link.path }}"
+    class="flex px-3 py-2 text-primary-light"
+    [class.text-secondary-light]="link.selected"
+    [class.font-bold]="link.selected"
+    [class.text-primary-light]="!link.selected"
+    [class.font-medium]="!link.selected"
+    [class.hover:text-secondary-light]="!link.selected"
+    role="menuitem"
+    tabindex="-1"
+  >
+    <svg
+      *ngIf="link.icon"
+      class="h-6 w-6 mr-2"
+      [class.fill-secondary-light]="link.selected"
+      [class.stroke-secondary-light]="link.selected"
+      [class.fill-primary-light]="!link.selected"
+      [class.stroke-primary-light]="!link.selected"
+    >
+      <use [attr.xlink:href]="'assets/img/symbol-defs.svg#' + link.icon"></use>
+    </svg>
+    <span>{{ link.label }}</span>
+  </button>
+</mat-menu>
