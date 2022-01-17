@@ -35,7 +35,8 @@ async function bootstrap() {
     logger: logger_levels,
   });
 
-  console.log(process.env.LOG_LEVEL);
+  console.log(`LOG_LEVEL : ${process.env.LOG_LEVEL ? process.env.LOG_LEVEL : 'LOG (by default)'}`);
+
   app.useGlobalInterceptors(new LoggingInterceptor());
 
   // add websocket
