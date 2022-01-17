@@ -1,1 +1,26 @@
-logged
+<!doctype html>
+<html>
+<head>
+</head>
+<body>
+Logged
+
+<script>
+  (function() {
+    const referrerSplit = document.referrer.split('/');
+    if ((referrerSplit.length > 2) && (referrerSplit[2].startsWith('localhost'))) {
+      const referrerHost = referrerSplit[0] + '//' + referrerSplit[2];
+      //console.log(referrerHost);
+      const locationHost = document.location.origin;
+      //console.log(locationHost);
+
+      if (referrerHost && (locationHost !== referrerHost)) {
+        const newURL = referrerHost + document.location.pathname + document.location.search;
+        //console.log(newURL);
+        window.location.replace(newURL);
+      }
+    }
+  })();
+</script>
+</body>
+</html>
