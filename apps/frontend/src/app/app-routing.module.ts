@@ -13,7 +13,7 @@ import { ToBeDefinedModule } from './to-be-defined/to-be-defined.module';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: '/planning',
+    redirectTo: '/courses',
     pathMatch: 'full',
   },
   {
@@ -33,7 +33,7 @@ const routes: Routes = [
     component: PlanningUserComponent,
     canActivate: [AuthGuard],
     data: {
-      label: 'Cours',
+      label: 'Mes cours',
       menu: true,
       icon: 'academic-cap',
       authenticate: true,
