@@ -41,6 +41,12 @@
           </svg>
           <span>{{ link.label }}</span>
         </div>
+        <div class="md:hidden" *ngFor="let link of linksUser" [class.hidden]="!link.selected" class="px-3 py-2 rounded-md text-lg flex text-secondary-light fill-secondary-light stroke-secondary-light">
+          <svg *ngIf="link.icon" class="h-6 w-6 mx-2">
+            <use [attr.xlink:href]="getIconAttr(link.icon)"></use>
+          </svg>
+          <span>{{ link.label }}</span>
+        </div>
       </div>
       <div class="hidden md:block">
         <!-- Menu horizontal droite -->

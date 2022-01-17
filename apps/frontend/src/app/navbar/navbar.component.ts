@@ -1,4 +1,3 @@
-import { animate, style, transition, trigger } from '@angular/animations';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { User } from '@golf-planning/api-interfaces';
@@ -38,6 +37,9 @@ export class NavbarComponent implements OnInit, OnDestroy {
       //console.log(data.constructor.name);
       if (data instanceof NavigationEnd) {
         this.links.forEach((link) => {
+          link.selected = '/' + link.path === data.urlAfterRedirects;
+        });
+        this.linksUser.forEach((link) => {
           link.selected = '/' + link.path === data.urlAfterRedirects;
         });
       }
