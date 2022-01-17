@@ -1,4 +1,3 @@
-import { trigger, transition, style, animate } from '@angular/animations';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Config, Filter } from '@golf-planning/api-interfaces';
 import { Subscription } from 'rxjs';
@@ -9,18 +8,17 @@ import { FilterService } from './filter.service';
   templateUrl: './filter.component.html',
   styleUrls: ['./filter.component.scss'],
   animations: [
-    trigger('enterAnimationHorizontal', [
-      transition(':enter', [style({ transform: 'scaleX(0)', opacity: 0 }), animate('500ms', style({ transform: 'scaleX(1)', opacity: 1 }))]),
-      transition(':leave', [style({ transform: 'scaleX(1)', opacity: 1 }), animate('300ms', style({ transform: 'scaleX(0)', opacity: 0 }))]),
-    ]),
-    trigger('enterAnimationVertical', [
-      transition(':enter', [style({ transform: 'scaleY(0)', opacity: 0 }), animate('300ms', style({ transform: 'scaleY(1)', opacity: 1 }))]),
-      transition(':leave', [style({ transform: 'scaleY(1)', opacity: 1 }), animate('100ms', style({ transform: 'scaleY(0)', opacity: 0 }))]),
-    ]),
+    // trigger('enterAnimationHorizontal', [
+    //   transition(':enter', [style({ transform: 'scaleX(0)', opacity: 0 }), animate('500ms', style({ transform: 'scaleX(1)', opacity: 1 }))]),
+    //   transition(':leave', [style({ transform: 'scaleX(1)', opacity: 1 }), animate('300ms', style({ transform: 'scaleX(0)', opacity: 0 }))]),
+    // ]),
+    // trigger('enterAnimationVertical', [
+    //   transition(':enter', [style({ transform: 'scaleY(0)', opacity: 0 }), animate('300ms', style({ transform: 'scaleY(1)', opacity: 1 }))]),
+    //   transition(':leave', [style({ transform: 'scaleY(1)', opacity: 1 }), animate('100ms', style({ transform: 'scaleY(0)', opacity: 0 }))]),
+    // ]),
   ],
 })
 export class FilterComponent implements OnInit, OnDestroy {
-  showFilterMenu = false;
 
   config: Config|null = null;
   private _currentConfigSubscription: Subscription | null = null;

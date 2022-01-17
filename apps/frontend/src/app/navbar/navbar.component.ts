@@ -10,19 +10,17 @@ import { UserService } from '../user/user.service';
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss'],
   animations: [
-    trigger('enterAnimationHorizontal', [
-      transition(':enter', [style({ transform: 'scaleX(0)', opacity: 0 }), animate('500ms', style({ transform: 'scaleX(1)', opacity: 1 }))]),
-      transition(':leave', [style({ transform: 'scaleX(1)', opacity: 1 }), animate('300ms', style({ transform: 'scaleX(0)', opacity: 0 }))]),
-    ]),
-    trigger('enterAnimationVertical', [
-      transition(':enter', [style({ transform: 'scaleY(0)', opacity: 0 }), animate('500ms', style({ transform: 'scaleY(1)', opacity: 1 }))]),
-      transition(':leave', [style({ transform: 'scaleY(1)', opacity: 1 }), animate('300ms', style({ transform: 'scaleY(0)', opacity: 0 }))]),
-    ]),
+    // trigger('enterAnimationHorizontal', [
+    //   transition(':enter', [style({ transform: 'scaleX(0)', opacity: 0 }), animate('500ms', style({ transform: 'scaleX(1)', opacity: 1 }))]),
+    //   transition(':leave', [style({ transform: 'scaleX(1)', opacity: 1 }), animate('300ms', style({ transform: 'scaleX(0)', opacity: 0 }))]),
+    // ]),
+    // trigger('enterAnimationVertical', [
+    //   transition(':enter', [style({ transform: 'scaleY(0)', opacity: 0 }), animate('500ms', style({ transform: 'scaleY(1)', opacity: 1 }))]),
+    //   transition(':leave', [style({ transform: 'scaleY(1)', opacity: 1 }), animate('300ms', style({ transform: 'scaleY(0)', opacity: 0 }))]),
+    // ]),
   ],
 })
 export class NavbarComponent implements OnInit, OnDestroy {
-  showUserMenu = false;
-  showMobileMenu = false;
 
   links: { path?: string; label: string; icon: string; selected: boolean }[] = [];
   linksUser: { path?: string; label: string; icon: string; selected: boolean }[] = [];

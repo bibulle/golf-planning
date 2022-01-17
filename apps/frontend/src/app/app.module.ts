@@ -10,6 +10,7 @@ import { AppComponent } from './app.component';
 import { AuthGuard, AuthGuardAdmin } from './authent/authent.guard';
 import { FilterModule } from './filter/filter.module';
 import { RefreshTokenInterceptor } from './interceptors/refresh-token.interceptor';
+import { MaterialModule } from './material.module';
 import { NavbarModule } from './navbar/navbar.module';
 import { UserService } from './user/user.service';
 
@@ -34,8 +35,9 @@ registerLocaleData(localeFr);
       },
     }),
     NavbarModule,
-    FilterModule
-  ],
+    FilterModule,
+    MaterialModule,
+    ],
   providers: [
     AuthGuard,
     AuthGuardAdmin,

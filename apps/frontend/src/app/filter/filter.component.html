@@ -1,3 +1,4 @@
+<!-- Sort button -->
 <button
   *ngIf="config"
   (click)="sortChange()"
@@ -11,10 +12,11 @@
   <use *ngIf="!config.ascendingSort" xlink:href="assets/img/symbol-defs.svg#sort-descending"></use>
 </svg>
 </button>
+<!-- Filter button -->
 <button
   type="button"
   class="inline-flex items-center justify-center p-2 rounded-md hover:text-secondary-light focus:outline-none"
-  (click)="showFilterMenu = !showFilterMenu"
+  [matMenuTriggerFor]="filterMenu"
   aria-controls="filter-menu"
   aria-expanded="false"
 >
@@ -23,16 +25,15 @@
     <use xlink:href="assets/img/symbol-defs.svg#filter"></use>
   </svg>
 </button>
-<div
-  *ngIf="showFilterMenu && config && config.filters.length > 0"
-  @enterAnimationVertical
+<mat-menu
+  #filterMenu="matMenu"
   class="origin-top-right absolute right-0 mt-2 w-52 rounded-md shadow-lg py-1 bg-primary-default ring-1 ring-primary-light ring-opacity-50 focus:outline-none"
   role="menu"
   aria-orientation="vertical"
   aria-labelledby="user-menu-button"
   tabindex="-1"
 >
-  <div *ngFor="let filter of config && config.filters" class="">
+  <div *ngFor="let filter of config && config.filters" class="" (click) = "$event.stopPropagation()">
     <label *ngIf="!filter.isSeparateur()" class="inline-flex items-center py-2 px-3">
       <input
         type="checkbox"
@@ -49,5 +50,5 @@
     </label>
     <div *ngIf="filter.isSeparateur()" class="bg-neutral-default h-px mx-1"></div>
   </div>
-</div>
+</mat-menu>
 
