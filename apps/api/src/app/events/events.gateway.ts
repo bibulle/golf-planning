@@ -39,7 +39,7 @@ export class EventsGateway {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   handleConnection(client: Socket, ...args: any[]) {
-    this.Logger.log(`New client connected...: ${client.id}`);
+    this.Logger.log(`New client connected... (${this.wsClients.length+1})`);
     
     this.wsClients.push(client);
 
