@@ -39,20 +39,19 @@ export class EventsGateway {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   handleConnection(client: Socket, ...args: any[]) {
-    this.Logger.log(`New client connected... (${this.wsClients.length+1})`);
-    
     this.wsClients.push(client);
 
+    this.Logger.log(`New client connected... (${this.wsClients.length})`);
   }
 
   handleDisconnect(client: Socket) {
-    this.Logger.log(`Client disconnected: ${this.wsClients.length+1}`);
     for (let i = 0; i < this.wsClients.length; i++) {
       if (this.wsClients[i] === client) {
         this.wsClients.splice(i, 1);
         break;
       }
     }
+    this.Logger.log(`Client disconnected: ${this.wsClients.length}`);
   }
 
   emiteEvent(msg: EventType) {
