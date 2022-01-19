@@ -51,7 +51,7 @@ export class EventsGateway {
         break;
       }
     }
-    this.Logger.log(`Client disconnected: ${this.wsClients.length}`);
+    this.Logger.log(`Client disconnected: (${this.wsClients.length})`);
   }
 
   emiteEvent(msg: EventType) {
