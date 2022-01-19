@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { Course, User } from '@golf-planning/api-interfaces';
 
 @Component({
@@ -6,16 +6,27 @@ import { Course, User } from '@golf-planning/api-interfaces';
   templateUrl: './course-item.component.html',
   styleUrls: ['./course-item.component.scss'],
 })
-export class CourseItemComponent {
+export class CourseItemComponent implements OnChanges {
   @Input() course!: Course;
-
-  @Input() firstCourseOfDay = true;
 
   @Input() users: User[] = [];
 
-  isUser(index:number): boolean {
-    return this.course.users.some(u => {
-      return u.academiergolf_index === index
+  isInThePast = true;
+
+  ngOnChanges(): void {
+    // console.log('OnChange');
+
+    const courseDate = this.course.date;
+    const split = this.course.hour.split(':');
+    courseDate.setHours(+split[0]);
+    courseDate.setMinutes(+split[1]);
+    // console.log(`${courseDate} ${this.course.hour} ${new Date()}`);
+    this.isInThePast = courseDate.getTime() < new Date().getTime();
+  }
+
+  isUser(index: number): boolean {
+    return this.course.users.some((u) => {
+      return u.academiergolf_index === index;
     });
   }
 

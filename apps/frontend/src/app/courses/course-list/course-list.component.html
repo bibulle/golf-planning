@@ -1,7 +1,8 @@
 <div class="flex items-stretch flex-wrap justify-items-start justify-center">
   <ng-container *ngFor="let c of filtredCourses; index as i" class="flex">
     <div *ngIf="isFirstCourseOfDay(i)" class="basis-full text-left mx-1 px-3 mt-3 text-2xl border-t-neutral-light text-neutral-dark"
-      [class.border-t-2]="i!==0">
+      [class.border-t-2]="i!==0"
+      [class.opacity-50]="isDayInThePast(c)" >
       {{ c.date | date: 'fullDate' }}
     </div>
     <golf-planning-course-item [course]="c" [users]="users"></golf-planning-course-item>
