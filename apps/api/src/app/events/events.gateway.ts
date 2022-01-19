@@ -46,7 +46,7 @@ export class EventsGateway {
   }
 
   handleDisconnect(client: Socket) {
-    this.Logger.log(`Client disconnected: ${client.id}`);
+    this.Logger.log(`Client disconnected: ${this.wsClients.length+1}`);
     for (let i = 0; i < this.wsClients.length; i++) {
       if (this.wsClients[i] === client) {
         this.wsClients.splice(i, 1);
