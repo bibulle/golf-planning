@@ -19,7 +19,7 @@
     </svg>
   </button>
 </div>
-<mat-menu #userMenu="matMenu" class="bg-primary-default shadow-md shadow-primary-dark border border-opacity-10 border-primary-dark">
+<mat-menu #userMenu="matMenu" class="rounded-md shadow-lg py-1 bg-primary-default ring-1 ring-primary-light ring-opacity-50 focus:outline-none">
   <button
     *ngFor="let link of linksUser"
     routerLink="{{ link.path }}"
