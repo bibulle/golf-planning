@@ -58,6 +58,9 @@ export class CourseListComponent implements OnInit, OnDestroy, OnChanges {
     }
     return this.filtredCourses[index - 1].date.toLocaleDateString() !== this.filtredCourses[index].date.toLocaleDateString();
   }
+  isDayInThePast(c: Course) : boolean {
+    return c.date.toISOString().substring(0,10) < new Date().toISOString().substring(0,10)
+  }
 
   doFilter() {
     console.log(this.courses);

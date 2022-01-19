@@ -2,9 +2,9 @@
   class="m-2 p-2 w-60 relative
          shadow-lg rounded-md 
          overflow-hidden
-         {{ course.places > 1 ? 'bg-primary-light' : 'bg-neutral-light' }}
-         {{ course.places === 0 ? ' opacity-80' : '' }}
-         {{ course.places === 1 ? ' opacity-100' : '' }}"
+         {{ !isInThePast && course.places > 1 ? 'bg-primary-light' : 'bg-neutral-light' }}
+         {{ isInThePast || course.places === 0 ? ' opacity-80' : '' }}
+         {{ !isInThePast && course.places === 1 ? ' opacity-100' : '' }}"
 >
   <div *ngFor="let user of users; index as i">
     <div *ngIf="isUser(i+1)" class="absolute -left-10 z-10 -rotate-45 w-48 h-4 opacity-100"
