@@ -1,10 +1,11 @@
 import { GoogleEvent, GoogleInfos } from '@golf-planning/api-interfaces';
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Cron } from '@nestjs/schedule';
+import { Cron, CronExpression } from '@nestjs/schedule';
 import { readFile, writeFile } from 'fs';
 import { calendar_v3, google } from 'googleapis';
 import { CoursesService } from '../courses/courses.service';
+import { EventsService } from '../events/events.service';
 
 @Injectable()
 export class CalendarService {
@@ -14,12 +15,12 @@ export class CalendarService {
   private static users: { [user_name: string]: GoogleInfos } = {};
   private readonly TOKENS_PATH = 'tokens.json';
 
-  constructor(private readonly _configService: ConfigService, private readonly _courseService: CoursesService) {
+  constructor(private readonly _configService: ConfigService, private readonly _courseService: CoursesService, private eventService: EventsService) {
     readFile(this.TOKENS_PATH, (err, tokens) => {
       if (err) return;
       CalendarService.users = JSON.parse(tokens.toString());
 
-      setTimeout(this.handleCronCalendar.bind(this), 15 * 1000);
+      setTimeout(this.loadAllGooogleCourses.bind(this), 15 * 1000);
     });
   }
 
@@ -72,11 +73,21 @@ export class CalendarService {
     });
   }
 
-  //@Cron(CronExpression.EVERY_MINUTE)
-  //@Cron(CronExpression.EVERY_10_MINUTES)
+  @Cron(CronExpression.EVERY_DAY_AT_5AM)
+  handleDailyCron() {
+      this.loadAllGooogleCourses();
+  }
+  
   @Cron("15 */10 * * * *")
-  handleCronCalendar() {
-    CalendarService.logger.debug('handleCronCalendar');
+  handle10MinutesCron() {
+    // If there is someone connected, update
+    if (this.eventService.geConnectedClientCount() > 0) {
+      this.loadAllGooogleCourses();
+    }
+  }
+
+  loadAllGooogleCourses() {
+    CalendarService.logger.log('loadAllGooogleCourses');
 
     Object.entries(CalendarService.users).forEach(async ([userName, googleInfos]) => {
       // read googles events

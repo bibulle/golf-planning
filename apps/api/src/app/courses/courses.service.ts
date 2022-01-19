@@ -16,8 +16,8 @@ export class CoursesService {
   courses: Course[] = [];
 
   constructor(private userService: UsersService, private acadeliegolfService: AcademiegolfService, private eventService: EventsService, private configService: ConfigService) {
-    this.handleCronPlanning();
-
+    // load course at startup
+    this.loadAllGolfCourses();
   }
 
   getPlanning(): Course[] {
@@ -29,10 +29,23 @@ export class CoursesService {
   });
 }
 
-  //@Cron(CronExpression.EVERY_30_SECONDS)
+@Cron(CronExpression.EVERY_DAY_AT_4AM)
+  handleDailyCron() {
+      this.loadAllGolfCourses();
+  }
+  
+  // @Cron(CronExpression.EVERY_30_SECONDS)
   @Cron(CronExpression.EVERY_10_MINUTES)
-  handleCronPlanning() {
-    this.logger.debug('handleCronPlanning');
+  handle10MinutesCron() {
+    // If there is someone connected, update
+    if (this.eventService.geConnectedClientCount() > 0) {
+      this.loadAllGolfCourses();
+    }
+  }
+
+
+  loadAllGolfCourses() {
+    this.logger.log('loadAllGolfCourses');
 
     // Get academigolf users
     const users: User[] = this.userService.readFromEnv();

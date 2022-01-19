@@ -13,4 +13,8 @@ export class EventsService {
     planningUpdated() {
         this.eventsGateway.emiteEvent(EventType.NEW_PLANNING);
     }
+
+    geConnectedClientCount(): number {
+        return this.eventsGateway.wsClients.length;
+    }
 }
