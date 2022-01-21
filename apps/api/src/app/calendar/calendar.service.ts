@@ -1,4 +1,4 @@
-import { GoogleEvent, GoogleInfos } from '@golf-planning/api-interfaces';
+import { CALENDAR_MOCK, GoogleEvent, GoogleInfos } from '@golf-planning/api-interfaces';
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Cron, CronExpression } from '@nestjs/schedule';
@@ -75,10 +75,11 @@ export class CalendarService {
 
   @Cron(CronExpression.EVERY_DAY_AT_5AM)
   handleDailyCron() {
-      this.loadAllGooogleCourses();
+    this.loadAllGooogleCourses();
   }
-  
-  @Cron("15 */10 * * * *")
+
+  @Cron('15 */10 * * * *')
+  //@Cron(CronExpression.EVERY_30_SECONDS)
   handle10MinutesCron() {
     // If there is someone connected, update
     if (this.eventService.geConnectedClientCount() > 0) {
@@ -189,6 +190,12 @@ export class CalendarService {
     return new Promise<void | GoogleEvent[]>((resolve, reject) => {
       CalendarService.logger.debug(`getGoogleEvents(${userName})`);
 
+      if (this._configService.get(`USE_GOOGLE_MOCK`) && /true/i.test(this._configService.get(`USE_GOOGLE_MOCK`))) {
+        CalendarService.logger.warn('Using google mock !!!');
+        const cals: GoogleEvent[] = CALENDAR_MOCK;
+        return resolve(cals);
+      }
+
       const calendar = google.calendar({
         version: 'v3',
         headers: {
@@ -290,7 +297,12 @@ export class CalendarService {
    * @param event
    */
   async addGoogleEvent(event: GoogleEvent, googleInfos: GoogleInfos) {
-    CalendarService.logger.log(`Adding to google : ${event.summary} ${event.start.dateTime}`);
+    CalendarService.logger.debug(`Adding to google : ${event.summary} ${event.start.dateTime}`);
+
+    if (this._configService.get(`USE_GOOGLE_MOCK`) && /true/i.test(this._configService.get(`USE_GOOGLE_MOCK`))) {
+      CalendarService.logger.warn('Using google mock !!!');
+      return;
+    }
 
     const calendar = google.calendar({
       version: 'v3',
@@ -299,14 +311,17 @@ export class CalendarService {
       },
     });
 
-    await calendar.events.insert({
-      calendarId: googleInfos.golfCalendarId,
-      requestBody: event,
-    }).catch(err => {
-      CalendarService.logger.error(`Error adding to google : ${event.summary} ${event.start.dateTime} ${err}`);
-    }).then(() => {
-      CalendarService.logger.log(`Added to google : ${event.summary} ${event.start.dateTime}`);
-    });
+    await calendar.events
+      .insert({
+        calendarId: googleInfos.golfCalendarId,
+        requestBody: event,
+      })
+      .catch((err) => {
+        CalendarService.logger.error(`Error adding to google : ${event.summary} ${event.start.dateTime} ${err}`);
+      })
+      .then(() => {
+        CalendarService.logger.log(`Added to google : ${event.summary} ${event.start.dateTime}`);
+      });
   }
   /**
    * Remove a google event from the golf calendar
@@ -315,6 +330,11 @@ export class CalendarService {
   async removeGoogleEvent(event: GoogleEvent, googleInfos: GoogleInfos) {
     CalendarService.logger.debug(`Removed from google : ${event.summary} ${event.start.dateTime}`);
 
+    if (this._configService.get(`USE_GOOGLE_MOCK`) && /true/i.test(this._configService.get(`USE_GOOGLE_MOCK`))) {
+      CalendarService.logger.warn('Using google mock !!!');
+      return;
+    }
+
     const calendar = google.calendar({
       version: 'v3',
       headers: {
@@ -322,21 +342,23 @@ export class CalendarService {
       },
     });
 
-    await calendar.events.delete({
-      calendarId: googleInfos.golfCalendarId,
-      eventId: event.id,
-    }).catch(err => {
-      CalendarService.logger.error(`Error removing from google : ${event.summary} ${event.start.dateTime} ${err}`);
-    }).then(() => {
-      CalendarService.logger.log(`Removed from google : ${event.summary} ${event.start.dateTime}`);
-    });
+    await calendar.events
+      .delete({
+        calendarId: googleInfos.golfCalendarId,
+        eventId: event.id,
+      })
+      .catch((err) => {
+        CalendarService.logger.error(`Error removing from google : ${event.summary} ${event.start.dateTime} ${err}`);
+      })
+      .then(() => {
+        CalendarService.logger.log(`Removed from google : ${event.summary} ${event.start.dateTime}`);
+      });
   }
 
   formatDateToGoogleDate(date: Date): string {
-
-    let res = "";
-    res += `${date.getFullYear()}-${(1+date.getMonth()).toPrecision().padStart(2,'0')}-${date.getDate().toPrecision().padStart(2,'0')}`;
-    res += `T${date.getHours().toPrecision().padStart(2,'0')}:${date.getMinutes().toPrecision().padStart(2,'0')}:${date.getSeconds().toPrecision().padStart(2,'0')}+01:00`;
+    let res = '';
+    res += `${date.getFullYear()}-${(1 + date.getMonth()).toPrecision().padStart(2, '0')}-${date.getDate().toPrecision().padStart(2, '0')}`;
+    res += `T${date.getHours().toPrecision().padStart(2, '0')}:${date.getMinutes().toPrecision().padStart(2, '0')}:${date.getSeconds().toPrecision().padStart(2, '0')}+01:00`;
     return res;
   }
 }
