@@ -2,3 +2,14 @@
 @tailwind base;
 @tailwind utilities;
 
+.blue-snackbar {
+  background: var(--color-primary-default);
+}
+
+.success-snackbar {
+  background: var(--color-green-light);
+}
+
+.error-snackbar {
+  background: var(--color-red-light);
+}

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Course } from '@golf-planning/api-interfaces';
+import { Course, User } from '@golf-planning/api-interfaces';
+import { PlanningUserService } from '../planning-user/planning-user.service';
 import { PlanningService } from './planning.service';
 
 @Component({
@@ -9,14 +10,20 @@ import { PlanningService } from './planning.service';
 })
 export class PlanningComponent implements OnInit {
   planning: Course[] = [];
+  users: User[] = [];
 
-  constructor(private _planningService: PlanningService) {}
+  constructor(private _planningService: PlanningService, private _planningUserService: PlanningUserService) {}
 
   ngOnInit(): void {
     this._planningService.getPlanning().subscribe((planning) => {
       //console.log(planning);
       this.planning = planning;
     });
+    this._planningUserService.getUsers().subscribe((users) => {
+      //console.log(users);
+      this.users = users;
+    });
+
   }
 
 }

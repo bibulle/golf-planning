@@ -13,6 +13,10 @@ export class EventsService {
     planningUpdated() {
         this.eventsGateway.emiteEvent(EventType.NEW_PLANNING);
     }
+    userUpdated() {
+        this.eventsGateway.emiteEvent(EventType.NEW_USER);
+    }
+
 
     geConnectedClientCount(): number {
         return this.eventsGateway.wsClients.length;

@@ -7,11 +7,11 @@ const { createGlobPatternsForDependencies } = require('@nrwl/angular/tailwind');
 
 module.exports = {
   mode: 'jit',
-  content: [
-    join(__dirname, '**/*.html'),
-    ...createGlobPatternsForDependencies(__dirname),
-  ],
-  // content: ['./apps/frontend/src/**/*.html'],
+  // content: [
+  //   join(__dirname, '**/*.html'),
+  //   ...createGlobPatternsForDependencies(__dirname),
+  // ],
+  content: ['./apps/frontend/src/**/*.html'],
   darkMode: 'media', // or 'media' or 'class'
   theme: {
     extend: {
@@ -40,6 +40,11 @@ module.exports = {
         default: '#68D391' /* green.400 */,
         dark: '#2F855A' /* green.700 */,
       },
+      red: {
+        light: '#fecaca' /* red.200 */,
+        default: '#f87171' /* red.400 */,
+        dark: '#b91c1c' /* red.700 */,
+      },
       pink: {
         light: '#FED7E2' /* pink.200 */,
         default: '#F687B3' /* pink.400 */,
@@ -65,7 +70,27 @@ module.exports = {
   variants: {
     extend: {},
   },
-  plugins: [require("@tailwindcss/forms")({
-    strategy: 'class',
-  }),],
+  plugins: [
+    require('@tailwindcss/forms')({
+      strategy: 'class',
+    }),
+    function({ addBase, theme }) {
+      function extractColorVars(colorObj, colorGroup = '') {
+        return Object.keys(colorObj).reduce((vars, colorKey) => {
+          const value = colorObj[colorKey];
+
+          const newVars =
+            typeof value === 'string'
+              ? { [`--color${colorGroup}-${colorKey}`]: value }
+              : extractColorVars(value, `-${colorKey}`);
+
+          return { ...vars, ...newVars };
+        }, {});
+      }
+
+      addBase({
+        ':root': extractColorVars(theme('colors')),
+      });
+    },
+  ],
 };

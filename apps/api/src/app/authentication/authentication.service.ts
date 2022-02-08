@@ -33,8 +33,7 @@ export class AuthenticationService {
         thirdPartyUser._json.name,
         thirdPartyUser._json.picture,
         provider,
-        thirdPartyUser._json.sub,
-        this._configService.get('USERS_ADMIN', '').split(' ').indexOf(thirdPartyUser.displayName) >= 0
+        thirdPartyUser._json.sub
       );
 
       const user1 = { ...user };
