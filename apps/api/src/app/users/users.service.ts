@@ -52,7 +52,7 @@ export class UsersService {
 
     return this.getUser(displayName);
   }
-  setGoogletoUser(displayName: string, given_name: string, family_name: string, locale: string, name: string, picture: string, provider: Provider, providerId: string, isAdmin: boolean): User {
+  setGoogletoUser(displayName: string, given_name: string, family_name: string, locale: string, name: string, picture: string, provider: Provider, providerId: string): User {
     this.logger.debug(`setGoogletoUser : '${displayName}'`);
     this.getUser(displayName).displayName = displayName;
     this.getUser(displayName).family_name = family_name;
@@ -62,7 +62,6 @@ export class UsersService {
     this.getUser(displayName).picture = picture;
     this.getUser(displayName).provider = provider;
     this.getUser(displayName).providerId = providerId;
-    this.getUser(displayName).isAdmin = isAdmin;
 
     return this.getUser(displayName);
   }

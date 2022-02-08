@@ -14,6 +14,7 @@ export class CourseListComponent implements OnInit, OnDestroy, OnChanges {
 
   filtredCourses: Course[] = [];
 
+  @Input()
   users: User[] = [];
 
   config: Config | null = null;
@@ -36,20 +37,7 @@ export class CourseListComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   ngOnChanges() {
-    this.calculateUser();
     this.doFilter();
-  }
-
-  calculateUser() {
-    const users: User[] = [];
-    this.courses.forEach((c) => {
-      c.users.forEach((u) => {
-        if (u.academiergolf_index) {
-          users[u.academiergolf_index - 1] = u;
-        }
-      });
-    });
-    this.users = users;
   }
 
   isFirstCourseOfDay(index: number): boolean {

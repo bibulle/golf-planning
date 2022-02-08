@@ -35,46 +35,46 @@ export class AuthGuard implements CanActivate {
   }
 }
 
-@Injectable()
-export class AuthGuardAdmin implements CanActivate {
-  constructor(
-    private _userService: UserService,
-    // TODO: Work on notification service
-    //private readonly _notificationService: NotificationService,
-    //private readonly logger: NGXLogger
-  ) {}
+// @Injectable()
+// export class AuthGuardAdmin implements CanActivate {
+//   constructor(
+//     private _userService: UserService,
+//     // TODO: Work on notification service
+//     //private readonly _notificationService: NotificationService,
+//     //private readonly logger: NGXLogger
+//   ) {}
 
-  canActivate(): Promise<boolean> {
-    // console.log('canActivate AuthGuardAdmin');
+//   canActivate(): Promise<boolean> {
+//     // console.log('canActivate AuthGuardAdmin');
 
-    return new Promise<boolean>(resolve => {
-      if (!this._userService.isAuthenticate()) {
-        // not logged in so try to login
-        this._userService
-          .startLoginGoogle()
-          .then(() => {
-            if (this._userService.isAdminAuthenticate()) {
-              // console.log('canActivate true');
-              resolve(true);
-            } else {
-              //this._notificationService.error('You are not an administrator');
-              resolve(false);
-            }
-          })
-          .catch(reason => {
-            console.warn('Cannot log to Google');
-            console.warn(reason);
-            resolve(false);
-          });
-      } else {
-        if (this._userService.isAdminAuthenticate()) {
-          // console.log('canActivate true');
-          resolve(true);
-        } else {
-          //this._notificationService.error('You are not an administrator');
-          resolve(false);
-        }
-      }
-    });
-  }
-}
+//     return new Promise<boolean>(resolve => {
+//       if (!this._userService.isAuthenticate()) {
+//         // not logged in so try to login
+//         this._userService
+//           .startLoginGoogle()
+//           .then(() => {
+//             if (this._userService.isAdminAuthenticate()) {
+//               // console.log('canActivate true');
+//               resolve(true);
+//             } else {
+//               //this._notificationService.error('You are not an administrator');
+//               resolve(false);
+//             }
+//           })
+//           .catch(reason => {
+//             console.warn('Cannot log to Google');
+//             console.warn(reason);
+//             resolve(false);
+//           });
+//       } else {
+//         if (this._userService.isAdminAuthenticate()) {
+//           // console.log('canActivate true');
+//           resolve(true);
+//         } else {
+//           //this._notificationService.error('You are not an administrator');
+//           resolve(false);
+//         }
+//       }
+//     });
+//   }
+// }

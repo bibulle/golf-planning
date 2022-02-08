@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Course } from '@golf-planning/api-interfaces';
+import { Course, User } from '@golf-planning/api-interfaces';
 import { PlanningUserService } from './planning-user.service';
 
 @Component({
@@ -9,6 +9,7 @@ import { PlanningUserService } from './planning-user.service';
 })
 export class PlanningUserComponent implements OnInit {
   planning: Course[] = [];
+  users: User[] = [];
 
   constructor(private _planningService: PlanningUserService) {}
 
@@ -16,6 +17,10 @@ export class PlanningUserComponent implements OnInit {
     this._planningService.getPlanning().subscribe((planning) => {
       //console.log(planning);
       this.planning = planning;
+    });
+    this._planningService.getUsers().subscribe((users) => {
+      //console.log(users);
+      this.users = users;
     });
   }
 }

@@ -1,5 +1,8 @@
 import { Component, Input, OnChanges } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Course, User } from '@golf-planning/api-interfaces';
+import { PlanningUserService } from '../../planning-user/planning-user.service';
+import { RegisterCourseDialogComponent } from '../register-course-dialog/register-course-dialog.component';
 
 @Component({
   selector: 'golf-planning-course-item',
@@ -13,15 +16,11 @@ export class CourseItemComponent implements OnChanges {
 
   isInThePast = true;
 
+  constructor(private _dialog: MatDialog, private _planningUserService: PlanningUserService) {}
+
   ngOnChanges(): void {
     // console.log('OnChange');
-
-    const courseDate = this.course.date;
-    const split = this.course.hour.split(':');
-    courseDate.setHours(+split[0]);
-    courseDate.setMinutes(+split[1]);
-    // console.log(`${courseDate} ${this.course.hour} ${new Date()}`);
-    this.isInThePast = courseDate.getTime() < new Date().getTime();
+    this.isInThePast = Course.getFullDate(this.course).getTime() < new Date().getTime();
   }
 
   isUser(index: number): boolean {
@@ -30,4 +29,23 @@ export class CourseItemComponent implements OnChanges {
     });
   }
 
+  openDialog() {
+    const dialogRef = this._dialog.open(RegisterCourseDialogComponent, { data: { course: this.course, users: this.users } });
+
+    dialogRef.afterClosed().subscribe((selectedusers: number[]) => {
+ 
+      if (!selectedusers || selectedusers.length === 0) {
+        console.log('Nothing to do');
+        return;
+      }
+
+      selectedusers.map(id => {
+        return this.users.find(u => u.academiergolf_index === id);
+      }).forEach( u => {
+        if (u) {
+          this._planningUserService.registerUser(this.course, u)
+        }
+      });
+    });
+  }
 }

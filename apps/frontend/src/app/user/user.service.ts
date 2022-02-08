@@ -164,9 +164,9 @@ export class UserService {
     return !!(this.user && this.user.providerId);
   }
 
-  isAdminAuthenticate() {
-    return this.isAuthenticate() && this.user.isAdmin === true;
-  }
+  // isAdminAuthenticate() {
+  //   return this.isAuthenticate() && this.user.isAdmin === true;
+  // }
 
   /**
    * Logout (just remove the JWT token)

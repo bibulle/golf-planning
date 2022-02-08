@@ -79,4 +79,18 @@ export class EventsService {
       //.pipe(tap((e) => console.log(`${e} (${e === EventType.NEW_COURSE})`)))
       .pipe(filter((e: EventType) => e === EventType.NEW_PLANNING));
   }
+  public getEventNewCourse() {
+    this.connect();
+    return this.event$
+      .asObservable()
+      //.pipe(tap((e) => console.log(`${e} (${e === EventType.NEW_COURSE})`)))
+      .pipe(filter((e: EventType) => e === EventType.NEW_COURSE));
+  }
+  public getEventNewUsers() {
+    this.connect();
+    return this.event$
+      .asObservable()
+      //.pipe(tap((e) => console.log(`${e} (${e === EventType.NEW_COURSE})`)))
+      .pipe(filter((e: EventType) => e === EventType.NEW_USER));
+  }
 }

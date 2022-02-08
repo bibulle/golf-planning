@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router'; // CLI imports router
+import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './authent/authent.guard';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { NotFoundModule } from './not-found/not-found.module';
