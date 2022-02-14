@@ -1,11 +1,31 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Event } from '@golf-planning/api-interfaces';
+import { EventsService } from '../services/events.service';
+
+interface SnackMessage {
+  message: string;
+  action: string;
+  className: string;
+  duration: number;
+}
 
 @Injectable({
   providedIn: 'root',
 })
 export class NotificationService {
-  constructor(private readonly snackBar: MatSnackBar) {}
+  messages: SnackMessage[] = [];
+  timeout: NodeJS.Timeout | undefined;
+
+  constructor(private readonly snackBar: MatSnackBar, private _eventService: EventsService) {
+
+    this._eventService.getEventMessage().subscribe((e : Event) => {
+      if (e.message) {
+        this.showMessage(e.message, '', 'blue-snackbar')
+      }
+    });
+
+  }
 
   /**
    * Presents a toast displaying the message with a green background
@@ -14,7 +34,7 @@ export class NotificationService {
    * this.notificationService.success("confirm oked");
    */
   success(message: string) {
-    this.openSnackBar(message, '', 'success-snackbar');
+    this.showMessage(message, '', 'success-snackbar');
   }
 
   /**
@@ -24,7 +44,28 @@ export class NotificationService {
    * this.notificationService.error("confirm canceled");
    */
   error(message: string) {
-    this.openSnackBar(message, '', 'error-snackbar');
+    this.showMessage(message, '', 'error-snackbar');
+  }
+
+  private showMessage(message: string, action: string, className = '', duration = 1000) {
+    this.messages.push({ message: message, action: action, className: className, duration: duration });
+    this.showMessages();
+  }
+
+  private showMessages() {
+    if (this.messages.length === 0 || this.timeout) {
+      return;
+    }
+
+    const snack = this.messages.shift();
+    if (snack) {
+      this.openSnackBar(snack.message, snack.action, snack.className, snack.duration);
+      
+      this.timeout = setTimeout(() => {
+          this.timeout = undefined;
+          this.showMessages();
+        }, snack.duration+500);
+    }
   }
 
   /**
@@ -35,6 +76,8 @@ export class NotificationService {
    * @param duration Optional number of SECONDS to display the notification for
    */
   private openSnackBar(message: string, action: string, className = '', duration = 1000) {
+    console.log(message);
+
     this.snackBar.open(message, action, {
       duration: duration,
       panelClass: [className],

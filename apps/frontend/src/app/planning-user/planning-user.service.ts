@@ -67,8 +67,8 @@ export class PlanningUserService {
         })
       )
       .subscribe(() => {
-        this._notificationService.success('Enregistrement reussi');
-        //console.log('OK !!');
+        this._notificationService.success(`Enregistrement reussi (${user.displayName})`);
+        //console.log(`Enregistrement reussi (${user.displayName})`);
       });
   }
 

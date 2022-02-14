@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Injectable } from '@angular/core';
-import { EventType } from '@golf-planning/api-interfaces';
+import { EventType, Event } from '@golf-planning/api-interfaces';
 import {
   BehaviorSubject,
   delayWhen,
@@ -76,21 +76,28 @@ export class EventsService {
     this.connect();
     return this.event$
       .asObservable()
-      //.pipe(tap((e) => console.log(`${e} (${e === EventType.NEW_COURSE})`)))
-      .pipe(filter((e: EventType) => e === EventType.NEW_PLANNING));
+      //.pipe(tap((e) => console.log(`${JSON.stringify(e, null, 2)}`)))
+      .pipe(filter((e: Event) => e.type === EventType.NEW_PLANNING));
   }
   public getEventNewCourse() {
     this.connect();
     return this.event$
       .asObservable()
       //.pipe(tap((e) => console.log(`${e} (${e === EventType.NEW_COURSE})`)))
-      .pipe(filter((e: EventType) => e === EventType.NEW_COURSE));
+      .pipe(filter((e: Event) => e.type === EventType.NEW_COURSE));
   }
   public getEventNewUsers() {
     this.connect();
     return this.event$
       .asObservable()
       //.pipe(tap((e) => console.log(`${e} (${e === EventType.NEW_COURSE})`)))
-      .pipe(filter((e: EventType) => e === EventType.NEW_USER));
+      .pipe(filter((e: Event) => e.type === EventType.NEW_USER));
+  }
+  public getEventMessage() {
+    this.connect();
+    return this.event$
+      .asObservable()
+      //.pipe(tap((e) => console.log(`${e} (${e === EventType.NEW_COURSE})`)))
+      .pipe(filter((e: Event) => e.type === EventType.MESSAGE));
   }
 }

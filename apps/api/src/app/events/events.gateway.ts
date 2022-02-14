@@ -54,9 +54,13 @@ export class EventsGateway {
     this.Logger.log(`Client disconnected: (${this.wsClients.length})`);
   }
 
-  emiteEvent(msg: EventType) {
+  emiteEvent(type: EventType, message = '') {
     for (const c of this.wsClients) {
-      c.send(JSON.stringify(msg));
+      if (type === EventType.MESSAGE) {
+        c.send(JSON.stringify({ type: type, message: message }));
+      } else {
+        c.send(JSON.stringify({ type: type }));
+      }
     }
    }
 }

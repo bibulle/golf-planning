@@ -124,15 +124,18 @@ export class User {
 /**
  * Events betwen API and frontend
  */
+
 export enum EventType {
   NEW_COURSE = 'NEW_COURSE',
   NEW_PLANNING = 'NEW_PLANNING',
   NEW_USER = 'NEW_USER',
-  UNKNOWN = 'UNKNOWN',
+  MESSAGE = "MESSAGE",
+  UNKNOWN = 'UNKNOWN'
 }
 
 export class Event {
-  private type: EventType | undefined = undefined;
+  type: EventType | undefined = undefined;
+  message: string | undefined = undefined;
 
   isNewCourse(): boolean {
     return this.type == EventType.NEW_COURSE;

@@ -15,7 +15,7 @@ export class CalendarService {
   private static users: { [user_name: string]: GoogleInfos } = {};
   private readonly TOKENS_PATH = 'tokens.json';
 
-  constructor(private readonly _configService: ConfigService, private readonly _courseService: CoursesService, private eventService: EventsService) {
+  constructor(private readonly _configService: ConfigService, private readonly _courseService: CoursesService, private _eventService: EventsService) {
     readFile(this.TOKENS_PATH, (err, tokens) => {
       if (err) return;
       CalendarService.users = JSON.parse(tokens.toString());
@@ -82,7 +82,7 @@ export class CalendarService {
   //@Cron(CronExpression.EVERY_30_SECONDS)
   handle10MinutesCron() {
     // If there is someone connected, update
-    if (this.eventService.geConnectedClientCount() > 0) {
+    if (this._eventService.geConnectedClientCount() > 0) {
       this.loadAllGooogleCourses();
     }
   }
@@ -129,7 +129,7 @@ export class CalendarService {
               });
             })
             .forEach((e) => {
-              this.addGoogleEvent(e, googleInfos);
+              this.addGoogleEvent(userName, e, googleInfos);
             });
 
           // remove google calendar that are not in golf
@@ -143,7 +143,7 @@ export class CalendarService {
               });
             })
             .forEach((e) => {
-              this.removeGoogleEvent(e, googleInfos);
+              this.removeGoogleEvent(userName, e, googleInfos);
             });
         });
     });
@@ -296,8 +296,8 @@ export class CalendarService {
    * Add a google event to the golf calendar
    * @param event
    */
-  async addGoogleEvent(event: GoogleEvent, googleInfos: GoogleInfos) {
-    CalendarService.logger.debug(`Adding to google : ${event.summary} ${event.start.dateTime}`);
+  async addGoogleEvent(userName: string, event: GoogleEvent, googleInfos: GoogleInfos) {
+    CalendarService.logger.debug(`Adding to google : ${new Date(event.start.dateTime).toLocaleDateString()} - ${userName}`);
 
     if (this._configService.get(`USE_GOOGLE_MOCK`) && /true/i.test(this._configService.get(`USE_GOOGLE_MOCK`))) {
       CalendarService.logger.warn('Using google mock !!!');
@@ -321,13 +321,14 @@ export class CalendarService {
       })
       .then(() => {
         CalendarService.logger.log(`Added to google : ${event.summary} ${event.start.dateTime}`);
+        this._eventService.sendMessage(`Added to ${userName}'s google : ${event.summary} (${new Date(event.start.dateTime).toLocaleDateString()})`);
       });
   }
   /**
    * Remove a google event from the golf calendar
    * @param event
    */
-  async removeGoogleEvent(event: GoogleEvent, googleInfos: GoogleInfos) {
+  async removeGoogleEvent(userName: string, event: GoogleEvent, googleInfos: GoogleInfos) {
     CalendarService.logger.debug(`Removed from google : ${event.summary} ${event.start.dateTime}`);
 
     if (this._configService.get(`USE_GOOGLE_MOCK`) && /true/i.test(this._configService.get(`USE_GOOGLE_MOCK`))) {
@@ -352,6 +353,7 @@ export class CalendarService {
       })
       .then(() => {
         CalendarService.logger.log(`Removed from google : ${event.summary} ${event.start.dateTime}`);
+        this._eventService.sendMessage(`Removed from ${userName}'s google : ${event.summary} (${new Date(event.start.dateTime).toLocaleDateString()})`);
       });
   }
 

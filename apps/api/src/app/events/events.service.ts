@@ -16,6 +16,9 @@ export class EventsService {
     userUpdated() {
         this.eventsGateway.emiteEvent(EventType.NEW_USER);
     }
+    sendMessage(msg: string) {
+        this.eventsGateway.emiteEvent(EventType.MESSAGE, msg);
+    }
 
 
     geConnectedClientCount(): number {
