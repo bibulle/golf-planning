@@ -158,6 +158,8 @@ export class CalendarService {
     return this._courseService.getCourse(userName).map((c) => {
       const times = c.hour.split(':').map((s) => +s);
 
+      CalendarService.logger.debug(c.date);
+      CalendarService.logger.debug(c.date.getTimezoneOffset());
       const startDate = new Date(c.date);
       startDate.setHours(times[0]);
       startDate.setMinutes(times[1]);
