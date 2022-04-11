@@ -78,7 +78,7 @@ export class CalendarService {
     this.loadAllGooogleCourses();
   }
 
-  @Cron('15 */10 * * * *')
+  @Cron('15 */3 * * * *')
   //@Cron(CronExpression.EVERY_30_SECONDS)
   handle10MinutesCron() {
     // If there is someone connected, update
@@ -96,7 +96,7 @@ export class CalendarService {
         .catch((err) => {
           CalendarService.logger.error(err);
         })
-        .then((calendar) => {
+        .then(async (calendar) => {
           CalendarService.logger.debug(`${calendar ? calendar.length : 0} events found in google for ${userName}`);
 
           // limit to right title : "Cours : .... (...)"
@@ -113,38 +113,66 @@ export class CalendarService {
             return;
           }
 
+          // CalendarService.logger.warn(`golfCalendar   : ${golfCalendar.length} `);
+          // CalendarService.logger.warn(`googleCalendar : ${googleCalendar.length} `);
+
           // Add to google golf course that are not already in google
-          golfCalendar
-            .filter((golfEvent) => {
-              return !googleCalendar.some((googleEvent) => {
-                // if (JSON.stringify(golfEvent).substring(0,50) === JSON.stringify(googleEvent).substring(0,50)) {
-                //   CalendarService.logger.debug(JSON.stringify(golfEvent));
-                //   CalendarService.logger.debug(JSON.stringify(googleEvent));
-                //   CalendarService.logger.debug(JSON.stringify(golfEvent).substring(0,50));
-                // }
-                const googleEventWithoutId = { ...googleEvent };
-                delete googleEventWithoutId.id;
-
-                return JSON.stringify(golfEvent) === JSON.stringify(googleEventWithoutId);
-              });
-            })
-            .forEach((e) => {
-              this.addGoogleEvent(userName, e, googleInfos);
-            });
-
-          // remove google calendar that are not in golf
-          googleCalendar
-            .filter((googleEvent) => {
+          const l1 = golfCalendar.filter((golfEvent) => {
+            return !googleCalendar.some((googleEvent) => {
               const googleEventWithoutId = { ...googleEvent };
               delete googleEventWithoutId.id;
+              // if (JSON.stringify(golfEvent).match(/2022-04-18/) && JSON.stringify(googleEventWithoutId).match(/2022-04-18/)) {
+              //   CalendarService.logger.debug(`Added   : ${JSON.stringify(golfEvent)}`);
+              //   CalendarService.logger.debug(`        : ${JSON.stringify(googleEventWithoutId)}`);
+              // }
 
-              return !golfCalendar.some((golfEvent) => {
-                return JSON.stringify(golfEvent) === JSON.stringify(googleEventWithoutId);
-              });
-            })
-            .forEach((e) => {
-              this.removeGoogleEvent(userName, e, googleInfos);
+              return JSON.stringify(golfEvent) === JSON.stringify(googleEventWithoutId);
             });
+          });
+          for (const e of l1) {
+            this.addGoogleEvent(userName, e, googleInfos);
+            await this.delay(2000);
+          }
+
+          // Found duplicate in google calendar
+          const l2 = googleCalendar.filter((googleEvent) => {
+            const googleEventWithoutId = { ...googleEvent };
+            delete googleEventWithoutId.id;
+            return googleCalendar.some((googleEvent2) => {
+              const googleEventWithoutId2 = { ...googleEvent2 };
+              delete googleEventWithoutId2.id;
+
+              // if (JSON.stringify(googleEventWithoutId2) === JSON.stringify(googleEventWithoutId)) {
+              //   CalendarService.logger.debug(`Duplicate : ${googleEvent.summary} ${googleEvent.start.dateTime} ${googleEvent.id}`);
+              //   CalendarService.logger.debug(`          : ${googleEvent2.summary} ${googleEvent2.start.dateTime} ${googleEvent2.id}`);
+              //   CalendarService.logger.debug(`          : ${JSON.stringify(googleEventWithoutId2) === JSON.stringify(googleEventWithoutId)} ${googleEvent.id > googleEvent2.id}`);
+              // }
+
+              return (JSON.stringify(googleEventWithoutId2) === JSON.stringify(googleEventWithoutId)) && (googleEvent.id > googleEvent2.id);
+            });
+          });
+          for (const e of l2) {
+            CalendarService.logger.debug(`Duplicate : ${e.summary} ${e.start.dateTime} ${e.id}`);
+            this.removeGoogleEvent(userName, e, googleInfos);
+            await this.delay(2000);
+          }
+
+          // remove google calendar that are not in golf
+          const l3 = googleCalendar.filter((googleEvent) => {
+            const googleEventWithoutId = { ...googleEvent };
+            delete googleEventWithoutId.id;
+            return !golfCalendar.some((golfEvent) => {
+                // if (JSON.stringify(golfEvent).match(/2022-04-18/) && JSON.stringify(googleEventWithoutId).match(/2022-04-18/)) {
+                //   CalendarService.logger.debug(`Removed : ${JSON.stringify(golfEvent)}`);
+                //   CalendarService.logger.debug(`        : ${JSON.stringify(googleEventWithoutId)}`);
+                // }
+              return JSON.stringify(golfEvent) === JSON.stringify(googleEventWithoutId);
+            });
+          });
+          for (const e of l3) {
+            this.removeGoogleEvent(userName, e, googleInfos);
+            await this.delay(2000);
+          }
         });
     });
   }
@@ -158,8 +186,7 @@ export class CalendarService {
     return this._courseService.getCourse(userName).map((c) => {
       const times = c.hour.split(':').map((s) => +s);
 
-      CalendarService.logger.debug(c.date);
-      CalendarService.logger.debug(c.date.getTimezoneOffset());
+      // CalendarService.logger.debug(c.date.toTimeString().replace(/^[0-9:]* /, "").replace(/ .*$/,""));
       const startDate = new Date(c.date);
       startDate.setHours(times[0]);
       startDate.setMinutes(times[1]);
@@ -168,16 +195,24 @@ export class CalendarService {
       endDate.setHours(times[0] + 1);
       endDate.setMinutes(times[1]);
 
+      const timezone = c.date
+        .toTimeString()
+        .replace(/^[0-9:]* /, '')
+        .replace(/ .*$/, '')
+        .replace(/^(.*)([0-9][0-9])$/, '$1:$2');
+
+      //CalendarService.logger.debug(`${timezone} ${c.date.toISOString()}`)
+
       return {
         summary: `Cours golf : ${c.title} (${c.prof})`,
         location: 'Golf de Toulouse La Ramée, Av. du Général Eisenhower, 31170 Tournefeuille, France',
         start: {
-          dateTime: this.formatDateToGoogleDate(startDate),
-          timeZone: 'Europe/Paris',
+          dateTime: this.formatDateToGoogleDate(startDate, timezone),
+          timeZone: timezone,
         },
         end: {
-          dateTime: this.formatDateToGoogleDate(endDate),
-          timeZone: 'Europe/Paris',
+          dateTime: this.formatDateToGoogleDate(endDate, timezone),
+          timeZone: timezone,
         },
       };
     });
@@ -271,7 +306,7 @@ export class CalendarService {
                   events.forEach((event) => {
                     //const start = event.start.dateTime || event.start.date;
                     //const end = event.end.dateTime || event.end.date;
-
+                    //CalendarService.logger.debug(event);
                     // clean the event
                     Object.keys(event)
                       .filter((k) => {
@@ -299,7 +334,7 @@ export class CalendarService {
    * @param event
    */
   async addGoogleEvent(userName: string, event: GoogleEvent, googleInfos: GoogleInfos) {
-    CalendarService.logger.debug(`Adding to google : ${new Date(event.start.dateTime).toLocaleDateString()} - ${userName}`);
+    CalendarService.logger.debug(`Adding to google : ${new Date(event.start.dateTime).toLocaleString()} - ${userName}`);
 
     if (this._configService.get(`USE_GOOGLE_MOCK`) && /true/i.test(this._configService.get(`USE_GOOGLE_MOCK`))) {
       CalendarService.logger.warn('Using google mock !!!');
@@ -359,10 +394,14 @@ export class CalendarService {
       });
   }
 
-  formatDateToGoogleDate(date: Date): string {
+  formatDateToGoogleDate(date: Date, timezone: string): string {
+    const tz = timezone.replace(/^.*([+-][0-9][0-9])[:]*([0-9][0-9])$/, '$1:$2');
+
     let res = '';
     res += `${date.getFullYear()}-${(1 + date.getMonth()).toPrecision().padStart(2, '0')}-${date.getDate().toPrecision().padStart(2, '0')}`;
-    res += `T${date.getHours().toPrecision().padStart(2, '0')}:${date.getMinutes().toPrecision().padStart(2, '0')}:${date.getSeconds().toPrecision().padStart(2, '0')}+01:00`;
+    res += `T${date.getHours().toPrecision().padStart(2, '0')}:${date.getMinutes().toPrecision().padStart(2, '0')}:${date.getSeconds().toPrecision().padStart(2, '0')}${tz}`;
     return res;
   }
+
+  private delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 }
