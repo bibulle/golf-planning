@@ -23,6 +23,9 @@ RUN npm run ng build api -- --prod
 # -------------
 FROM node:16
 
+# switch to europe timezone
+RUN ln -fs /usr/share/zoneinfo/Europe/Paris /etc/localtime
+
 WORKDIR /usr/src
 
 COPY package*.json ./
