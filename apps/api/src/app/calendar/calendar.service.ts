@@ -1,21 +1,38 @@
 import { CALENDAR_MOCK, GoogleEvent, GoogleInfos } from '@golf-planning/api-interfaces';
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Cron, CronExpression } from '@nestjs/schedule';
+import { CronExpression, SchedulerRegistry } from '@nestjs/schedule';
 import { readFile, writeFile } from 'fs';
-import { calendar_v3, google } from 'googleapis';
+import { google } from 'googleapis';
 import { CoursesService } from '../courses/courses.service';
 import { EventsService } from '../events/events.service';
+import { CronJob } from 'cron';
 
 @Injectable()
 export class CalendarService {
   private static readonly logger = new Logger(CalendarService.name);
 
-  toto: calendar_v3.Schema$Event;
+  private static readonly CRON_GOOGLE_FORCE_DEFAULT = CronExpression.EVERY_DAY_AT_5AM;
+  private static readonly CRON_GOOGLE_RECURRING_DEFAULT = '15 */10 * * * *';
+  private static cronGoogleForce = CalendarService.CRON_GOOGLE_FORCE_DEFAULT;
+  private static cronGoogleRecurrent = CalendarService.CRON_GOOGLE_RECURRING_DEFAULT;
+
   private static users: { [user_name: string]: GoogleInfos } = {};
   private readonly TOKENS_PATH = 'tokens.json';
 
-  constructor(private readonly _configService: ConfigService, private readonly _courseService: CoursesService, private _eventService: EventsService) {
+  constructor(private readonly _configService: ConfigService, private readonly _courseService: CoursesService, private _eventService: EventsService, private _schedulerRegistry: SchedulerRegistry) {
+    CalendarService.cronGoogleForce = this._configService.get('CRON_GOOGLE_FORCE', CalendarService.CRON_GOOGLE_FORCE_DEFAULT);
+    CalendarService.cronGoogleRecurrent = this._configService.get('CRON_GOOGLE_RECURRING', CalendarService.CRON_GOOGLE_RECURRING_DEFAULT);
+    CalendarService.logger.debug(`cronGoogleRecurrent : ${CalendarService.cronGoogleRecurrent}`);
+    CalendarService.logger.debug(`cronGoogleForce     : ${CalendarService.cronGoogleForce}`);
+
+    const job1 = new CronJob(CalendarService.cronGoogleRecurrent, () => {this.handle10MinutesCron();});
+    this._schedulerRegistry.addCronJob('cronGoogleRecurrent', job1);
+    job1.start();
+    const job2 = new CronJob(CalendarService.cronGoogleForce, () => {this.handleDailyCron();});
+    this._schedulerRegistry.addCronJob('cronGoogleForce', job2);
+    job2.start();
+
     readFile(this.TOKENS_PATH, (err, tokens) => {
       if (err) return;
       CalendarService.users = JSON.parse(tokens.toString());
@@ -73,13 +90,12 @@ export class CalendarService {
     });
   }
 
-  @Cron(CronExpression.EVERY_DAY_AT_5AM)
+  // @Cron(CalendarService.cronGoogleForce)
   handleDailyCron() {
     this.loadAllGooogleCourses();
   }
 
-  @Cron('15 */3 * * * *')
-  //@Cron(CronExpression.EVERY_30_SECONDS)
+  // @Cron(CalendarService.cronGoogleRecurrent)
   handle10MinutesCron() {
     // If there is someone connected, update
     if (this._eventService.geConnectedClientCount() > 0) {

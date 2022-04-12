@@ -70,6 +70,7 @@
     "@nrwl/node": "13.4.6",
     "@nrwl/tao": "13.4.6",
     "@nrwl/workspace": "13.4.6",
+    "@types/cron": "^1.7.3",
     "@types/express-session": "^1.17.4",
     "@types/got": "^9.6.12",
     "@types/jest": "27.0.2",

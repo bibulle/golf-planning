@@ -1,14 +1,21 @@
 import { Course, COURSE_MOCK, PLANNING_MOCK, User, USERS_MOCK } from '@golf-planning/api-interfaces';
 import { Injectable, Logger } from '@nestjs/common';
-import { Cron, CronExpression } from '@nestjs/schedule';
+import { CronExpression, SchedulerRegistry } from '@nestjs/schedule';
 import { EventsService } from '../events/events.service';
 import { UsersService } from '../users/users.service';
 import { AcademiegolfService } from './academiegolf.service';
 import { ConfigService } from '@nestjs/config';
+import { CronJob } from 'cron';
+
 
 @Injectable()
 export class CoursesService {
   private readonly logger = new Logger(CoursesService.name);
+
+  private static readonly CRON_GOLF_FORCE_DEFAULT = CronExpression.EVERY_DAY_AT_4AM;
+  private static readonly CRON_GOLF_RECURRING_DEFAULT = CronExpression.EVERY_10_MINUTES;
+  private static cronGolfForce = CoursesService.CRON_GOLF_FORCE_DEFAULT;
+  private static cronGolfRecurrent = CoursesService.CRON_GOLF_RECURRING_DEFAULT;
 
   NB_DAYS_PLANNING = 20;
 
@@ -16,7 +23,19 @@ export class CoursesService {
   courses: Course[] = [];
   users: User[] = [];
 
-  constructor(private userService: UsersService, private acadeliegolfService: AcademiegolfService, private eventService: EventsService, private configService: ConfigService) {
+  constructor(private userService: UsersService, private acadeliegolfService: AcademiegolfService, private eventService: EventsService, private _configService: ConfigService, private _schedulerRegistry: SchedulerRegistry) {
+    CoursesService.cronGolfForce = this._configService.get('CRON_GOLF_FORCE', CoursesService.CRON_GOLF_FORCE_DEFAULT);
+    CoursesService.cronGolfRecurrent = this._configService.get('CRON_GOLF_RECURRING', CoursesService.CRON_GOLF_RECURRING_DEFAULT);
+    this.logger.debug(`cronGolfRecurrent : ${CoursesService.cronGolfRecurrent}`);
+    this.logger.debug(`cronGolfForce     : ${CoursesService.cronGolfForce}`);
+
+    const job1 = new CronJob(CoursesService.cronGolfRecurrent, () => {this.handle10MinutesCron();});
+    this._schedulerRegistry.addCronJob('cronGolfRecurrent', job1);
+    job1.start();
+    const job2 = new CronJob(CoursesService.cronGolfForce, () => {this.handleDailyCron();});
+    this._schedulerRegistry.addCronJob('cronGolfForce', job2);
+    job2.start();
+
     this.users = this.userService.readFromEnv();
     this.eventService.userUpdated();
 
@@ -36,13 +55,12 @@ export class CoursesService {
     return this.users;
   }
 
-  @Cron(CronExpression.EVERY_DAY_AT_4AM)
+  // @Cron(CoursesService.cronGolfForce)
   handleDailyCron() {
     this.loadAllGolfCourses();
   }
 
-  // @Cron(CronExpression.EVERY_30_SECONDS)
-  @Cron(CronExpression.EVERY_10_MINUTES)
+  // @Cron(CoursesService.cronGolfRecurrent)
   handle10MinutesCron() {
     // If there is someone connected, update
     if (this.eventService.geConnectedClientCount() > 0) {
@@ -56,7 +74,7 @@ export class CoursesService {
     // Get academigolf users
     this.logger.debug(`Found ${this.users.length} users`);
 
-    if (this.configService.get(`USE_COURSE_MOCK`) && /true/i.test(this.configService.get(`USE_COURSE_MOCK`))) {
+    if (this._configService.get(`USE_COURSE_MOCK`) && /true/i.test(this._configService.get(`USE_COURSE_MOCK`))) {
       this.logger.warn('Using course mock !!!');
 
       setTimeout(() => {
@@ -238,7 +256,7 @@ export class CoursesService {
       return Promise.reject(`Cours non trouvé (${courseId})`);
     }
 
-    if (this.configService.get(`USE_COURSE_MOCK`) && /true/i.test(this.configService.get(`USE_COURSE_MOCK`))) {
+    if (this._configService.get(`USE_COURSE_MOCK`) && /true/i.test(this._configService.get(`USE_COURSE_MOCK`))) {
       this.logger.warn('Using course mock !!!');
       course.users.push(new User(user.displayName, user.academiergolf_index, user.academiergolf_userid));
       this.eventService.planningUpdated();
