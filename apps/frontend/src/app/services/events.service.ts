@@ -86,6 +86,13 @@ export class EventsService {
       //.pipe(tap((e) => console.log(`${e} (${e === EventType.NEW_COURSE})`)))
       .pipe(filter((e: Event) => e.type === EventType.NEW_COURSE));
   }
+  public getEventNewParcours() {
+    this.connect();
+    return this.event$
+      .asObservable()
+      //.pipe(tap((e) => console.log(`${e} (${e === EventType.NEW_COURSE})`)))
+      .pipe(filter((e: Event) => e.type === EventType.NEW_PARCOURS));
+  }
   public getEventNewUsers() {
     this.connect();
     return this.event$

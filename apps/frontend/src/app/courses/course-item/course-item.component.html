@@ -4,7 +4,7 @@
          shadow-lg rounded-md 
          overflow-hidden
          {{ !isInThePast && course.places > 1 ? 'bg-primary-light' : 'bg-neutral-light' }}
-         {{ isInThePast || course.places === 0 ? ' opacity-80' : '' }}
+         {{ isInThePast || course.places === 0 ? ' opacity-50' : '' }}
          {{ !isInThePast && course.places === 1 ? ' opacity-100' : '' }}"
 >
   <div *ngFor="let user of users; index as i">

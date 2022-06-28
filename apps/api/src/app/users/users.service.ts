@@ -24,8 +24,10 @@ export class UsersService {
       const given_name = this.configService.get(`GOLF_USER_${cpt}`);
       const login = this.configService.get(`GOLF_LOGIN_${cpt}`);
       const password = this.configService.get(`GOLF_PASSWORD_${cpt}`);
+      const loginChrono = this.configService.get(`CHRONOGOLF_LOGIN_${cpt}`);
+      const passwordChrono = this.configService.get(`CHRONOGOLF_PASSWORD_${cpt}`);
       if (given_name && login && password) {
-        users.push(this.setAcademieGolfToUser(given_name, cpt, login, password));
+        users.push(this.setGolfSiteToUser(given_name, cpt, login, password, loginChrono, passwordChrono));
         //debug(cpt, login);
       }
     } while (users[cpt - 1]);
@@ -45,10 +47,12 @@ export class UsersService {
     return this.users[displayName];
   }
 
-  setAcademieGolfToUser(displayName: string, index: number, login: string, password: string): User {
+  setGolfSiteToUser(displayName: string, index: number, login: string, password: string, loginChrono: string, passwordChrono: string): User {
     this.getUser(displayName).academiergolf_index = index;
     this.getUser(displayName).academiergolf_login = login;
     this.getUser(displayName).academiergolf_password = password;
+    this.getUser(displayName).chronogolf_login = loginChrono;
+    this.getUser(displayName).chronogolf_password = passwordChrono;
 
     return this.getUser(displayName);
   }

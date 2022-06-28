@@ -13,6 +13,9 @@ export class EventsService {
     planningUpdated() {
         this.eventsGateway.emiteEvent(EventType.NEW_PLANNING);
     }
+    parcoursUpdated() {
+        this.eventsGateway.emiteEvent(EventType.NEW_PARCOURS);
+    }
     userUpdated() {
         this.eventsGateway.emiteEvent(EventType.NEW_USER);
     }

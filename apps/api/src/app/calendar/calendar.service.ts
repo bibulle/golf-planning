@@ -7,6 +7,7 @@ import { google } from 'googleapis';
 import { CoursesService } from '../courses/courses.service';
 import { EventsService } from '../events/events.service';
 import { CronJob } from 'cron';
+import { ParcoursService } from '../parcours/parcours.service';
 
 @Injectable()
 export class CalendarService {
@@ -20,7 +21,7 @@ export class CalendarService {
   private static users: { [user_name: string]: GoogleInfos } = {};
   private readonly TOKENS_PATH = 'tokens.json';
 
-  constructor(private readonly _configService: ConfigService, private readonly _courseService: CoursesService, private _eventService: EventsService, private _schedulerRegistry: SchedulerRegistry) {
+  constructor(private readonly _configService: ConfigService, private readonly _courseService: CoursesService, private readonly _parcoursService: ParcoursService, private _eventService: EventsService, private _schedulerRegistry: SchedulerRegistry) {
     CalendarService.cronGoogleForce = this._configService.get('CRON_GOOGLE_FORCE', CalendarService.CRON_GOOGLE_FORCE_DEFAULT);
     CalendarService.cronGoogleRecurrent = this._configService.get('CRON_GOOGLE_RECURRING', CalendarService.CRON_GOOGLE_RECURRING_DEFAULT);
     CalendarService.logger.debug(`cronGoogleRecurrent : ${CalendarService.cronGoogleRecurrent}`);
@@ -119,7 +120,7 @@ export class CalendarService {
           const googleCalendar: GoogleEvent[] = !calendar
             ? []
             : calendar.filter((e) => {
-                return e.summary.match(/^Cours .*: .* (.*)$/) != null;
+                return e.summary.match(/^(Cours|Parcours) golf.*: .* (.*)$/) != null;
               });
 
           // get the courses for the user
@@ -231,7 +232,32 @@ export class CalendarService {
           timeZone: timezone,
         },
       };
-    });
+    }).concat(this._parcoursService.getParcours().map((p) => {
+      const timezone = p.teetime
+      .toTimeString()
+      .replace(/^[0-9:]* /, '')
+      .replace(/ .*$/, '')
+      .replace(/^(.*)([0-9][0-9])$/, '$1:$2');
+
+      const endDate = new Date(p.teetime);
+      endDate.setMinutes(p.teetime.getMinutes()+10*p.holes);
+
+
+      // CalendarService.logger.debug(`${timezone} ${p.teetime.toISOString()}`)
+
+      return {
+        summary: `Parcours golf : ${p.course.name} (${p.club.name})`,
+        location: `${p.club.name}`,
+        start: {
+          dateTime: this.formatDateToGoogleDate(p.teetime, timezone),
+          timeZone: timezone,
+        },
+        end: {
+          dateTime: this.formatDateToGoogleDate(endDate, timezone),
+          timeZone: timezone,
+        },
+      };
+    }));
   }
   /**
    * Get events from google calendar
@@ -350,7 +376,7 @@ export class CalendarService {
    * @param event
    */
   async addGoogleEvent(userName: string, event: GoogleEvent, googleInfos: GoogleInfos) {
-    CalendarService.logger.debug(`Adding to google : ${new Date(event.start.dateTime).toLocaleString()} - ${userName}`);
+    CalendarService.logger.debug(`Adding to google : ${new Date(event.start.dateTime).toLocaleString()} - ${userName} (${event.summary})`);
 
     if (this._configService.get(`USE_GOOGLE_MOCK`) && /true/i.test(this._configService.get(`USE_GOOGLE_MOCK`))) {
       CalendarService.logger.warn('Using google mock !!!');

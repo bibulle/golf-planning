@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { calendar_v3 } from 'googleapis';
 
 /**
@@ -5,7 +6,7 @@ import { calendar_v3 } from 'googleapis';
  */
 export interface ApiReturn {
   //version: Version;
-  data: Course[] | User[] | MyToken;
+  data: Course[] | ParcoursResa[] | ParcoursResa[] | User[] | MyToken;
   refreshToken: string;
 }
 
@@ -17,6 +18,9 @@ export interface MyToken {
  * Courses
  */
 export class Course {
+  public static readonly TYPE = 'Course';
+
+  type = Course.TYPE;
   date: Date;
   hour: string;
   title: string;
@@ -57,33 +61,73 @@ export class Course {
   }
 }
 
+export class ParcoursResa {
+  public static readonly TYPE = 'Parcours';
+
+  type = ParcoursResa.TYPE;
+  holes: number;
+  booking_reference: string;
+  teetime: Date;
+  club_id: number;
+  club?: Club;
+  course_id: number;
+  course?: Parcours;
+
+  constructor(value: any) {
+    //console.log(JSON.stringify(value));
+    this.club_id = value.club_id;
+    this.holes = value.holes;
+    this.booking_reference = value.booking_reference;
+    this.teetime = new Date(value.teetime.date + ' ' + value.teetime.start_time);
+    this.course_id = value.teetime.course_id;
+  }
+
+  static getKey(parcours: ParcoursResa) {
+    // console.log(parcours);
+    if (typeof parcours.teetime === 'string') {
+      parcours.teetime = new Date(parcours.teetime);
+    }
+    return `${parcours.teetime.toISOString()} ${parcours.course_id}`;
+  }
+}
+
+export class Parcours {
+  id: number;
+  club_id: number;
+  holes: number;
+  name: string;
+
+  constructor(value: any) {
+    //console.log(JSON.stringify(value));
+    this.id = value.id;
+    this.club_id = value.club_id;
+    this.holes = value.holes;
+    this.name = value.name;
+    // console.log(JSON.stringify(this));
+  }
+}
+export class Club {
+  id: number;
+  name: string;
+  city: string;
+  country: string;
+  phone_number: string;
+
+  constructor(value: any) {
+    //console.log(JSON.stringify(value));
+    this.id = value.id;
+    this.name = value.name;
+    this.city = value.city;
+    this.country = value.country.name;
+    this.phone_number = value.phone_number;
+    // console.log(JSON.stringify(this));
+  }
+}
+
 /**
  * Calendar Event (comming from Google)
  */
 export type GoogleEvent = calendar_v3.Schema$Event;
-
-// export interface GoogleEvent {
-//   // title: string;
-//   // startDate: Date;
-//   // endDate: Date;
-//   summary: string;
-//   location: 'Golf de Toulouse La Ramée, Av. du Général Eisenhower, 31170 Tournefeuille, France';
-//   description: string;
-//   start: {
-//     dateTime: string;
-//     timeZone: string;
-//   };
-//   end: {
-//     dateTime: string;
-//     timeZone: string;
-//   },
-//   recurrence: string[];
-//   attendees: string[];
-//   reminders: {
-//     useDefault: true,
-//     overrides: [],
-//   }
-// }
 
 /**
  * Google infos
@@ -112,7 +156,9 @@ export class User {
   academiergolf_index?: number;
   academiergolf_login?: string;
   academiergolf_password?: string;
-  academiergolf_userid?: string; 
+  academiergolf_userid?: string;
+  chronogolf_login?: string;
+  chronogolf_password?: string;
 
   constructor(displayName: string, academiergolf_index?: number, academiergolf_userid?: string) {
     this.displayName = displayName;
@@ -128,9 +174,10 @@ export class User {
 export enum EventType {
   NEW_COURSE = 'NEW_COURSE',
   NEW_PLANNING = 'NEW_PLANNING',
+  NEW_PARCOURS = 'NEW_PARCOURS',
   NEW_USER = 'NEW_USER',
-  MESSAGE = "MESSAGE",
-  UNKNOWN = 'UNKNOWN'
+  MESSAGE = 'MESSAGE',
+  UNKNOWN = 'UNKNOWN',
 }
 
 export class Event {
@@ -151,19 +198,20 @@ export class Config {
 
   constructor() {
     this.filters = [
-      new Filter('reservé', FilterType.INVERTED_MATCH, true, 'Reservé', (c) => c.users.length > 0),
+      new Filter('reservé', FilterType.INVERTED_MATCH, true, 'Reservé', (c) => c.users.length > 0, null),
+      new Filter('parcours', FilterType.INVERTED_MATCH, true, 'Parcours', null, (p) => p.type === ParcoursResa.TYPE),
       Filter.getSeparateur(),
-      new Filter('0 dispo', FilterType.MATCH, false, '0 place', (c) => c.places === 0),
-      new Filter('1 dispo', FilterType.MATCH, false, '1 place', (c) => c.places === 1),
-      new Filter('2 dispo', FilterType.MATCH, true, '2 places ou plus', (c) => c.places > 1),
+      new Filter('0 dispo', FilterType.MATCH, false, '0 place', (c) => c.places === 0, null),
+      new Filter('1 dispo', FilterType.MATCH, false, '1 place', (c) => c.places === 1, null),
+      new Filter('2 dispo', FilterType.MATCH, true, '2 places ou plus', (c) => c.places > 1, null),
       Filter.getSeparateur(),
-      new Filter('bronze', FilterType.MATCH, true, 'Cours bronze', (c) => c.title.indexOf('BRONZE') >= 0),
-      new Filter('argent', FilterType.MATCH, true, 'Cours argent', (c) => c.title.indexOf('ARGENT') >= 0),
-      new Filter('gold', FilterType.MATCH, false, 'Cours gold', (c) => c.title.indexOf('OR') >= 0),
-      new Filter('compact', FilterType.MATCH, true, 'Cours compact', (c) => c.title.indexOf('COMPACT') >= 0),
-      new Filter('parcours', FilterType.MATCH, false, 'Cours parcours', (c) => c.title.indexOf('PARCOURS') >= 0),
-      new Filter('regles', FilterType.MATCH, false, 'Cours regles', (c) => c.title.indexOf('REGLES') >= 0),
-      new Filter('individuel', FilterType.MATCH, false, 'Cours individuel', (c) => c.title.indexOf('INDIVIDUELLE') >= 0),
+      new Filter('cours bronze', FilterType.MATCH, true, 'Cours bronze', (c) => c.title.indexOf('BRONZE') >= 0, null),
+      new Filter('cours argent', FilterType.MATCH, true, 'Cours argent', (c) => c.title.indexOf('ARGENT') >= 0, null),
+      new Filter('cours gold', FilterType.MATCH, false, 'Cours gold', (c) => c.title.indexOf('OR') >= 0, null),
+      new Filter('cours compact', FilterType.MATCH, true, 'Cours compact', (c) => c.title.indexOf('COMPACT') >= 0, null),
+      new Filter('cours parcours', FilterType.MATCH, false, 'Cours parcours', (c) => c.title.indexOf('PARCOURS') >= 0, null),
+      new Filter('cours regles', FilterType.MATCH, false, 'Cours regles', (c) => c.title.indexOf('REGLES') >= 0, null),
+      new Filter('cours individuel', FilterType.MATCH, false, 'Cours individuel', (c) => c.title.indexOf('INDIVIDUELLE') >= 0, null),
     ];
   }
 }
@@ -184,9 +232,18 @@ export class Filter {
   label?: string;
   icon?: string;
   selected: boolean;
-  match: null | ((c: Course) => boolean);
+  matchCourse: null | ((c: Course) => boolean);
+  matchParcours: null | ((c: ParcoursResa) => boolean);
 
-  constructor(id: string, type: FilterType, selected: boolean, label: string | null, match: null | ((c: Course) => boolean), icon?: string) {
+  constructor(
+    id: string,
+    type: FilterType,
+    selected: boolean,
+    label: string | null,
+    matchCourse: null | ((c: Course) => boolean),
+    matchParcours: null | ((c: ParcoursResa) => boolean),
+    icon?: string
+  ) {
     this.id = id;
     this.type = type;
     if (label !== null) {
@@ -194,26 +251,47 @@ export class Filter {
     }
     this.icon = icon;
     this.selected = selected;
-    this.match = match;
+    this.matchCourse = matchCourse;
+    this.matchParcours = matchParcours;
   }
 
   static getSeparateur() {
-    return new Filter(`${Filter.SEPARATEUR}_${Filter.separateurCounter++}`, FilterType.SEPARATOR, false, null, null);
+    return new Filter(`${Filter.SEPARATEUR}_${Filter.separateurCounter++}`, FilterType.SEPARATOR, false, null, null, null);
   }
 
   isSeparateur(): boolean {
     return this.type === FilterType.SEPARATOR;
   }
 
-  isVisible(c: Course): boolean {
-    // if (this.id === "reservé" ) {
-    //   console.log(`${c.title} (${c.users.length}) -> ${this.selected && (this.match === null || this.match(c))} ${c.users.length > 0}`);
-
-    // }
+  isVisible(c: Course | ParcoursResa): boolean {
     if (this.type === FilterType.MATCH) {
-      return this.selected || this.match === null || !this.match(c);
+      // Type MATCH (true if every filter is true)
+      if (c.type === Course.TYPE) {
+        if (this.matchCourse === null) {
+          return false;
+        }
+        return this.selected || !this.matchCourse(c as Course);
+      } else {
+        if (this.matchParcours === null) {
+          return false;
+        }
+        return this.selected || !this.matchParcours(c as ParcoursResa);
+      }
     } else {
-      return this.selected && (this.match === null || this.match(c));
+      // Type REVERSE MATCH (true if one filter is true)
+      if (c.type === Course.TYPE) {
+        if (this.matchCourse === null) {
+          return false;
+        }
+        return this.selected && this.matchCourse(c as Course);
+      } else {
+        if (this.matchParcours === null) {
+          return false;
+        }
+        return this.selected && this.matchParcours(c as ParcoursResa);
+      }
     }
+
+    
   }
 }

@@ -10,9 +10,10 @@ import { UsersModule } from './users/users.module';
 import { RefreshTokenInterceptor } from './interceptors/refresh-token.interceptor';
 import { AuthenticationModule } from './authentication/authentication.module';
 import { CalendarModule } from './calendar/calendar.module';
+import { ParcoursModule } from './parcours/parcours.module';
 
 @Module({
-  imports: [ScheduleModule.forRoot(), ConfigModule.forRoot(), EventsModule, CoursesModule, UsersModule, AuthenticationModule, CalendarModule],
+  imports: [ScheduleModule.forRoot(), ConfigModule.forRoot(), EventsModule, CoursesModule, UsersModule, AuthenticationModule, CalendarModule, ParcoursModule],
   controllers: [AppController],
   providers: [
     {

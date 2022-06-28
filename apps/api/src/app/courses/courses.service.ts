@@ -7,7 +7,6 @@ import { AcademiegolfService } from './academiegolf.service';
 import { ConfigService } from '@nestjs/config';
 import { CronJob } from 'cron';
 
-
 @Injectable()
 export class CoursesService {
   private readonly logger = new Logger(CoursesService.name);
@@ -23,16 +22,26 @@ export class CoursesService {
   courses: Course[] = [];
   users: User[] = [];
 
-  constructor(private userService: UsersService, private acadeliegolfService: AcademiegolfService, private eventService: EventsService, private _configService: ConfigService, private _schedulerRegistry: SchedulerRegistry) {
+  constructor(
+    private userService: UsersService,
+    private acadeliegolfService: AcademiegolfService,
+    private eventService: EventsService,
+    private _configService: ConfigService,
+    private _schedulerRegistry: SchedulerRegistry
+  ) {
     CoursesService.cronGolfForce = this._configService.get('CRON_GOLF_FORCE', CoursesService.CRON_GOLF_FORCE_DEFAULT);
     CoursesService.cronGolfRecurrent = this._configService.get('CRON_GOLF_RECURRING', CoursesService.CRON_GOLF_RECURRING_DEFAULT);
     this.logger.debug(`cronGolfRecurrent : ${CoursesService.cronGolfRecurrent}`);
     this.logger.debug(`cronGolfForce     : ${CoursesService.cronGolfForce}`);
 
-    const job1 = new CronJob(CoursesService.cronGolfRecurrent, () => {this.handle10MinutesCron();});
+    const job1 = new CronJob(CoursesService.cronGolfRecurrent, () => {
+      this.handle10MinutesCron();
+    });
     this._schedulerRegistry.addCronJob('cronGolfRecurrent', job1);
     job1.start();
-    const job2 = new CronJob(CoursesService.cronGolfForce, () => {this.handleDailyCron();});
+    const job2 = new CronJob(CoursesService.cronGolfForce, () => {
+      this.handleDailyCron();
+    });
     this._schedulerRegistry.addCronJob('cronGolfForce', job2);
     job2.start();
 
