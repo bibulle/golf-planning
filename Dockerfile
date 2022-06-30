@@ -28,10 +28,10 @@ RUN ln -fs /usr/share/zoneinfo/Europe/Paris /etc/localtime
 
 WORKDIR /usr/src
 
-COPY package*.json ./
+COPY --from=BUILD /usr/src/package*.json ./
 COPY --from=BUILD /usr/src/dist dist/ 
 
-RUN npm ci --only=production --ignore-scripts
+RUN npm ci --only=production --ignore-scripts --omit=dev
 
 ENV PORT=3000
 ENV AUTHENT_JWT_SECRET=authent_jwt_secret
