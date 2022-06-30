@@ -21,16 +21,26 @@ export class CalendarService {
   private static users: { [user_name: string]: GoogleInfos } = {};
   private readonly TOKENS_PATH = 'tokens.json';
 
-  constructor(private readonly _configService: ConfigService, private readonly _courseService: CoursesService, private readonly _parcoursService: ParcoursService, private _eventService: EventsService, private _schedulerRegistry: SchedulerRegistry) {
+  constructor(
+    private readonly _configService: ConfigService,
+    private readonly _courseService: CoursesService,
+    private readonly _parcoursService: ParcoursService,
+    private _eventService: EventsService,
+    private _schedulerRegistry: SchedulerRegistry
+  ) {
     CalendarService.cronGoogleForce = this._configService.get('CRON_GOOGLE_FORCE', CalendarService.CRON_GOOGLE_FORCE_DEFAULT);
     CalendarService.cronGoogleRecurrent = this._configService.get('CRON_GOOGLE_RECURRING', CalendarService.CRON_GOOGLE_RECURRING_DEFAULT);
     CalendarService.logger.debug(`cronGoogleRecurrent : ${CalendarService.cronGoogleRecurrent}`);
     CalendarService.logger.debug(`cronGoogleForce     : ${CalendarService.cronGoogleForce}`);
 
-    const job1 = new CronJob(CalendarService.cronGoogleRecurrent, () => {this.handle10MinutesCron();});
+    const job1 = new CronJob(CalendarService.cronGoogleRecurrent, () => {
+      this.handle10MinutesCron();
+    });
     this._schedulerRegistry.addCronJob('cronGoogleRecurrent', job1);
     job1.start();
-    const job2 = new CronJob(CalendarService.cronGoogleForce, () => {this.handleDailyCron();});
+    const job2 = new CronJob(CalendarService.cronGoogleForce, () => {
+      this.handleDailyCron();
+    });
     this._schedulerRegistry.addCronJob('cronGoogleForce', job2);
     job2.start();
 
@@ -110,9 +120,6 @@ export class CalendarService {
     Object.entries(CalendarService.users).forEach(async ([userName, googleInfos]) => {
       // read googles events
       this.getGoogleEvents(userName, googleInfos)
-        .catch((err) => {
-          CalendarService.logger.error(err);
-        })
         .then(async (calendar) => {
           CalendarService.logger.debug(`${calendar ? calendar.length : 0} events found in google for ${userName}`);
 
@@ -165,7 +172,7 @@ export class CalendarService {
               //   CalendarService.logger.debug(`          : ${JSON.stringify(googleEventWithoutId2) === JSON.stringify(googleEventWithoutId)} ${googleEvent.id > googleEvent2.id}`);
               // }
 
-              return (JSON.stringify(googleEventWithoutId2) === JSON.stringify(googleEventWithoutId)) && (googleEvent.id > googleEvent2.id);
+              return JSON.stringify(googleEventWithoutId2) === JSON.stringify(googleEventWithoutId) && googleEvent.id > googleEvent2.id;
             });
           });
           for (const e of l2) {
@@ -179,10 +186,10 @@ export class CalendarService {
             const googleEventWithoutId = { ...googleEvent };
             delete googleEventWithoutId.id;
             return !golfCalendar.some((golfEvent) => {
-                // if (JSON.stringify(golfEvent).match(/2022-04-18/) && JSON.stringify(googleEventWithoutId).match(/2022-04-18/)) {
-                //   CalendarService.logger.debug(`Removed : ${JSON.stringify(golfEvent)}`);
-                //   CalendarService.logger.debug(`        : ${JSON.stringify(googleEventWithoutId)}`);
-                // }
+              // if (JSON.stringify(golfEvent).match(/2022-04-18/) && JSON.stringify(googleEventWithoutId).match(/2022-04-18/)) {
+              //   CalendarService.logger.debug(`Removed : ${JSON.stringify(golfEvent)}`);
+              //   CalendarService.logger.debug(`        : ${JSON.stringify(googleEventWithoutId)}`);
+              // }
               return JSON.stringify(golfEvent) === JSON.stringify(googleEventWithoutId);
             });
           });
@@ -190,6 +197,9 @@ export class CalendarService {
             this.removeGoogleEvent(userName, e, googleInfos);
             await this.delay(2000);
           }
+        })
+        .catch((err) => {
+          CalendarService.logger.error(err);
         });
     });
   }
@@ -200,64 +210,68 @@ export class CalendarService {
    * @returns
    */
   getGolfCoursesAsGoogleEvent(userName): GoogleEvent[] {
-    return this._courseService.getCourse(userName).map((c) => {
-      const times = c.hour.split(':').map((s) => +s);
+    return this._courseService
+      .getCourse(userName)
+      .map((c) => {
+        const times = c.hour.split(':').map((s) => +s);
 
-      // CalendarService.logger.debug(c.date.toTimeString().replace(/^[0-9:]* /, "").replace(/ .*$/,""));
-      const startDate = new Date(c.date);
-      startDate.setHours(times[0]);
-      startDate.setMinutes(times[1]);
+        // CalendarService.logger.debug(c.date.toTimeString().replace(/^[0-9:]* /, "").replace(/ .*$/,""));
+        const startDate = new Date(c.date);
+        startDate.setHours(times[0]);
+        startDate.setMinutes(times[1]);
 
-      const endDate = new Date(c.date);
-      endDate.setHours(times[0] + 1);
-      endDate.setMinutes(times[1]);
+        const endDate = new Date(c.date);
+        endDate.setHours(times[0] + 1);
+        endDate.setMinutes(times[1]);
 
-      const timezone = c.date
-        .toTimeString()
-        .replace(/^[0-9:]* /, '')
-        .replace(/ .*$/, '')
-        .replace(/^(.*)([0-9][0-9])$/, '$1:$2');
+        const timezone = c.date
+          .toTimeString()
+          .replace(/^[0-9:]* /, '')
+          .replace(/ .*$/, '')
+          .replace(/^(.*)([0-9][0-9])$/, '$1:$2');
 
-      //CalendarService.logger.debug(`${timezone} ${c.date.toISOString()}`)
+        //CalendarService.logger.debug(`${timezone} ${c.date.toISOString()}`)
 
-      return {
-        summary: `Cours golf : ${c.title} (${c.prof})`,
-        location: 'Golf de Toulouse La Ramée, Av. du Général Eisenhower, 31170 Tournefeuille, France',
-        start: {
-          dateTime: this.formatDateToGoogleDate(startDate, timezone),
-          timeZone: timezone,
-        },
-        end: {
-          dateTime: this.formatDateToGoogleDate(endDate, timezone),
-          timeZone: timezone,
-        },
-      };
-    }).concat(this._parcoursService.getParcours().map((p) => {
-      const timezone = p.teetime
-      .toTimeString()
-      .replace(/^[0-9:]* /, '')
-      .replace(/ .*$/, '')
-      .replace(/^(.*)([0-9][0-9])$/, '$1:$2');
+        return {
+          summary: `Cours golf : ${c.title} (${c.prof})`,
+          location: 'Golf de Toulouse La Ramée, Av. du Général Eisenhower, 31170 Tournefeuille, France',
+          start: {
+            dateTime: this.formatDateToGoogleDate(startDate, timezone),
+            timeZone: timezone,
+          },
+          end: {
+            dateTime: this.formatDateToGoogleDate(endDate, timezone),
+            timeZone: timezone,
+          },
+        };
+      })
+      .concat(
+        this._parcoursService.getParcours().map((p) => {
+          const timezone = p.teetime
+            .toTimeString()
+            .replace(/^[0-9:]* /, '')
+            .replace(/ .*$/, '')
+            .replace(/^(.*)([0-9][0-9])$/, '$1:$2');
 
-      const endDate = new Date(p.teetime);
-      endDate.setMinutes(p.teetime.getMinutes()+10*p.holes);
+          const endDate = new Date(p.teetime);
+          endDate.setMinutes(p.teetime.getMinutes() + 10 * p.holes);
 
+          // CalendarService.logger.debug(`${timezone} ${p.teetime.toISOString()}`)
 
-      // CalendarService.logger.debug(`${timezone} ${p.teetime.toISOString()}`)
-
-      return {
-        summary: `Parcours golf : ${p.course.name} (${p.club.name})`,
-        location: `${p.club.name}`,
-        start: {
-          dateTime: this.formatDateToGoogleDate(p.teetime, timezone),
-          timeZone: timezone,
-        },
-        end: {
-          dateTime: this.formatDateToGoogleDate(endDate, timezone),
-          timeZone: timezone,
-        },
-      };
-    }));
+          return {
+            summary: `Parcours golf : ${p.course.name} (${p.club.name})`,
+            location: `${p.club.name}`,
+            start: {
+              dateTime: this.formatDateToGoogleDate(p.teetime, timezone),
+              timeZone: timezone,
+            },
+            end: {
+              dateTime: this.formatDateToGoogleDate(endDate, timezone),
+              timeZone: timezone,
+            },
+          };
+        })
+      );
   }
   /**
    * Get events from google calendar
