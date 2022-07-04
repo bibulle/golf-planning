@@ -79,34 +79,36 @@ export class ParcoursService {
       return;
     }
 
+    const parcoursTabs: { [key: string]: ParcoursResa } = {};
+
+    this.logger.log(this.users);
+
     (async () => {
-      for (
-        let j = 0;
-        j <
-        this.users.filter((u) => {
-          // this.logger.debug(u.chronogolf_login);
-          return u.chronogolf_login !== undefined;
-        }).length;
-        j++
-      ) {
-        const u = this.users[j];
-        this.logger.debug(u.displayName);
+      await Promise.all(
+        this.users
+          .filter((u) => {
+            // this.logger.debug(`${u.displayName} : ${u.chronogolf_login}`);
+            return u.chronogolf_login !== undefined;
+          })
+          .map(async (u) => {
+            // this.logger.debug(`${u.displayName} : ${u.chronogolf_login}`);
+            const parcours = await this.getPlanningUser(u).catch((reason) => {
+              this.logger.error(reason);
+            });
+            // this.logger.debug(JSON.stringify(parcours));
 
-        const parcours = await this.getPlanningUser(u).catch((reason) => {
-          this.logger.error(reason);
-        });
-        //this.logger.debug(JSON.stringify(parcours));
+            if (parcours) {
+              parcours.forEach((p) => {
+                if (!parcoursTabs[ParcoursResa.getKey(p)]) {
+                  parcoursTabs[ParcoursResa.getKey(p)] = p;
+                }
+                parcoursTabs[ParcoursResa.getKey(p)].users.push(new User(u.displayName, u.academiergolf_index));
+              });
+            }
+          })
+      );
 
-        this.fillAndCompareParcours(parcours);
-
-        // if (!lessons) {
-        //   break loop1;
-        // }
-
-        // lessons.forEach((c) => {
-        //   planningTabs[Course.getKey(c)] = c;
-        // });
-      }
+      this.fillAndCompareParcours(Object.values(parcoursTabs));
     })();
   }
 

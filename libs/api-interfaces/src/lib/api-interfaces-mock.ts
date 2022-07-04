@@ -54,7 +54,8 @@ export const PLANNING_MOCK: any[] = [
   { type: Course.TYPE, date: '2022-01-29T11:00:00.000Z', hour: '10:00', title: 'SWING 4U BRONZE', prof: 'Alexandre', places: 0, golf_evt_id: '1032813', golf_id: '24', users: [] },
   { type: Course.TYPE, date: '2022-01-29T11:00:00.000Z', hour: '11:00', title: 'SWING 4U OR', prof: 'Alexandre', places: 0, golf_evt_id: '1032784', golf_id: '24', users: [] },
   {
-    type: Course.TYPE, date: '2022-01-29T11:00:00.000Z',
+    type: Course.TYPE,
+    date: '2022-01-29T11:00:00.000Z',
     hour: '12:00',
     title: 'SWING 4U ARGENT',
     prof: 'Alexandre',
@@ -450,13 +451,76 @@ export const CALENDAR_MOCK: any[] = [
   { id: '56dnd06oiduuatlg1q4o829u3h_20220627', summary: 'Anniversaire Nath', start: { date: '2022-06-27' }, end: { date: '2022-06-28' } },
 ];
 
-export const PARCOURS_19628_MOCK: Parcours = {id:19628,club_id:17108,holes:9,name:"Parcours Compact"};
-export const CLUB_17108_MOCK: Club = {id:17108,name:"UGOLF Toulouse La Ramée",city:"Tournefeuille",country:"France",phone_number:"05 61 07 09 09"};
+export const PARCOURS_19628_MOCK: Parcours = { id: 19628, club_id: 17108, holes: 9, name: 'Parcours Compact' };
+export const CLUB_17108_MOCK: Club = { id: 17108, name: 'UGOLF Toulouse La Ramée', city: 'Tournefeuille', country: 'France', phone_number: '05 61 07 09 09' };
 
 export const PARCOURS_RESA_MOCK: ParcoursResa[] = [
-  { type: ParcoursResa.TYPE, club_id: 17108, holes: 9, booking_reference: '41B2-1ZIA', teetime: new Date('2022-06-12T15:40:00.000Z'), course_id: 19628, course: PARCOURS_19628_MOCK,club: CLUB_17108_MOCK },
-  { type: ParcoursResa.TYPE, club_id: 17108, holes: 9, booking_reference: 'O1FR-ZS6F', teetime: new Date('2022-06-05T16:00:00.000Z'), course_id: 19628, course: PARCOURS_19628_MOCK,club: CLUB_17108_MOCK },
-  { type: ParcoursResa.TYPE, club_id: 17108, holes: 9, booking_reference: 'P4IF-QV0G', teetime: new Date('2022-05-26T14:10:00.000Z'), course_id: 19628, course: PARCOURS_19628_MOCK,club: CLUB_17108_MOCK },
-  { type: ParcoursResa.TYPE, club_id: 17108, holes: 9, booking_reference: 'J21R-TB8U', teetime: new Date('2022-04-18T09:10:00.000Z'), course_id: 19628, course: PARCOURS_19628_MOCK,club: CLUB_17108_MOCK },
-  { type: ParcoursResa.TYPE, club_id: 17108, holes: 9, booking_reference: 'UJK9-UYYS', teetime: new Date('2021-12-24T13:10:00.000Z'), course_id: 19628, course: PARCOURS_19628_MOCK,club: CLUB_17108_MOCK },
+  {
+    type: ParcoursResa.TYPE,
+    club_id: 17108,
+    holes: 9,
+    booking_reference: '41B2-1ZIA',
+    teetime: new Date('2022-06-12T15:40:00.000Z'),
+    course_id: 19628,
+    course: PARCOURS_19628_MOCK,
+    club: CLUB_17108_MOCK,
+    users: [
+      { displayName: 'Nathalie M', academiergolf_index: 2 },
+    ],
+  },
+  {
+    type: ParcoursResa.TYPE,
+    club_id: 17108,
+    holes: 9,
+    booking_reference: 'O1FR-ZS6F',
+    teetime: new Date('2022-06-05T16:00:00.000Z'),
+    course_id: 19628,
+    course: PARCOURS_19628_MOCK,
+    club: CLUB_17108_MOCK,
+    users: [
+      { displayName: 'Bibulle Martin', academiergolf_index: 1 },
+    ],
+  },
+  {
+    type: ParcoursResa.TYPE,
+    club_id: 17108,
+    holes: 9,
+    booking_reference: 'P4IF-QV0G',
+    teetime: new Date('2022-05-26T14:10:00.000Z'),
+    course_id: 19628,
+    course: PARCOURS_19628_MOCK,
+    club: CLUB_17108_MOCK,
+    users: [
+      { displayName: 'Bibulle Martin', academiergolf_index: 1 },
+      { displayName: 'Nathalie M', academiergolf_index: 2 },
+    ],
+  },
+  {
+    type: ParcoursResa.TYPE,
+    club_id: 17108,
+    holes: 9,
+    booking_reference: 'J21R-TB8U',
+    teetime: new Date('2022-04-18T09:10:00.000Z'),
+    course_id: 19628,
+    course: PARCOURS_19628_MOCK,
+    club: CLUB_17108_MOCK,
+    users: [
+      { displayName: 'Bibulle Martin', academiergolf_index: 1 },
+      { displayName: 'Nathalie M', academiergolf_index: 2 },
+    ],
+  },
+  {
+    type: ParcoursResa.TYPE,
+    club_id: 17108,
+    holes: 9,
+    booking_reference: 'UJK9-UYYS',
+    teetime: new Date('2021-12-24T13:10:00.000Z'),
+    course_id: 19628,
+    course: PARCOURS_19628_MOCK,
+    club: CLUB_17108_MOCK,
+    users: [
+      { displayName: 'Bibulle Martin', academiergolf_index: 1 },
+      { displayName: 'Nathalie M', academiergolf_index: 2 },
+    ],
+  },
 ];

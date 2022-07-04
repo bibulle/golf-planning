@@ -72,6 +72,7 @@ export class ParcoursResa {
   club?: Club;
   course_id: number;
   course?: Parcours;
+  users: User[];
 
   constructor(value: any) {
     //console.log(JSON.stringify(value));
@@ -80,6 +81,9 @@ export class ParcoursResa {
     this.booking_reference = value.booking_reference;
     this.teetime = new Date(value.teetime.date + ' ' + value.teetime.start_time);
     this.course_id = value.teetime.course_id;
+
+    this.users = [];
+
   }
 
   static getKey(parcours: ParcoursResa) {

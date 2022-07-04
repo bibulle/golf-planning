@@ -23,10 +23,9 @@ export class ParcoursItemComponent implements OnChanges {
   }
 
   isUser(index: number): boolean {
-    return false;
-    // return this.course.users.some((u) => {
-    //   return u.academiergolf_index === index;
-    // });
+    return this.parcours.users.some((u) => {
+      return u.academiergolf_index === index;
+    });
   }
 
 }
