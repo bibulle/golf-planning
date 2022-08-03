@@ -81,7 +81,7 @@ export class ParcoursService {
 
     const parcoursTabs: { [key: string]: ParcoursResa } = {};
 
-    this.logger.log(this.users);
+    // this.logger.log(this.users);
 
     (async () => {
       await Promise.all(
