@@ -1,21 +1,24 @@
 <div
-  (click)="openDialog()" 
-  class="m-2 p-2 w-60 relative
-         shadow-lg rounded-md 
-         overflow-hidden
-         {{ !isInThePast && course.places > 1 ? 'bg-primary-light' : 'bg-neutral-light' }}
-         {{ isInThePast || course.places === 0 ? ' opacity-50' : '' }}
-         {{ !isInThePast && course.places === 1 ? ' opacity-100' : '' }}"
+  (click)="openDialog()"
+  class="m-2 p-2 w-60 relative shadow-lg rounded-md overflow-hidden"
+  [class.bg-primary-light]="!isInThePast"
+  [class.opacity-100]="!isInThePast"
+  [class.bg-neutral-light]="isInThePast"
+  [class.opacity-50]="isInThePast"
 >
   <div *ngFor="let user of users; index as i">
-    <div *ngIf="isUser(i+1)" class="absolute -left-10 z-10 -rotate-45 w-48 h-4 opacity-100"
-    [style.top]="(1.5*i-2)+'rem'"
-    [class.bg-blue-light]="i%4===0"
-    [class.bg-pink-light]="i%4===1"
-    [class.bg-amber-light]="i%4===2"
-    [class.bg-violet-light]="i%4===3"
-    [title]="user.displayName"
-    >&nbsp;</div>
+    <div
+      *ngIf="isUser(i + 1)"
+      class="absolute -left-10 z-10 -rotate-45 w-48 h-4 opacity-100"
+      [style.top]="1.5 * i - 2 + 'rem'"
+      [class.bg-blue-light]="i % 4 === 0"
+      [class.bg-pink-light]="i % 4 === 1"
+      [class.bg-amber-light]="i % 4 === 2"
+      [class.bg-violet-light]="i % 4 === 3"
+      [title]="user.displayName"
+    >
+      &nbsp;
+    </div>
   </div>
   <!-- <div *ngIf="isUser(1)" class="bg-blue-light absolute top-0 -left-10 z-10 -rotate-45 w-32 h-4 opacity-100">&nbsp;</div>
   <div *ngIf="isUser(2)" class="bg-pink-light absolute top-4 -left-8 z-10 -rotate-45 w-32 h-4">&nbsp;</div> -->

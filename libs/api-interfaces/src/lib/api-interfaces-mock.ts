@@ -288,7 +288,7 @@ export const COURSE_MOCK: any[] = [
   },
   {
     type: Course.TYPE,
-    date: '2021-12-18T11:00:00.000Z',
+    date: '2022-12-18T11:00:00.000Z',
     hour: '14:00',
     title: 'SWING 4U BRONZE',
     prof: 'Charles',
@@ -445,8 +445,8 @@ export const CALENDAR_MOCK: any[] = [
     id: 't2u8d98o0b2bbqo1esa34s5pg8',
     summary: 'Cours golf : SWING 4U BRONZE (Charles)',
     location: 'Golf de Toulouse La Ramée, Av. du Général Eisenhower, 31170 Tournefeuille, France',
-    start: { dateTime: '2021-12-18T14:00:00+01:00', timeZone: 'GMT+01:00' },
-    end: { dateTime: '2021-12-18T15:00:00+01:00', timeZone: 'GMT+01:00' },
+    start: { dateTime: '2022-12-18T14:00:00+01:00', timeZone: 'GMT+01:00' },
+    end: { dateTime: '2022-12-18T15:00:00+01:00', timeZone: 'GMT+01:00' },
   },
   { id: '56dnd06oiduuatlg1q4o829u3h_20220627', summary: 'Anniversaire Nath', start: { date: '2022-06-27' }, end: { date: '2022-06-28' } },
 ];
