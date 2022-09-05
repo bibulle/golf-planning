@@ -1,6 +1,7 @@
 import { ApiReturn, GlobalStatus } from '@golf-planning/api-interfaces';
-import { Controller, Get, HttpException, HttpStatus, Logger } from '@nestjs/common';
+import { Controller, Get, HttpException, HttpStatus, Logger, Res } from '@nestjs/common';
 import { HealthService } from './health.service';
+import { Response } from 'express';
 
 @Controller('health')
 export class HealthController {
@@ -9,18 +10,22 @@ export class HealthController {
   constructor(private _healthService: HealthService) {}
 
   @Get('')
-  async getBStatus(): Promise<ApiReturn> {
-    return new Promise<ApiReturn>((resolve) => {
+  async getBStatus(@Res() res: Response) {
+    // return new Promise<ApiReturn>((resolve) => {
       this._healthService
         .getHealthSattus()
         .then((status: GlobalStatus) => {
-          resolve({ data: status });
+          if (status.golfStatus === 'OK') {
+            res.status(HttpStatus.OK).json({ data: status });
+          } else {
+            res.status(215).json({ data: status });
+          }
         })
         .catch((err) => {
           this.logger.error(err);
           throw new HttpException('Something go wrong', HttpStatus.INTERNAL_SERVER_ERROR);
         });
-    });
+    // });
   }
 
 }
