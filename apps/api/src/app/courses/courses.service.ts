@@ -1,4 +1,4 @@
-import { Course, COURSE_MOCK, PLANNING_MOCK, User, USERS_MOCK } from '@golf-planning/api-interfaces';
+import { Course, COURSE_MOCK, PLANNING_MOCK, User, ServiceStatus, USERS_MOCK } from '@golf-planning/api-interfaces';
 import { Injectable, Logger } from '@nestjs/common';
 import { CronExpression, SchedulerRegistry } from '@nestjs/schedule';
 import { EventsService } from '../events/events.service';
@@ -21,6 +21,10 @@ export class CoursesService {
   planning: Course[] = [];
   courses: Course[] = [];
   users: User[] = [];
+
+  usersStatus: { [user_name: string]: ServiceStatus } = {};
+
+  courseStatus: ServiceStatus = { ok: false };
 
   constructor(
     private userService: UsersService,
@@ -47,6 +51,10 @@ export class CoursesService {
 
     this.users = this.userService.readFromEnv();
     this.eventService.userUpdated();
+
+    this.users.forEach((u) => {
+      this.usersStatus[u.displayName] = { ok: false };
+    });
 
     // load course at startup
     this.loadAllGolfCourses();
@@ -111,6 +119,7 @@ export class CoursesService {
           //this.logger.debug(i);
           const lessons = await this.getPlanningGlobal(u, date).catch((reason) => {
             this.logger.error(reason);
+            this.courseStatus.error = reason;
           });
           if (!lessons) {
             break loop1;
@@ -122,14 +131,29 @@ export class CoursesService {
         }
       }
 
+      if (Object.keys(planningTabs).length != 0) {
+        this.courseStatus.ok = true;
+        this.courseStatus.lastLoad = new Date();
+        this.courseStatus.count = Object.keys(planningTabs).length;
+        this.courseStatus.error = undefined;
+      } else {
+        this.courseStatus.ok = false;
+      }
+
       // get users course
       await Promise.all(
         this.users.map(async (u) => {
           const lessons = await this.getPlanningUser(u).catch((reason) => {
             this.logger.error(reason);
+            this.usersStatus[u.displayName].ok = false;
+            this.usersStatus[u.displayName].error = reason;
           });
           //this.logger.debug(JSON.stringify(lessons,null,2));
           if (lessons) {
+            this.usersStatus[u.displayName].lastLoad = new Date();
+            this.usersStatus[u.displayName].ok = true;
+            this.usersStatus[u.displayName].error = undefined;
+            this.usersStatus[u.displayName].count = lessons.length;
             lessons.forEach((l) => {
               // add users to course in planning
               if (planningTabs[Course.getKey(l)]) {
@@ -302,4 +326,12 @@ export class CoursesService {
         // Promise.resolve();
       });
   }
+
+  getUsersStatus(): Promise<{ [user_name: string]: ServiceStatus }> {
+    return Promise.resolve(this.usersStatus);
+  }
+  getCoursesStatus(): Promise<ServiceStatus> {
+    return Promise.resolve(this.courseStatus);
+  }
 }
+

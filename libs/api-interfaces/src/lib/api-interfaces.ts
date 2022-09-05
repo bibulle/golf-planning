@@ -6,12 +6,26 @@ import { calendar_v3 } from 'googleapis';
  */
 export interface ApiReturn {
   //version: Version;
-  data: Course[] | ParcoursResa[] | ParcoursResa[] | User[] | MyToken;
-  refreshToken: string;
+  data: Course[] | ParcoursResa[] | ParcoursResa[] | User[] | MyToken | GlobalStatus;
+  refreshToken?: string;
 }
 
 export interface MyToken {
   id_token: string;
+}
+
+export class GlobalStatus {
+  golfStatus = 'OK'
+  course?: ServiceStatus;
+  courseUser?: { [user_name: string]: ServiceStatus };
+  googleUser?: { [user_name: string]: ServiceStatus; };
+  parcourtUser?: { [user_name: string]: ServiceStatus; };
+}
+export class ServiceStatus {
+  ok = false;
+  lastLoad?: Date;
+  count? = 0;
+  error?: string;
 }
 
 /**

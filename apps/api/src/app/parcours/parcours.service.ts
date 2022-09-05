@@ -1,4 +1,4 @@
-import { ParcoursResa, User, USERS_MOCK, PARCOURS_RESA_MOCK } from '@golf-planning/api-interfaces';
+import { ParcoursResa, User, USERS_MOCK, PARCOURS_RESA_MOCK, ServiceStatus } from '@golf-planning/api-interfaces';
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { CronExpression, SchedulerRegistry } from '@nestjs/schedule';
@@ -18,6 +18,8 @@ export class ParcoursService {
 
   planning: ParcoursResa[] = [];
   users: User[] = [];
+
+  usersStatus: { [user_name: string]: ServiceStatus } = {};
 
   constructor(
     private userService: UsersService,
@@ -44,6 +46,10 @@ export class ParcoursService {
 
     this.users = this.userService.readFromEnv();
     this.eventService.userUpdated();
+
+    this.users.forEach((u) => {
+      this.usersStatus[u.displayName] = { ok: false };
+    });
 
     // load course at startup
     this.loadAllGolfParcours();
@@ -94,10 +100,17 @@ export class ParcoursService {
             // this.logger.debug(`${u.displayName} : ${u.chronogolf_login}`);
             const parcours = await this.getPlanningUser(u).catch((reason) => {
               this.logger.error(reason);
+              this.usersStatus[u.displayName].ok = false;
+              this.usersStatus[u.displayName].error = reason;  
             });
             // this.logger.debug(JSON.stringify(parcours));
 
             if (parcours) {
+              this.usersStatus[u.displayName].lastLoad = new Date();
+              this.usersStatus[u.displayName].ok = true;
+              this.usersStatus[u.displayName].error = undefined;
+              this.usersStatus[u.displayName].count = parcours.length;
+
               parcours.forEach((p) => {
                 if (!parcoursTabs[ParcoursResa.getKey(p)]) {
                   parcoursTabs[ParcoursResa.getKey(p)] = p;
@@ -137,4 +150,9 @@ export class ParcoursService {
       }
     }
   }
+
+  getUsersStatus(): Promise<{ [user_name: string]: ServiceStatus }> {
+    return Promise.resolve(this.usersStatus);
+  }
+
 }

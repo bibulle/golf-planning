@@ -1,4 +1,4 @@
-import { CALENDAR_MOCK, GoogleEvent, GoogleInfos } from '@golf-planning/api-interfaces';
+import { CALENDAR_MOCK, GoogleEvent, GoogleInfos, ServiceStatus } from '@golf-planning/api-interfaces';
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { CronExpression, SchedulerRegistry } from '@nestjs/schedule';
@@ -8,6 +8,7 @@ import { CoursesService } from '../courses/courses.service';
 import { EventsService } from '../events/events.service';
 import { CronJob } from 'cron';
 import { ParcoursService } from '../parcours/parcours.service';
+import { LazyModuleLoader } from '@nestjs/core';
 
 @Injectable()
 export class CalendarService {
@@ -20,6 +21,8 @@ export class CalendarService {
 
   private static users: { [user_name: string]: GoogleInfos } = {};
   private readonly TOKENS_PATH = 'tokens.json';
+
+  usersStatus: { [user_name: string]: ServiceStatus } = {};
 
   constructor(
     private readonly _configService: ConfigService,
@@ -118,6 +121,9 @@ export class CalendarService {
     CalendarService.logger.log('loadAllGooogleCourses');
 
     Object.entries(CalendarService.users).forEach(async ([userName, googleInfos]) => {
+      if (!this.usersStatus[userName]) {
+        this.usersStatus[userName] = new ServiceStatus();
+      }
       // read googles events
       this.getGoogleEvents(userName, googleInfos)
         .then(async (calendar) => {
@@ -130,6 +136,10 @@ export class CalendarService {
                 return e.summary.match(/^(Cours|Parcours) golf.*: .* (.*)$/) != null;
               });
 
+          this.usersStatus[userName].ok = true;
+          this.usersStatus[userName].lastLoad = new Date();
+          this.usersStatus[userName].count = googleCalendar.length;
+
           // get the courses for the user
           const golfCalendar = this.getGolfCoursesAsGoogleEvent(userName);
           if (golfCalendar.length === 0) {
@@ -137,69 +147,86 @@ export class CalendarService {
             return;
           }
 
-          // CalendarService.logger.warn(`golfCalendar   : ${golfCalendar.length} `);
+          // count events
+          const parcoursCount = golfCalendar.filter((c) => {
+            return c.summary.startsWith('Parcours');
+          }).length;
+          const coursCount = golfCalendar.filter((c) => {
+            return c.summary.startsWith('Cours');
+          }).length;
+          CalendarService.logger.warn(`golfCalendar   : ${parcoursCount} parcours & ${coursCount} cours`);
+          // CalendarService.logger.warn(`golfCalendar   : ${JSON.stringify(golfCalendar, null, 2)} `);
           // CalendarService.logger.warn(`googleCalendar : ${googleCalendar.length} `);
 
-          // Add to google golf course that are not already in google
-          const l1 = golfCalendar.filter((golfEvent) => {
-            return !googleCalendar.some((googleEvent) => {
+          if (coursCount === 0) {
+            CalendarService.logger.warn('Cours not yet loaded, do nothing');
+          } else {
+            // Add to google golf course that are not already in google
+            const l1 = golfCalendar.filter((golfEvent) => {
+              return !googleCalendar.some((googleEvent) => {
+                const googleEventWithoutId = { ...googleEvent };
+                delete googleEventWithoutId.id;
+                // if (JSON.stringify(golfEvent).match(/2022-04-18/) && JSON.stringify(googleEventWithoutId).match(/2022-04-18/)) {
+                //   CalendarService.logger.debug(`Added   : ${JSON.stringify(golfEvent)}`);
+                //   CalendarService.logger.debug(`        : ${JSON.stringify(googleEventWithoutId)}`);
+                // }
+
+                return JSON.stringify(golfEvent) === JSON.stringify(googleEventWithoutId);
+              });
+            });
+            for (const e of l1) {
+              this.addGoogleEvent(userName, e, googleInfos);
+              await this.delay(2000);
+            }
+
+            // Found duplicate in google calendar
+            const l2 = googleCalendar.filter((googleEvent) => {
               const googleEventWithoutId = { ...googleEvent };
               delete googleEventWithoutId.id;
-              // if (JSON.stringify(golfEvent).match(/2022-04-18/) && JSON.stringify(googleEventWithoutId).match(/2022-04-18/)) {
-              //   CalendarService.logger.debug(`Added   : ${JSON.stringify(golfEvent)}`);
-              //   CalendarService.logger.debug(`        : ${JSON.stringify(googleEventWithoutId)}`);
-              // }
+              return googleCalendar.some((googleEvent2) => {
+                const googleEventWithoutId2 = { ...googleEvent2 };
+                delete googleEventWithoutId2.id;
 
-              return JSON.stringify(golfEvent) === JSON.stringify(googleEventWithoutId);
+                // if (JSON.stringify(googleEventWithoutId2) === JSON.stringify(googleEventWithoutId)) {
+                //   CalendarService.logger.debug(`Duplicate : ${googleEvent.summary} ${googleEvent.start.dateTime} ${googleEvent.id}`);
+                //   CalendarService.logger.debug(`          : ${googleEvent2.summary} ${googleEvent2.start.dateTime} ${googleEvent2.id}`);
+                //   CalendarService.logger.debug(`          : ${JSON.stringify(googleEventWithoutId2) === JSON.stringify(googleEventWithoutId)} ${googleEvent.id > googleEvent2.id}`);
+                // }
+
+                return JSON.stringify(googleEventWithoutId2) === JSON.stringify(googleEventWithoutId) && googleEvent.id > googleEvent2.id;
+              });
             });
-          });
-          for (const e of l1) {
-            this.addGoogleEvent(userName, e, googleInfos);
-            await this.delay(2000);
-          }
+            for (const e of l2) {
+              CalendarService.logger.debug(`Duplicate : ${e.summary} ${e.start.dateTime} ${e.id}`);
+              this.removeGoogleEvent(userName, e, googleInfos);
+              await this.delay(2000);
+            }
 
-          // Found duplicate in google calendar
-          const l2 = googleCalendar.filter((googleEvent) => {
-            const googleEventWithoutId = { ...googleEvent };
-            delete googleEventWithoutId.id;
-            return googleCalendar.some((googleEvent2) => {
-              const googleEventWithoutId2 = { ...googleEvent2 };
-              delete googleEventWithoutId2.id;
-
-              // if (JSON.stringify(googleEventWithoutId2) === JSON.stringify(googleEventWithoutId)) {
-              //   CalendarService.logger.debug(`Duplicate : ${googleEvent.summary} ${googleEvent.start.dateTime} ${googleEvent.id}`);
-              //   CalendarService.logger.debug(`          : ${googleEvent2.summary} ${googleEvent2.start.dateTime} ${googleEvent2.id}`);
-              //   CalendarService.logger.debug(`          : ${JSON.stringify(googleEventWithoutId2) === JSON.stringify(googleEventWithoutId)} ${googleEvent.id > googleEvent2.id}`);
-              // }
-
-              return JSON.stringify(googleEventWithoutId2) === JSON.stringify(googleEventWithoutId) && googleEvent.id > googleEvent2.id;
+            // remove google calendar that are not in golf
+            const l3 = googleCalendar.filter((googleEvent) => {
+              const googleEventWithoutId = { ...googleEvent };
+              delete googleEventWithoutId.id;
+              return !golfCalendar.some((golfEvent) => {
+                // if (JSON.stringify(golfEvent).match(/2022-04-18/) && JSON.stringify(googleEventWithoutId).match(/2022-04-18/)) {
+                //   CalendarService.logger.debug(`Removed : ${JSON.stringify(golfEvent)}`);
+                //   CalendarService.logger.debug(`        : ${JSON.stringify(googleEventWithoutId)}`);
+                // }
+                return JSON.stringify(golfEvent) === JSON.stringify(googleEventWithoutId);
+              });
             });
-          });
-          for (const e of l2) {
-            CalendarService.logger.debug(`Duplicate : ${e.summary} ${e.start.dateTime} ${e.id}`);
-            this.removeGoogleEvent(userName, e, googleInfos);
-            await this.delay(2000);
-          }
-
-          // remove google calendar that are not in golf
-          const l3 = googleCalendar.filter((googleEvent) => {
-            const googleEventWithoutId = { ...googleEvent };
-            delete googleEventWithoutId.id;
-            return !golfCalendar.some((golfEvent) => {
-              // if (JSON.stringify(golfEvent).match(/2022-04-18/) && JSON.stringify(googleEventWithoutId).match(/2022-04-18/)) {
-              //   CalendarService.logger.debug(`Removed : ${JSON.stringify(golfEvent)}`);
-              //   CalendarService.logger.debug(`        : ${JSON.stringify(googleEventWithoutId)}`);
-              // }
-              return JSON.stringify(golfEvent) === JSON.stringify(googleEventWithoutId);
-            });
-          });
-          for (const e of l3) {
-            this.removeGoogleEvent(userName, e, googleInfos);
-            await this.delay(2000);
+            for (const e of l3) {
+              this.removeGoogleEvent(userName, e, googleInfos);
+              await this.delay(2000);
+            }
           }
         })
         .catch((err) => {
           CalendarService.logger.error(err);
+          this.usersStatus[userName].ok = false;
+          this.usersStatus[userName].error = ''+err;
+          // if (err?.data?.error?.message) {
+          //   this.usersStatus[userName].error = err?.data?.error?.message;
+          // }
         });
     });
   }
@@ -460,4 +487,8 @@ export class CalendarService {
   }
 
   private delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
+
+  getUsersStatus(): Promise<{ [user_name: string]: ServiceStatus }> {
+    return Promise.resolve(this.usersStatus);
+  }
 }

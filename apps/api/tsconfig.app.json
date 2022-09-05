@@ -8,7 +8,7 @@
     "target": "es2015",
     "lib": [
       // ... other libs
-      "es2019",
+      "es2020",
       "dom"
     ]
   },

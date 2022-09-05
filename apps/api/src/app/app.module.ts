@@ -11,9 +11,10 @@ import { RefreshTokenInterceptor } from './interceptors/refresh-token.intercepto
 import { AuthenticationModule } from './authentication/authentication.module';
 import { CalendarModule } from './calendar/calendar.module';
 import { ParcoursModule } from './parcours/parcours.module';
+import { HealthModule } from './health/health.module';
 
 @Module({
-  imports: [ScheduleModule.forRoot(), ConfigModule.forRoot(), EventsModule, CoursesModule, UsersModule, AuthenticationModule, CalendarModule, ParcoursModule],
+  imports: [ScheduleModule.forRoot(), ConfigModule.forRoot(), EventsModule, CoursesModule, UsersModule, AuthenticationModule, CalendarModule, ParcoursModule, HealthModule],
   controllers: [AppController],
   providers: [
     {
