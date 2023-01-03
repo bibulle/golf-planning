@@ -8,7 +8,6 @@ import { CoursesService } from '../courses/courses.service';
 import { EventsService } from '../events/events.service';
 import { CronJob } from 'cron';
 import { ParcoursService } from '../parcours/parcours.service';
-import { LazyModuleLoader } from '@nestjs/core';
 
 @Injectable()
 export class CalendarService {
@@ -133,7 +132,8 @@ export class CalendarService {
           const googleCalendar: GoogleEvent[] = !calendar
             ? []
             : calendar.filter((e) => {
-                return e.summary.match(/^(Cours|Parcours) golf.*: .* (.*)$/) != null;
+                // CalendarService.logger.debug(e);
+                return e.summary && e.summary.match(/^(Cours|Parcours) golf.*: .* (.*)$/) != null;
               });
 
           this.usersStatus[userName].ok = true;
@@ -152,6 +152,7 @@ export class CalendarService {
             return c.summary.startsWith('Parcours');
           }).length;
           const coursCount = golfCalendar.filter((c) => {
+            // CalendarService.logger.debug(c);
             return c.summary.startsWith('Cours');
           }).length;
           CalendarService.logger.warn(`golfCalendar   : ${parcoursCount} parcours & ${coursCount} cours`);
@@ -223,7 +224,7 @@ export class CalendarService {
         .catch((err) => {
           CalendarService.logger.error(err);
           this.usersStatus[userName].ok = false;
-          this.usersStatus[userName].error = ''+err;
+          this.usersStatus[userName].error = '' + err;
           // if (err?.data?.error?.message) {
           //   this.usersStatus[userName].error = err?.data?.error?.message;
           // }
@@ -240,6 +241,7 @@ export class CalendarService {
     return this._courseService
       .getCourse(userName)
       .map((c) => {
+        // CalendarService.logger.debug(`${userName} : ${c.title} `);
         const times = c.hour.split(':').map((s) => +s);
 
         // CalendarService.logger.debug(c.date.toTimeString().replace(/^[0-9:]* /, "").replace(/ .*$/,""));
@@ -330,7 +332,7 @@ export class CalendarService {
           if (err.code === 401) {
             this._getTokenWithRefresh(googleInfos)
               .catch((err) => {
-                CalendarService.logger.error(`Removing tokens due to error ${err}`);
+                CalendarService.logger.error(`${userName} : Removing tokens due to error ${err}`);
                 this.removeUserGoogleInfos(userName);
                 reject(err);
               })
@@ -343,7 +345,7 @@ export class CalendarService {
                 }
               });
           } else {
-            CalendarService.logger.error('Getting calendar list error: ' + err);
+            CalendarService.logger.error(`${userName} : Getting calendar list error: ${err}`);
             reject(err);
           }
         })

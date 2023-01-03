@@ -1,4 +1,4 @@
-import { ApiReturn, GlobalStatus } from '@golf-planning/api-interfaces';
+import { GlobalStatus } from '@golf-planning/api-interfaces';
 import { Controller, Get, HttpException, HttpStatus, Logger, Res } from '@nestjs/common';
 import { HealthService } from './health.service';
 import { Response } from 'express';

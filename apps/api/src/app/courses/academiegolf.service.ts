@@ -40,29 +40,29 @@ export class AcademiegolfService {
     const cookieJar = this.getCookieJar(user.academiergolf_login);
 
     // Fetch the url
-    //this.logger.debug('Fetch : ' + url);
+    // this.logger.debug('Fetch : ' + url);
     const response = await got(url, { cookieJar }).catch((reason) => {
       this.logger.error(reason);
       return Promise.reject('Cannot connect to Academie Golf!!');
     });
-    //this.logger.debug('Fetch : ' + url + '  done');
+    // this.logger.debug('Fetch : ' + url + '  done');
 
     let dom = new JSDOM(response.body);
 
     // if auth button found, try to authenticate
     if (dom.window.document.querySelector('#auth')) {
-      //this.logger.debug('Authentification');
+      // this.logger.debug('Authentification');
       await this.authenticate(user);
-      //this.logger.debug('Authentification done');
+      // this.logger.debug('Authentification done');
 
       // refetch the URL
-      //this.logger.debug('Fetch : ' + url);
+      // this.logger.debug('Fetch : ' + url);
       const response = await got(url, { cookieJar }).catch((reason) => {
         this.logger.error('ERROR');
         this.logger.error(reason);
         return Promise.reject('Cannot connect to Academie Golf!!');
       });
-      //this.logger.debug('Fetch : ' + url + '  done');
+      // this.logger.debug('Fetch : ' + url + '  done');
 
       dom = new JSDOM(response.body);
     }
@@ -71,7 +71,7 @@ export class AcademiegolfService {
       return Promise.reject('Cannot authenticate to Academie Golf!!');
     }
 
-    // Verify if tit's the good date
+    // Verify if it's the good date
     if (date) {
       const returnedDate = dom.window.document.querySelector('#planning-modal-redirect')['value'];
       if (returnedDate != formatedDate) {

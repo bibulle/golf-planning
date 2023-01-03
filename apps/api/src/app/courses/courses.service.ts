@@ -64,6 +64,7 @@ export class CoursesService {
     return this.planning;
   }
   getCourse(user?: string): Course[] {
+    // this.logger.debug(`getCourse(${user})`);
     return this.courses.filter((c) => {
       return !user || c.users.some((u) => u.displayName === user);
     });
@@ -273,7 +274,7 @@ export class CoursesService {
     }
 
     const lessons = this.acadeliegolfService.getFromPage(dom);
-
+    // console.log(lessons);
     return lessons;
   }
 
