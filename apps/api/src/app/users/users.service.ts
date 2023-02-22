@@ -48,9 +48,9 @@ export class UsersService {
   }
 
   setGolfSiteToUser(displayName: string, index: number, login: string, password: string, loginChrono: string, passwordChrono: string): User {
-    this.getUser(displayName).academiergolf_index = index;
-    this.getUser(displayName).academiergolf_login = login;
-    this.getUser(displayName).academiergolf_password = password;
+    this.getUser(displayName).academiegolf_index = index;
+    this.getUser(displayName).academiegolf_login = login;
+    this.getUser(displayName).academiegolf_password = password;
     this.getUser(displayName).chronogolf_login = loginChrono;
     this.getUser(displayName).chronogolf_password = passwordChrono;
 

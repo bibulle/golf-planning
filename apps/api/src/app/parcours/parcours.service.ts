@@ -115,7 +115,7 @@ export class ParcoursService {
                 if (!parcoursTabs[ParcoursResa.getKey(p)]) {
                   parcoursTabs[ParcoursResa.getKey(p)] = p;
                 }
-                parcoursTabs[ParcoursResa.getKey(p)].users.push(new User(u.displayName, u.academiergolf_index));
+                parcoursTabs[ParcoursResa.getKey(p)].users.push(new User(u.displayName, u.academiegolf_index));
               });
             }
           })

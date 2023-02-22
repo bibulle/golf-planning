@@ -71,7 +71,7 @@ export class PlanningUserService {
       .post<ApiReturn>('api/courses/register', {
         courseId: course.golf_evt_id,
         golfId: course.golf_id,
-        userIndex: user.academiergolf_index,
+        userIndex: user.academiegolf_index,
       })
       .pipe(
         catchError((err) => {
@@ -88,6 +88,31 @@ export class PlanningUserService {
       .subscribe(() => {
         this._notificationService.success(`Enregistrement reussi (${user.displayName})`);
         //console.log(`Enregistrement reussi (${user.displayName})`);
+      });
+  }
+
+  deregisterUser(course: Course, user: User) {
+    this._http
+      .post<ApiReturn>('api/courses/deregister', {
+        courseId: course.golf_evt_id,
+        golfId: course.golf_id,
+        userIndex: user.academiegolf_index,
+      })
+      .pipe(
+        catchError((err) => {
+          if (err.error && err.error.message) {
+            console.error(err.error.message);
+            this._notificationService.error(err.error.message);
+          } else {
+            console.error(err.statusText);
+            this._notificationService.error(err.statusText);
+          }
+          return NEVER;
+        })
+      )
+      .subscribe(() => {
+        this._notificationService.success(`De-Enregistrement reussi (${user.displayName})`);
+        //console.log(`De-Enregistrement reussi (${user.displayName})`);
       });
   }
 

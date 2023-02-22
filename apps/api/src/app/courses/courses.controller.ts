@@ -41,13 +41,30 @@ export class CoursesController {
         return {"statusCode":200,"message":"Done1"};
       });
   }
+  @Post('courses/deregister')
+  @UseGuards(AuthGuard('jwt'))
+  async deregisterUser(@Body() data: { courseId: string; golfId: string; userIndex: number }) {
+    // this.logger.debug(data);
+    return this._coursesService
+      .deRegisterUser(data.courseId, data.golfId, data.userIndex)
+      .catch((err) => {
+        // this.logger.debug(err);
+        // this.logger.debug('400');
+        return Promise.reject({"statusCode":400,"message":err});
+      })
+      .then((v) => {
+        // this.logger.debug(v);
+        // this.logger.debug('200');
+        return {"statusCode":200,"message":"Done1"};
+      });
+  }
 
   @Get('users')
   @UseGuards(AuthGuard('jwt'))
   async getUsers(): Promise<User[]> {
     const users = this._coursesService.getUsers().map((u) => {
       const nu: User = { ...u };
-      nu.academiergolf_password = undefined;
+      nu.academiegolf_password = undefined;
       return nu;
     });
     return users;

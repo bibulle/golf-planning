@@ -28,7 +28,7 @@ export class CoursesService {
 
   constructor(
     private userService: UsersService,
-    private acadeliegolfService: AcademiegolfService,
+    private academiegolfService: AcademiegolfService,
     private eventService: EventsService,
     private _configService: ConfigService,
     private _schedulerRegistry: SchedulerRegistry
@@ -89,7 +89,7 @@ export class CoursesService {
   loadAllGolfCourses() {
     this.logger.log('loadAllGolfCourses');
 
-    // Get academigolf users
+    // Get academiegolf users
     this.logger.debug(`Found ${this.users.length} users`);
 
     if (this._configService.get(`USE_COURSE_MOCK`) && /true/i.test(this._configService.get(`USE_COURSE_MOCK`))) {
@@ -158,10 +158,10 @@ export class CoursesService {
             lessons.forEach((l) => {
               // add users to course in planning
               if (planningTabs[Course.getKey(l)]) {
-                const nu = new User(u.displayName, u.academiergolf_index, u.academiergolf_userid);
-                nu.academiergolf_index = u.academiergolf_index;
+                const nu = new User(u.displayName, u.academiegolf_index, u.academiegolf_userId);
+                nu.academiegolf_index = u.academiegolf_index;
                 planningTabs[Course.getKey(l)].users.push(nu);
-                //this.logger.debug(`${Course.getKey(l)} -> ${u.academiergolf_index} ${u.displayName}`);
+                //this.logger.debug(`${Course.getKey(l)} -> ${u.academiegolf_index} ${u.displayName}`);
                 //this.logger.debug(JSON.stringify(planningTabs[l.getKey()], null, 2));
                 //this.logger.debug(`${l.getKey()} ${JSON.stringify(planningTabs[l.getKey()])}`)
               }
@@ -169,7 +169,7 @@ export class CoursesService {
               if (!coursesTabs[Course.getKey(l)]) {
                 coursesTabs[Course.getKey(l)] = l;
               }
-              coursesTabs[Course.getKey(l)].users.push(new User(u.displayName, u.academiergolf_index));
+              coursesTabs[Course.getKey(l)].users.push(new User(u.displayName, u.academiegolf_index));
             });
           }
         })
@@ -251,13 +251,13 @@ export class CoursesService {
    * @returns
    */
   private async getPlanningGlobal(user: User, date: Date): Promise<Course[]> {
-    const dom = await this.acadeliegolfService.getPlanningGlobalPage(user, date);
+    const dom = await this.academiegolfService.getPlanningGlobalPage(user, date);
 
     if (!dom) {
       return undefined;
     }
 
-    const lessons = this.acadeliegolfService.getFromPage(dom, date);
+    const lessons = this.academiegolfService.getFromPage(dom, date);
 
     return lessons;
   }
@@ -267,20 +267,20 @@ export class CoursesService {
    * @returns
    */
   private async getPlanningUser(user: User): Promise<Course[]> {
-    const dom = await this.acadeliegolfService.getPlanningUserPage(user);
+    const dom = await this.academiegolfService.getPlanningUserPage(user);
 
     if (!dom) {
       return undefined;
     }
 
-    const lessons = this.acadeliegolfService.getFromPage(dom);
+    const lessons = this.academiegolfService.getFromPage(dom);
     // console.log(lessons);
     return lessons;
   }
 
   async registerUser(courseId: string, golfId: string, userIndex: number): Promise<string> {
     // cherche le user et le cours
-    const user: User = this.users.find((u) => u.academiergolf_index === userIndex);
+    const user: User = this.users.find((u) => u.academiegolf_index === userIndex);
     if (!user) {
       return Promise.reject(`Utilisateur non trouvé (${userIndex})`);
     }
@@ -292,14 +292,14 @@ export class CoursesService {
 
     if (this._configService.get(`USE_COURSE_MOCK`) && /true/i.test(this._configService.get(`USE_COURSE_MOCK`))) {
       this.logger.warn('Using course mock !!!');
-      course.users.push(new User(user.displayName, user.academiergolf_index, user.academiergolf_userid));
+      course.users.push(new User(user.displayName, user.academiegolf_index, user.academiegolf_userId));
       this.eventService.planningUpdated();
       this.eventService.courseUpdated();
       this.loadAllGolfCourses();
       return Promise.resolve('Success (with mock)');
     }
 
-    this.acadeliegolfService
+    this.academiegolfService
       .registerUser(course, user)
       .catch((err) => {
         Promise.reject(err);
@@ -313,7 +313,7 @@ export class CoursesService {
         if (dom.window.document.querySelector('.reveal-modal-err')) {
           return Promise.reject(dom.window.document.querySelector('.reveal-modal-err').textContent);
         } else if (dom.window.document.querySelector('.reveal-modal-ok')) {
-          course.users.push(new User(user.displayName, user.academiergolf_index, user.academiergolf_userid));
+          course.users.push(new User(user.displayName, user.academiegolf_index, user.academiegolf_userId));
           this.eventService.planningUpdated();
           this.eventService.courseUpdated();
           this.loadAllGolfCourses();
@@ -326,6 +326,57 @@ export class CoursesService {
         // this.logger.debug(dom.window.document.body.textContent);
         // Promise.resolve();
       });
+  }
+
+  async deRegisterUser(courseId: string, golfId: string, userIndex: number): Promise<string> {
+    // cherche le user et le cours
+    const user: User = this.users.find((u) => u.academiegolf_index === userIndex);
+    if (!user) {
+      return Promise.reject(`Utilisateur non trouvé (${userIndex})`);
+    }
+
+    const course: Course = this.planning.find((c) => c.golf_evt_id === courseId && c.golf_id === golfId);
+    if (!course) {
+      return Promise.reject(`Cours non trouvé (${courseId})`);
+    }
+
+    if (this._configService.get(`USE_COURSE_MOCK`) && /true/i.test(this._configService.get(`USE_COURSE_MOCK`))) {
+      this.logger.warn('Using course mock !!!');
+      course.users = course.users.filter(u => u.academiegolf_index !== user.academiegolf_index);
+      this.eventService.planningUpdated();
+      this.eventService.courseUpdated();
+      this.loadAllGolfCourses();
+      return Promise.resolve('Success (with mock)');
+    }
+
+    this.academiegolfService
+      .deRegisterUser(course, user)
+      .catch((err) => {
+        Promise.reject(err);
+      })
+      .then((dom) => {
+        if (!dom) {
+          this.logger.error('Dom is not defined');
+          return Promise.reject('Something go wrong !!');
+        }
+
+        if (dom.window.document.querySelector('.reveal-modal-err')) {
+          return Promise.reject(dom.window.document.querySelector('.reveal-modal-err').textContent);
+        } else if (dom.window.document.querySelector('.reveal-modal-ok')) {
+          course.users = course.users.filter(u => u.academiegolf_index !== user.academiegolf_index);
+          this.eventService.planningUpdated();
+          this.eventService.courseUpdated();
+          this.loadAllGolfCourses();
+
+          return Promise.resolve(dom.window.document.querySelector('.reveal-modal-ok').textContent);
+        } else {
+          this.logger.error('Dom has no reveal-modal tag');
+          return Promise.reject('Something go wrong !!');
+        }
+        // this.logger.debug(dom.window.document.body.textContent);
+        // Promise.resolve();
+      });
+
   }
 
   getUsersStatus(): Promise<{ [user_name: string]: ServiceStatus }> {
