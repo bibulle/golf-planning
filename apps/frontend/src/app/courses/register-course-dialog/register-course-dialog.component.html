@@ -1,11 +1,11 @@
 <mat-card class="rounded-md shadow-lg bg-primary-default text-neutral-light">
-  <mat-card-title class="text-xl font-bold pt-5 pb-4 text-secondary-light">{{ data.course.title }} {{data.course.golf_evt_id}}</mat-card-title>
+  <mat-card-title class="text-xl font-bold pt-5 pb-4 text-secondary-light">{{ data.course.title }} {{ data.course.golf_evt_id }}</mat-card-title>
   <div class="absolute top-1 right-2 text-secondary-light" [class.text-red-default]="countSelectedUsers() > data.course.places">
     <span *ngIf="data.course.places === 0">Aucune place disponible</span>
     <span *ngIf="data.course.places === 1">Une place disponible</span>
     <span *ngIf="data.course.places > 1">{{ data.course.places }} places disponibles</span>
   </div>
-  <form #f="ngForm" (ngSubmit)="register()">
+  <form #f="ngForm" (ngSubmit)="onSubmit($event.submitter.id)">
     <mat-card-content>
       <div class="text-lg pb-3 text-secondary-light">
         <span class="font-semibold">{{ courseDate | date: 'EEEE d MMMM' | titlecase }}</span>
@@ -13,15 +13,12 @@
       </div>
       <div class="flex flex-col">
         <div *ngFor="let user of data.users">
-          <label *ngIf="user.academiergolf_index" class="inline-flex items-center py-2 px-3 text-neutral-light" [class.opacity-60]="isUserAlreadyRegistered(user.academiergolf_index)">
+          <label *ngIf="user.academiergolf_index" class="inline-flex items-center py-2 px-3 text-neutral-light">
             <input
               type="checkbox"
               (change)="selectedUser[user.academiergolf_index] = !selectedUser[user.academiergolf_index]"
               class="form-checkbox h-5 w-5 mr-2 text-secondary-dark bg-neutral-default border-neutral-default focus:ring-0"
-              [class.text-primary-default]="isUserAlreadyRegistered(user.academiergolf_index)"
-              [class.text-secondary-dark]="!isUserAlreadyRegistered(user.academiergolf_index)"
               [checked]="selectedUser[user.academiergolf_index] || isUserAlreadyRegistered(user.academiergolf_index)"
-              [disabled]="isUserAlreadyRegistered(user.academiergolf_index)"
             />
             <!-- <svg *ngIf="filter.icon" class="h-8 w-8 fill-neutral-default stroke-neutral-default" [class.fill-neutral-light]="filter.selected" [class.stroke-neutral-light]="filter.selected">
           <use [attr.xlink:href]="'assets/img/symbol-defs.svg#' + filter.icon"></use>
@@ -29,19 +26,31 @@
             <span class="text-lg">
               {{ user.displayName }}
             </span>
-            <span *ngIf="isUserAlreadyRegistered(user.academiergolf_index)" class="text-sm px-2">(Deja enregistré)</span>
+            <span *ngIf="isUserAlreadyRegistered(user.academiergolf_index)" class="text-sm px-2">(Enregistré)</span>
           </label>
         </div>
       </div>
     </mat-card-content>
     <mat-card-actions class="flex justify-around text-lg" style="display: flex">
       <button
-        [disabled]="getError()"
+        id="register"
+        [disabled]="getRegisterError()"
         mat-button
         type="submit"
+        [title]="getRegisterError() ? getRegisterError() : ''"
         class="rounded-md px-3 py-2 bg-primary-dark disabled:opacity-20 flex focus:outline-none focus:ring-2 focus:ring-offset-0 focus:ring-primary-light"
       >
         Inscrire
+      </button>
+      <button
+        id="deregister"
+        [disabled]="getDeregisterError()"
+        mat-button
+        type="submit"
+        [title]="getDeregisterError() ? getDeregisterError() : ''"
+        class="rounded-md px-3 py-2 bg-primary-dark disabled:opacity-20 flex focus:outline-none focus:ring-2 focus:ring-offset-0 focus:ring-primary-light"
+      >
+        Désinscrire
       </button>
       <button mat-button type="button" (click)="cancel()" class="rounded-md px-3 py-2 bg-primary-dark flex focus:outline-none focus:ring-2 focus:ring-offset-0 focus:ring-primary-light">Cancel</button>
     </mat-card-actions>

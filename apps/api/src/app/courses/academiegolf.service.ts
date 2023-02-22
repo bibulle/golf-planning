@@ -13,6 +13,7 @@ export class AcademiegolfService {
   private static readonly URL_MY_COURS = 'https://academiegolf.com/fr/la-ramee/mes-informations?tab=1';
   private static readonly URL_CON = 'https://academiegolf.com/fr/la-ramee/connexion.html';
   private static readonly URL_REGISTER = 'https://academiegolf.com/includes/public/ajaxCtrl/_ajaxPlanning.php?action=eleveAddEvtPublish';
+  private static readonly URL_DELETE = 'https://academiegolf.com/includes/public/ajaxCtrl/_ajaxPlanning.php?action=eleveDelEvtPublish';
   // 'eleveAddEvt','&lang=fr&golf_evt_id='+jQuery(this).attr('id')+'&guser_id=rame-011008'+'&golf_id=24'+'&datePlus=2022-01-30'+'&guser_type=eleve'
 
   cookiesJars: { [id: string]: CookieJar } = {};
@@ -104,7 +105,7 @@ export class AcademiegolfService {
 
     const cookieJar = this.getCookieJar(user.academiergolf_login);
 
-    const boundary = this.genrateRandomString();
+    const boundary = this.generateRandomString();
     // Temporary solution (build body and header "manually")
     const headers = {
       'content-type': `multipart/form-data; boundary=--------------------------${boundary}`,
@@ -172,6 +173,80 @@ export class AcademiegolfService {
     return dom;
   }
 
+  async deRegisterUser(course: Course, user: User): Promise<JSDOM> {
+    // this.logger.debug(JSON.stringify(course, null, 2));
+    // this.logger.debug(JSON.stringify(user, null, 2));
+
+    const cookieJar = this.getCookieJar(user.academiergolf_login);
+
+    const boundary = this.generateRandomString();
+    // Temporary solution (build body and header "manually")
+    const headers = {
+      'content-type': `multipart/form-data; boundary=--------------------------${boundary}`,
+    };
+    const body = `----------------------------${boundary}
+        Content-Disposition: form-data; name="golf_evt_id"
+        
+        ${course.golf_evt_id}
+        ----------------------------${boundary}
+        Content-Disposition: form-data; name="guser_id"
+        
+        ${user.academiergolf_userid}
+        ----------------------------${boundary}
+        Content-Disposition: form-data; name="golf_id"
+        
+        ${course.golf_id}
+        ----------------------------${boundary}
+        Content-Disposition: form-data; name="datePlus"
+        
+        ${course.date.getFullYear()}-${(1 + course.date.getMonth()).toPrecision().padStart(2, '0')}-${course.date.getDate().toPrecision().padStart(2, '0')}
+        ----------------------------${boundary}
+        Content-Disposition: form-data; name="guser_type"
+        
+        eleve
+        ----------------------------${boundary}--
+        `.replace(/^[ \t]*/gm, '');
+
+    // this.logger.debug(JSON.stringify(body, null, 2));
+
+    const response = await got
+      .post(AcademiegolfService.URL_DELETE, {
+        followRedirect: true,
+        cookieJar,
+        body: body,
+        headers: headers,
+      })
+      .catch((err) => {
+        return Promise.reject(err);
+      });
+    // this.logger.debug(JSON.stringify(response.body, null, 2));
+    let dom = new JSDOM(response.body);
+
+    if (dom.window.document.querySelector('#auth') || dom.window.document.querySelector('.reveal-modal-err')) {
+      await this.authenticate(user);
+
+      const response = await got
+        .post(AcademiegolfService.URL_DELETE, {
+          followRedirect: true,
+          cookieJar,
+          body: body,
+          headers: headers,
+        })
+        .catch((err) => {
+          return Promise.reject(err);
+        });
+      // this.logger.debug(JSON.stringify(response.body, null, 2));
+      dom = new JSDOM(response.body);
+    }
+
+    if (dom.window.document.querySelector('#auth')) {
+      return Promise.reject('Cannot authenticate to Academie Golf!!');
+    }
+
+    // this.logger.debug(dom);
+    return dom;
+  }
+
   /**
    * Authenticate
    */
@@ -184,7 +259,7 @@ export class AcademiegolfService {
 
     //const formEncoder = new FormDataEncoder(formData);
 
-    const boundary = this.genrateRandomString();
+    const boundary = this.generateRandomString();
 
     // Temporary solution (build body and header "manually")
     const headers = {
@@ -353,7 +428,7 @@ export class AcademiegolfService {
 
     return parts[5].replace(/h/, ':');
   }
-  private genrateRandomString(): string {
+  private generateRandomString(): string {
     return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
   }
 

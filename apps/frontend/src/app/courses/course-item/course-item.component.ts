@@ -32,18 +32,28 @@ export class CourseItemComponent implements OnChanges {
   openDialog() {
     const dialogRef = this._dialog.open(RegisterCourseDialogComponent, { data: { course: this.course, users: this.users } });
 
-    dialogRef.afterClosed().subscribe((selectedusers: number[]) => {
+    dialogRef.afterClosed().subscribe((changedUsers: {register?:number[], deregister?:number[]}) => {
+
+      const registerUser = (changedUsers && changedUsers.register ? changedUsers.register : []);
+      const deregisterUser = (changedUsers && changedUsers.deregister ? changedUsers.deregister : []);
  
-      if (!selectedusers || selectedusers.length === 0) {
+      if (registerUser.length === 0 && deregisterUser.length === 0) {
         console.log('Nothing to do');
         return;
       }
 
-      selectedusers.map(id => {
+      registerUser.map(id => {
         return this.users.find(u => u.academiergolf_index === id);
       }).forEach( u => {
         if (u) {
           this._planningUserService.registerUser(this.course, u)
+        }
+      });
+      deregisterUser.map(id => {
+        return this.users.find(u => u.academiergolf_index === id);
+      }).forEach( u => {
+        if (u) {
+          this._planningUserService.deregisterUser(this.course, u)
         }
       });
     });

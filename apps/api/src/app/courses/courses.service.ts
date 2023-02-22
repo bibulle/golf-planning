@@ -328,6 +328,57 @@ export class CoursesService {
       });
   }
 
+  async deRegisterUser(courseId: string, golfId: string, userIndex: number): Promise<string> {
+    // cherche le user et le cours
+    const user: User = this.users.find((u) => u.academiergolf_index === userIndex);
+    if (!user) {
+      return Promise.reject(`Utilisateur non trouvé (${userIndex})`);
+    }
+
+    const course: Course = this.planning.find((c) => c.golf_evt_id === courseId && c.golf_id === golfId);
+    if (!course) {
+      return Promise.reject(`Cours non trouvé (${courseId})`);
+    }
+
+    if (this._configService.get(`USE_COURSE_MOCK`) && /true/i.test(this._configService.get(`USE_COURSE_MOCK`))) {
+      this.logger.warn('Using course mock !!!');
+      course.users = course.users.filter(u => u.academiergolf_index !== user.academiergolf_index);
+      this.eventService.planningUpdated();
+      this.eventService.courseUpdated();
+      this.loadAllGolfCourses();
+      return Promise.resolve('Success (with mock)');
+    }
+
+    this.acadeliegolfService
+      .deRegisterUser(course, user)
+      .catch((err) => {
+        Promise.reject(err);
+      })
+      .then((dom) => {
+        if (!dom) {
+          this.logger.error('Dom is not defined');
+          return Promise.reject('Something go wrong !!');
+        }
+
+        if (dom.window.document.querySelector('.reveal-modal-err')) {
+          return Promise.reject(dom.window.document.querySelector('.reveal-modal-err').textContent);
+        } else if (dom.window.document.querySelector('.reveal-modal-ok')) {
+          course.users = course.users.filter(u => u.academiergolf_index !== user.academiergolf_index);
+          this.eventService.planningUpdated();
+          this.eventService.courseUpdated();
+          this.loadAllGolfCourses();
+
+          return Promise.resolve(dom.window.document.querySelector('.reveal-modal-ok').textContent);
+        } else {
+          this.logger.error('Dom has no reveal-modal tag');
+          return Promise.reject('Something go wrong !!');
+        }
+        // this.logger.debug(dom.window.document.body.textContent);
+        // Promise.resolve();
+      });
+
+  }
+
   getUsersStatus(): Promise<{ [user_name: string]: ServiceStatus }> {
     return Promise.resolve(this.usersStatus);
   }

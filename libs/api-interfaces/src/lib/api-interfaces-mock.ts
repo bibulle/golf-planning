@@ -174,6 +174,33 @@ export const PLANNING_MOCK: any[] = [
   { type: Course.TYPE, date: '2022-02-10T11:00:00.000Z', hour: '16:00', title: 'SWING 4U ARGENT', prof: 'Alexandre', places: 8, golf_evt_id: '1033557', golf_id: '24', users: [] },
   { type: Course.TYPE, date: '2022-02-10T11:00:00.000Z', hour: '16:00', title: 'SWING 4U COMPACT', prof: 'Cédric', places: 0, golf_evt_id: '1033545', golf_id: '24', users: [] },
   { type: Course.TYPE, date: '2022-02-10T11:00:00.000Z', hour: '17:30', title: 'SWING 4U ARGENT', prof: 'Cédric', places: 8, golf_evt_id: '1033546', golf_id: '24', users: [] },
+  {
+    type: Course.TYPE,
+    date: '2023-08-11T11:00:00.000Z',
+    hour: '12:00',
+    title: 'SWING 4U ARGENT',
+    prof: 'Alexandre',
+    places: 3,
+    golf_evt_id: '1032744',
+    golf_id: '24',
+    users: [
+      { displayName: 'Bibulle Martin', academiergolf_index: 1 }
+    ],
+  },
+  {
+    type: Course.TYPE,
+    date: '2023-08-10T11:00:00.000Z',
+    hour: '12:00',
+    title: 'SWING 4U ARGENT',
+    prof: 'Alexandre',
+    places: 3,
+    golf_evt_id: '1032743',
+    golf_id: '24',
+    users: [
+      { displayName: 'Bibulle Martin', academiergolf_index: 1 },
+      { displayName: 'Nathalie M', academiergolf_index: 2 },
+    ],
+  }
 ];
 
 export const COURSE_MOCK: any[] = [
@@ -360,9 +387,36 @@ export const COURSE_MOCK: any[] = [
     title: 'SWING 4U ARGENT',
     prof: 'Alexandre',
     places: 3,
-    golf_evt_id: null,
-    golf_id: null,
+    golf_evt_id: '1032785',
+    golf_id: '24',
     users: [{ displayName: 'Bibulle Martin', academiergolf_index: 1 }],
+  },
+  {
+    type: Course.TYPE,
+    date: '2023-08-10T11:00:00.000Z',
+    hour: '12:00',
+    title: 'SWING 4U ARGENT',
+    prof: 'Alexandre',
+    places: 3,
+    golf_evt_id: '1032743',
+    golf_id: '24',
+    users: [
+      { displayName: 'Bibulle Martin', academiergolf_index: 1 },
+      { displayName: 'Nathalie M', academiergolf_index: 2 },
+    ],
+  },
+  {
+    type: Course.TYPE,
+    date: '2023-08-11T11:00:00.000Z',
+    hour: '12:00',
+    title: 'SWING 4U ARGENT',
+    prof: 'Alexandre',
+    places: 3,
+    golf_evt_id: '1032744',
+    golf_id: '24',
+    users: [
+      { displayName: 'Bibulle Martin', academiergolf_index: 1 }
+    ],
   },
 ];
 
