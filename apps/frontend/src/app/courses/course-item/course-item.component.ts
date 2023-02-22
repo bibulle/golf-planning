@@ -25,7 +25,7 @@ export class CourseItemComponent implements OnChanges {
 
   isUser(index: number): boolean {
     return this.course.users.some((u) => {
-      return u.academiergolf_index === index;
+      return u.academiegolf_index === index;
     });
   }
 
@@ -43,14 +43,14 @@ export class CourseItemComponent implements OnChanges {
       }
 
       registerUser.map(id => {
-        return this.users.find(u => u.academiergolf_index === id);
+        return this.users.find(u => u.academiegolf_index === id);
       }).forEach( u => {
         if (u) {
           this._planningUserService.registerUser(this.course, u)
         }
       });
       deregisterUser.map(id => {
-        return this.users.find(u => u.academiergolf_index === id);
+        return this.users.find(u => u.academiegolf_index === id);
       }).forEach( u => {
         if (u) {
           this._planningUserService.deregisterUser(this.course, u)

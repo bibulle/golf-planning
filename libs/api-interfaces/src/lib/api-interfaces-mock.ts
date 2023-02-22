@@ -62,7 +62,7 @@ export const PLANNING_MOCK: any[] = [
     places: 3,
     golf_evt_id: '1032785',
     golf_id: '24',
-    users: [{ displayName: 'Bibulle Martin', academiergolf_index: 1, academiergolf_userid: 'rame-011008' }],
+    users: [{ displayName: 'Bibulle Martin', academiegolf_index: 1, academiegolf_userId: 'rame-011008' }],
   },
   { type: Course.TYPE, date: '2022-01-29T11:00:00.000Z', hour: '12:00', title: 'SWING 4U BRONZE', prof: 'Baptiste', places: 0, golf_evt_id: '1032819', golf_id: '24', users: [] },
   { type: Course.TYPE, date: '2022-01-29T11:00:00.000Z', hour: '14:00', title: 'SWING 4U BRONZE', prof: 'Alexandre', places: 0, golf_evt_id: '1032827', golf_id: '24', users: [] },
@@ -184,7 +184,7 @@ export const PLANNING_MOCK: any[] = [
     golf_evt_id: '1032744',
     golf_id: '24',
     users: [
-      { displayName: 'Bibulle Martin', academiergolf_index: 1 }
+      { displayName: 'Bibulle Martin', academiegolf_index: 1 }
     ],
   },
   {
@@ -197,8 +197,8 @@ export const PLANNING_MOCK: any[] = [
     golf_evt_id: '1032743',
     golf_id: '24',
     users: [
-      { displayName: 'Bibulle Martin', academiergolf_index: 1 },
-      { displayName: 'Nathalie M', academiergolf_index: 2 },
+      { displayName: 'Bibulle Martin', academiegolf_index: 1 },
+      { displayName: 'Nathalie M', academiegolf_index: 2 },
     ],
   }
 ];
@@ -213,7 +213,7 @@ export const COURSE_MOCK: any[] = [
     places: 0,
     golf_evt_id: null,
     golf_id: null,
-    users: [{ displayName: 'Bibulle Martin', academiergolf_index: 1 }],
+    users: [{ displayName: 'Bibulle Martin', academiegolf_index: 1 }],
   },
   {
     type: Course.TYPE,
@@ -225,8 +225,8 @@ export const COURSE_MOCK: any[] = [
     golf_evt_id: null,
     golf_id: null,
     users: [
-      { displayName: 'Bibulle Martin', academiergolf_index: 1 },
-      { displayName: 'Nathalie M', academiergolf_index: 2 },
+      { displayName: 'Bibulle Martin', academiegolf_index: 1 },
+      { displayName: 'Nathalie M', academiegolf_index: 2 },
     ],
   },
   {
@@ -239,8 +239,8 @@ export const COURSE_MOCK: any[] = [
     golf_evt_id: null,
     golf_id: null,
     users: [
-      { displayName: 'Bibulle Martin', academiergolf_index: 1 },
-      { displayName: 'Nathalie M', academiergolf_index: 2 },
+      { displayName: 'Bibulle Martin', academiegolf_index: 1 },
+      { displayName: 'Nathalie M', academiegolf_index: 2 },
     ],
   },
   {
@@ -253,8 +253,8 @@ export const COURSE_MOCK: any[] = [
     golf_evt_id: null,
     golf_id: null,
     users: [
-      { displayName: 'Bibulle Martin', academiergolf_index: 1 },
-      { displayName: 'Nathalie M', academiergolf_index: 2 },
+      { displayName: 'Bibulle Martin', academiegolf_index: 1 },
+      { displayName: 'Nathalie M', academiegolf_index: 2 },
     ],
   },
   {
@@ -267,8 +267,8 @@ export const COURSE_MOCK: any[] = [
     golf_evt_id: null,
     golf_id: null,
     users: [
-      { displayName: 'Bibulle Martin', academiergolf_index: 1 },
-      { displayName: 'Nathalie M', academiergolf_index: 2 },
+      { displayName: 'Bibulle Martin', academiegolf_index: 1 },
+      { displayName: 'Nathalie M', academiegolf_index: 2 },
     ],
   },
   {
@@ -281,8 +281,8 @@ export const COURSE_MOCK: any[] = [
     golf_evt_id: null,
     golf_id: null,
     users: [
-      { displayName: 'Bibulle Martin', academiergolf_index: 1 },
-      { displayName: 'Nathalie M', academiergolf_index: 2 },
+      { displayName: 'Bibulle Martin', academiegolf_index: 1 },
+      { displayName: 'Nathalie M', academiegolf_index: 2 },
     ],
   },
   {
@@ -295,8 +295,8 @@ export const COURSE_MOCK: any[] = [
     golf_evt_id: null,
     golf_id: null,
     users: [
-      { displayName: 'Bibulle Martin', academiergolf_index: 1 },
-      { displayName: 'Nathalie M', academiergolf_index: 2 },
+      { displayName: 'Bibulle Martin', academiegolf_index: 1 },
+      { displayName: 'Nathalie M', academiegolf_index: 2 },
     ],
   },
   {
@@ -309,8 +309,8 @@ export const COURSE_MOCK: any[] = [
     golf_evt_id: null,
     golf_id: null,
     users: [
-      { displayName: 'Bibulle Martin', academiergolf_index: 1 },
-      { displayName: 'Nathalie M', academiergolf_index: 2 },
+      { displayName: 'Bibulle Martin', academiegolf_index: 1 },
+      { displayName: 'Nathalie M', academiegolf_index: 2 },
     ],
   },
   {
@@ -323,8 +323,8 @@ export const COURSE_MOCK: any[] = [
     golf_evt_id: null,
     golf_id: null,
     users: [
-      { displayName: 'Bibulle Martin', academiergolf_index: 1 },
-      { displayName: 'Nathalie M', academiergolf_index: 2 },
+      { displayName: 'Bibulle Martin', academiegolf_index: 1 },
+      { displayName: 'Nathalie M', academiegolf_index: 2 },
     ],
   },
   {
@@ -337,8 +337,8 @@ export const COURSE_MOCK: any[] = [
     golf_evt_id: null,
     golf_id: null,
     users: [
-      { displayName: 'Bibulle Martin', academiergolf_index: 1 },
-      { displayName: 'Nathalie M', academiergolf_index: 2 },
+      { displayName: 'Bibulle Martin', academiegolf_index: 1 },
+      { displayName: 'Nathalie M', academiegolf_index: 2 },
     ],
   },
   {
@@ -351,8 +351,8 @@ export const COURSE_MOCK: any[] = [
     golf_evt_id: null,
     golf_id: null,
     users: [
-      { displayName: 'Bibulle Martin', academiergolf_index: 1 },
-      { displayName: 'Nathalie M', academiergolf_index: 2 },
+      { displayName: 'Bibulle Martin', academiegolf_index: 1 },
+      { displayName: 'Nathalie M', academiegolf_index: 2 },
     ],
   },
   {
@@ -365,8 +365,8 @@ export const COURSE_MOCK: any[] = [
     golf_evt_id: null,
     golf_id: null,
     users: [
-      { displayName: 'Bibulle Martin', academiergolf_index: 1 },
-      { displayName: 'Nathalie M', academiergolf_index: 2 },
+      { displayName: 'Bibulle Martin', academiegolf_index: 1 },
+      { displayName: 'Nathalie M', academiegolf_index: 2 },
     ],
   },
   {
@@ -378,7 +378,7 @@ export const COURSE_MOCK: any[] = [
     places: 4,
     golf_evt_id: null,
     golf_id: null,
-    users: [{ displayName: 'Nathalie M', academiergolf_index: 2 }],
+    users: [{ displayName: 'Nathalie M', academiegolf_index: 2 }],
   },
   {
     type: Course.TYPE,
@@ -389,7 +389,7 @@ export const COURSE_MOCK: any[] = [
     places: 3,
     golf_evt_id: '1032785',
     golf_id: '24',
-    users: [{ displayName: 'Bibulle Martin', academiergolf_index: 1 }],
+    users: [{ displayName: 'Bibulle Martin', academiegolf_index: 1 }],
   },
   {
     type: Course.TYPE,
@@ -401,8 +401,8 @@ export const COURSE_MOCK: any[] = [
     golf_evt_id: '1032743',
     golf_id: '24',
     users: [
-      { displayName: 'Bibulle Martin', academiergolf_index: 1 },
-      { displayName: 'Nathalie M', academiergolf_index: 2 },
+      { displayName: 'Bibulle Martin', academiegolf_index: 1 },
+      { displayName: 'Nathalie M', academiegolf_index: 2 },
     ],
   },
   {
@@ -415,7 +415,7 @@ export const COURSE_MOCK: any[] = [
     golf_evt_id: '1032744',
     golf_id: '24',
     users: [
-      { displayName: 'Bibulle Martin', academiergolf_index: 1 }
+      { displayName: 'Bibulle Martin', academiegolf_index: 1 }
     ],
   },
 ];
@@ -423,12 +423,12 @@ export const COURSE_MOCK: any[] = [
 export const USERS_MOCK: any[] = [
   {
     displayName: 'Bibulle Martin',
-    academiergolf_index: 1,
-    academiergolf_userid: 'rame-011008',
-    academiergolf_login: 'foo@gmail.com',
-    academiergolf_password: 'ffsdfsg"éqsdfq',
+    academiegolf_index: 1,
+    academiegolf_userId: 'rame-011008',
+    academiegolf_login: 'foo@gmail.com',
+    academiegolf_password: 'password',
   },
-  { displayName: 'Nathalie M', academiergolf_index: 2, academiergolf_userid: 'rame-011029', academiergolf_login: 'bar@gmail.com', academiergolf_password: 'gsqdgsggg' },
+  { displayName: 'Nathalie M', academiegolf_index: 2, academiegolf_userId: 'rame-011029', academiegolf_login: 'bar@gmail.com', academiegolf_password: 'password' },
 ];
 
 export const CALENDAR_MOCK: any[] = [
@@ -519,7 +519,7 @@ export const PARCOURS_RESA_MOCK: ParcoursResa[] = [
     course: PARCOURS_19628_MOCK,
     club: CLUB_17108_MOCK,
     users: [
-      { displayName: 'Nathalie M', academiergolf_index: 2 },
+      { displayName: 'Nathalie M', academiegolf_index: 2 },
     ],
   },
   {
@@ -532,7 +532,7 @@ export const PARCOURS_RESA_MOCK: ParcoursResa[] = [
     course: PARCOURS_19628_MOCK,
     club: CLUB_17108_MOCK,
     users: [
-      { displayName: 'Bibulle Martin', academiergolf_index: 1 },
+      { displayName: 'Bibulle Martin', academiegolf_index: 1 },
     ],
   },
   {
@@ -545,8 +545,8 @@ export const PARCOURS_RESA_MOCK: ParcoursResa[] = [
     course: PARCOURS_19628_MOCK,
     club: CLUB_17108_MOCK,
     users: [
-      { displayName: 'Bibulle Martin', academiergolf_index: 1 },
-      { displayName: 'Nathalie M', academiergolf_index: 2 },
+      { displayName: 'Bibulle Martin', academiegolf_index: 1 },
+      { displayName: 'Nathalie M', academiegolf_index: 2 },
     ],
   },
   {
@@ -559,8 +559,8 @@ export const PARCOURS_RESA_MOCK: ParcoursResa[] = [
     course: PARCOURS_19628_MOCK,
     club: CLUB_17108_MOCK,
     users: [
-      { displayName: 'Bibulle Martin', academiergolf_index: 1 },
-      { displayName: 'Nathalie M', academiergolf_index: 2 },
+      { displayName: 'Bibulle Martin', academiegolf_index: 1 },
+      { displayName: 'Nathalie M', academiegolf_index: 2 },
     ],
   },
   {
@@ -573,8 +573,8 @@ export const PARCOURS_RESA_MOCK: ParcoursResa[] = [
     course: PARCOURS_19628_MOCK,
     club: CLUB_17108_MOCK,
     users: [
-      { displayName: 'Bibulle Martin', academiergolf_index: 1 },
-      { displayName: 'Nathalie M', academiergolf_index: 2 },
+      { displayName: 'Bibulle Martin', academiegolf_index: 1 },
+      { displayName: 'Nathalie M', academiegolf_index: 2 },
     ],
   },
 ];

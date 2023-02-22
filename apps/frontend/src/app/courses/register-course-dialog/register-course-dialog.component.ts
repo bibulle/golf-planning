@@ -17,7 +17,7 @@ export class RegisterCourseDialogComponent implements OnInit {
   ngOnInit(): void {
     this.courseDate = Course.getFullDate(this.data.course);
     this.data.course.users.forEach((u) => {
-      if (u.academiergolf_index) this.selectedUser[u.academiergolf_index] = true;
+      if (u.academiegolf_index) this.selectedUser[u.academiegolf_index] = true;
     });
   }
 
@@ -26,7 +26,7 @@ export class RegisterCourseDialogComponent implements OnInit {
     let countNewSelectedUser = 0;
     this.selectedUser.forEach((b, index) => {
       const ul = this.data.course.users.filter((u) => {
-        return u.academiergolf_index === index;
+        return u.academiegolf_index === index;
       });
       if (b && ul.length === 0) {
         countNewSelectedUser++;
@@ -46,7 +46,7 @@ export class RegisterCourseDialogComponent implements OnInit {
     let countNewDeselectedUser = 0;
     this.selectedUser.forEach((b, index) => {
       const ul = this.data.course.users.filter((u) => {
-        return u.academiergolf_index === index;
+        return u.academiegolf_index === index;
       });
       if (!b && ul.length !== 0) {
         countNewDeselectedUser++;
@@ -67,7 +67,7 @@ export class RegisterCourseDialogComponent implements OnInit {
 
   isUserAlreadyRegistered(index: number): boolean {
     return this.data.course.users.some((u) => {
-      return u.academiergolf_index === index;
+      return u.academiegolf_index === index;
     });
   }
   countSelectedUsers(): number {

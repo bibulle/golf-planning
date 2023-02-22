@@ -37,8 +37,8 @@ export class AuthenticationService {
       );
 
       const user1 = { ...user };
-      delete user1.academiergolf_login;
-      delete user1.academiergolf_password;
+      delete user1.academiegolf_login;
+      delete user1.academiegolf_password;
       return sign(user1, this._configService.get('AUTHENT_JWT_SECRET'), { expiresIn: 3600 });
     } catch (err) {
       this.logger.error(err);

@@ -24,7 +24,7 @@ export class ParcoursItemComponent implements OnChanges {
 
   isUser(index: number): boolean {
     return this.parcours.users.some((u) => {
-      return u.academiergolf_index === index;
+      return u.academiegolf_index === index;
     });
   }
 

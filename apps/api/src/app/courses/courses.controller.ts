@@ -64,7 +64,7 @@ export class CoursesController {
   async getUsers(): Promise<User[]> {
     const users = this._coursesService.getUsers().map((u) => {
       const nu: User = { ...u };
-      nu.academiergolf_password = undefined;
+      nu.academiegolf_password = undefined;
       return nu;
     });
     return users;

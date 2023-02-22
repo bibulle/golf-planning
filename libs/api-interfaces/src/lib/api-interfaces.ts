@@ -143,7 +143,7 @@ export class Club {
 }
 
 /**
- * Calendar Event (comming from Google)
+ * Calendar Event (coming from Google)
  */
 export type GoogleEvent = calendar_v3.Schema$Event;
 
@@ -171,22 +171,22 @@ export class User {
   provider?: string;
   providerId?: string;
 
-  academiergolf_index?: number;
-  academiergolf_login?: string;
-  academiergolf_password?: string;
-  academiergolf_userid?: string;
+  academiegolf_index?: number;
+  academiegolf_login?: string;
+  academiegolf_password?: string;
+  academiegolf_userId?: string;
   chronogolf_login?: string;
   chronogolf_password?: string;
 
-  constructor(displayName: string, academiergolf_index?: number, academiergolf_userid?: string) {
+  constructor(displayName: string, academiegolf_index?: number, academiegolf_userId?: string) {
     this.displayName = displayName;
-    this.academiergolf_index = academiergolf_index;
-    this.academiergolf_userid = academiergolf_userid;
+    this.academiegolf_index = academiegolf_index;
+    this.academiegolf_userId = academiegolf_userId;
   }
 }
 
 /**
- * Events betwen API and frontend
+ * Events between API and frontend
  */
 
 export enum EventType {
@@ -216,7 +216,7 @@ export class Config {
 
   constructor() {
     this.filters = [
-      new Filter('reservé', FilterType.INVERTED_MATCH, true, 'Reservé', (c) => c.users.length > 0, null),
+      new Filter('réservé', FilterType.INVERTED_MATCH, true, 'Réservé', (c) => c.users.length > 0, null),
       new Filter('parcours', FilterType.INVERTED_MATCH, true, 'Parcours', null, (p) => p.type === ParcoursResa.TYPE),
       Filter.getSeparateur(),
       new Filter('0 dispo', FilterType.MATCH, false, '0 place', (c) => c.places === 0, null),
@@ -228,7 +228,7 @@ export class Config {
       new Filter('cours gold', FilterType.MATCH, false, 'Cours gold', (c) => c.title.indexOf('OR') >= 0, null),
       new Filter('cours compact', FilterType.MATCH, true, 'Cours compact', (c) => c.title.indexOf('COMPACT') >= 0, null),
       new Filter('cours parcours', FilterType.MATCH, false, 'Cours parcours', (c) => c.title.indexOf('PARCOURS') >= 0, null),
-      new Filter('cours regles', FilterType.MATCH, false, 'Cours regles', (c) => c.title.indexOf('REGLES') >= 0, null),
+      new Filter('cours règles', FilterType.MATCH, false, 'Cours règles', (c) => c.title.indexOf('REGLES') >= 0, null),
       new Filter('cours individuel', FilterType.MATCH, false, 'Cours individuel', (c) => c.title.indexOf('INDIVIDUELLE') >= 0, null),
     ];
   }
@@ -243,7 +243,7 @@ export enum FilterType {
 }
 export class Filter {
   private static readonly SEPARATEUR = 'SEPARATEUR';
-  private static separateurCounter = 0;
+  private static séparateurCounter = 0;
 
   id: string;
   type: FilterType;
@@ -274,7 +274,7 @@ export class Filter {
   }
 
   static getSeparateur() {
-    return new Filter(`${Filter.SEPARATEUR}_${Filter.separateurCounter++}`, FilterType.SEPARATOR, false, null, null, null);
+    return new Filter(`${Filter.SEPARATEUR}_${Filter.séparateurCounter++}`, FilterType.SEPARATOR, false, null, null, null);
   }
 
   isSeparateur(): boolean {

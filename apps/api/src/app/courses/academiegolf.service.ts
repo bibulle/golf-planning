@@ -38,7 +38,7 @@ export class AcademiegolfService {
       url = `${url}/${formatedDate}`;
     }
 
-    const cookieJar = this.getCookieJar(user.academiergolf_login);
+    const cookieJar = this.getCookieJar(user.academiegolf_login);
 
     // Fetch the url
     // this.logger.debug('Fetch : ' + url);
@@ -82,13 +82,13 @@ export class AcademiegolfService {
     }
 
     // get user_id
-    if (!user.academiergolf_userid) {
+    if (!user.academiegolf_userId) {
       for (let index = dom.window.document.scripts.length - 1; index > -1; index--) {
         // this.logger.debug(`${index+1}/${dom.window.document.scripts.length} ${user.academiergolf_userid}`);
         const script = dom.window.document.scripts[index];
         const s = script.textContent;
         if (s.match(/guser_id=([^']*)'/)) {
-          user.academiergolf_userid = s.match(/guser_id=([^']*)'/)[1];
+          user.academiegolf_userId = s.match(/guser_id=([^']*)'/)[1];
           // this.logger.debug(`${index+1}/${dom.window.document.scripts.length} ${user.academiergolf_userid}`);
           this.eventService.userUpdated();
           break;
@@ -103,7 +103,7 @@ export class AcademiegolfService {
     // this.logger.debug(JSON.stringify(course, null, 2));
     // this.logger.debug(JSON.stringify(user, null, 2));
 
-    const cookieJar = this.getCookieJar(user.academiergolf_login);
+    const cookieJar = this.getCookieJar(user.academiegolf_login);
 
     const boundary = this.generateRandomString();
     // Temporary solution (build body and header "manually")
@@ -117,7 +117,7 @@ export class AcademiegolfService {
         ----------------------------${boundary}
         Content-Disposition: form-data; name="guser_id"
         
-        ${user.academiergolf_userid}
+        ${user.academiegolf_userId}
         ----------------------------${boundary}
         Content-Disposition: form-data; name="golf_id"
         
@@ -177,7 +177,7 @@ export class AcademiegolfService {
     // this.logger.debug(JSON.stringify(course, null, 2));
     // this.logger.debug(JSON.stringify(user, null, 2));
 
-    const cookieJar = this.getCookieJar(user.academiergolf_login);
+    const cookieJar = this.getCookieJar(user.academiegolf_login);
 
     const boundary = this.generateRandomString();
     // Temporary solution (build body and header "manually")
@@ -191,7 +191,7 @@ export class AcademiegolfService {
         ----------------------------${boundary}
         Content-Disposition: form-data; name="guser_id"
         
-        ${user.academiergolf_userid}
+        ${user.academiegolf_userId}
         ----------------------------${boundary}
         Content-Disposition: form-data; name="golf_id"
         
@@ -268,11 +268,11 @@ export class AcademiegolfService {
     const body = `----------------------------${boundary}
         Content-Disposition: form-data; name="login"
         
-        ${user.academiergolf_login}
+        ${user.academiegolf_login}
         ----------------------------${boundary}
         Content-Disposition: form-data; name="password"
         
-        ${user.academiergolf_password}
+        ${user.academiegolf_password}
         ----------------------------${boundary}
         Content-Disposition: form-data; name="auth"
         
@@ -280,7 +280,7 @@ export class AcademiegolfService {
         ----------------------------${boundary}--
         `.replace(/^[ \t]*/gm, '');
 
-    const cookieJar = this.getCookieJar(user.academiergolf_login);
+    const cookieJar = this.getCookieJar(user.academiegolf_login);
 
     // Fetch the connection URL
     //this.logger.debug('Fetch : ' + AcademiegolfService.URL_CON);

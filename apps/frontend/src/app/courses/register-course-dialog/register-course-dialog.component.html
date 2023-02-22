@@ -13,12 +13,12 @@
       </div>
       <div class="flex flex-col">
         <div *ngFor="let user of data.users">
-          <label *ngIf="user.academiergolf_index" class="inline-flex items-center py-2 px-3 text-neutral-light">
+          <label *ngIf="user.academiegolf_index" class="inline-flex items-center py-2 px-3 text-neutral-light">
             <input
               type="checkbox"
-              (change)="selectedUser[user.academiergolf_index] = !selectedUser[user.academiergolf_index]"
+              (change)="selectedUser[user.academiegolf_index] = !selectedUser[user.academiegolf_index]"
               class="form-checkbox h-5 w-5 mr-2 text-secondary-dark bg-neutral-default border-neutral-default focus:ring-0"
-              [checked]="selectedUser[user.academiergolf_index] || isUserAlreadyRegistered(user.academiergolf_index)"
+              [checked]="selectedUser[user.academiegolf_index] || isUserAlreadyRegistered(user.academiegolf_index)"
             />
             <!-- <svg *ngIf="filter.icon" class="h-8 w-8 fill-neutral-default stroke-neutral-default" [class.fill-neutral-light]="filter.selected" [class.stroke-neutral-light]="filter.selected">
           <use [attr.xlink:href]="'assets/img/symbol-defs.svg#' + filter.icon"></use>
@@ -26,7 +26,7 @@
             <span class="text-lg">
               {{ user.displayName }}
             </span>
-            <span *ngIf="isUserAlreadyRegistered(user.academiergolf_index)" class="text-sm px-2">(Enregistré)</span>
+            <span *ngIf="isUserAlreadyRegistered(user.academiegolf_index)" class="text-sm px-2">(Enregistré)</span>
           </label>
         </div>
       </div>

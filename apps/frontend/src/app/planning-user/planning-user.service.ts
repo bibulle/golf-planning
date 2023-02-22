@@ -71,7 +71,7 @@ export class PlanningUserService {
       .post<ApiReturn>('api/courses/register', {
         courseId: course.golf_evt_id,
         golfId: course.golf_id,
-        userIndex: user.academiergolf_index,
+        userIndex: user.academiegolf_index,
       })
       .pipe(
         catchError((err) => {
@@ -96,7 +96,7 @@ export class PlanningUserService {
       .post<ApiReturn>('api/courses/deregister', {
         courseId: course.golf_evt_id,
         golfId: course.golf_id,
-        userIndex: user.academiergolf_index,
+        userIndex: user.academiegolf_index,
       })
       .pipe(
         catchError((err) => {
