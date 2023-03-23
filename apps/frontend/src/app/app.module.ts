@@ -14,6 +14,8 @@ import { RefreshTokenInterceptor } from './interceptors/refresh-token.intercepto
 import { MaterialModule } from './material.module';
 import { NavbarModule } from './navbar/navbar.module';
 import { UserService } from './user/user.service';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
 
 registerLocaleData(localeFr);
 
@@ -39,6 +41,12 @@ registerLocaleData(localeFr);
     NavbarModule,
     FilterModule,
     MaterialModule,
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: environment.production,
+      // Register the ServiceWorker as soon as the application is stable
+      // or after 30 seconds (whichever comes first).
+      registrationStrategy: 'registerWhenStable:30000'
+    }),
     ],
   providers: [
     AuthGuard,
