@@ -1,10 +1,10 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    // "composite": true,
-    // "declaration": true,
     "outDir": "../../dist/out-tsc",
-    "types": []
+    "types": [],
+    "target": "ES2022",
+    "useDefineForClassFields": false
   },
   "files": ["src/main.ts", "src/polyfills.ts"],
   "include": ["src/**/*.d.ts"],

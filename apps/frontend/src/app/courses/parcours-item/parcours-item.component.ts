@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { ParcoursResa, User } from '@golf-planning/api-interfaces';
 import { PlanningUserService } from '../../planning-user/planning-user.service';
 
@@ -27,5 +27,4 @@ export class ParcoursItemComponent implements OnChanges {
       return u.academiegolf_index === index;
     });
   }
-
 }

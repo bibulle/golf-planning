@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { Event } from '@golf-planning/api-interfaces';
 import { EventsService } from '../services/events.service';
 
@@ -18,13 +18,11 @@ export class NotificationService {
   timeout: NodeJS.Timeout | undefined;
 
   constructor(private readonly snackBar: MatSnackBar, private _eventService: EventsService) {
-
-    this._eventService.getEventMessage().subscribe((e : Event) => {
+    this._eventService.getEventMessage().subscribe((e: Event) => {
       if (e.message) {
-        this.showMessage(e.message, '', 'blue-snackbar')
+        this.showMessage(e.message, '', 'blue-snackbar');
       }
     });
-
   }
 
   /**
@@ -60,11 +58,11 @@ export class NotificationService {
     const snack = this.messages.shift();
     if (snack) {
       this.openSnackBar(snack.message, snack.action, snack.className, snack.duration);
-      
+
       this.timeout = setTimeout(() => {
-          this.timeout = undefined;
-          this.showMessages();
-        }, snack.duration+500);
+        this.timeout = undefined;
+        this.showMessages();
+      }, snack.duration + 500);
     }
   }
 

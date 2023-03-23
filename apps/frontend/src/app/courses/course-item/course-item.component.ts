@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { Course, User } from '@golf-planning/api-interfaces';
 import { PlanningUserService } from '../../planning-user/planning-user.service';
 import { RegisterCourseDialogComponent } from '../register-course-dialog/register-course-dialog.component';
@@ -32,30 +32,33 @@ export class CourseItemComponent implements OnChanges {
   openDialog() {
     const dialogRef = this._dialog.open(RegisterCourseDialogComponent, { data: { course: this.course, users: this.users } });
 
-    dialogRef.afterClosed().subscribe((changedUsers: {register?:number[], deregister?:number[]}) => {
+    dialogRef.afterClosed().subscribe((changedUsers: { register?: number[]; deregister?: number[] }) => {
+      const registerUser = changedUsers && changedUsers.register ? changedUsers.register : [];
+      const deregisterUser = changedUsers && changedUsers.deregister ? changedUsers.deregister : [];
 
-      const registerUser = (changedUsers && changedUsers.register ? changedUsers.register : []);
-      const deregisterUser = (changedUsers && changedUsers.deregister ? changedUsers.deregister : []);
- 
       if (registerUser.length === 0 && deregisterUser.length === 0) {
         console.log('Nothing to do');
         return;
       }
 
-      registerUser.map(id => {
-        return this.users.find(u => u.academiegolf_index === id);
-      }).forEach( u => {
-        if (u) {
-          this._planningUserService.registerUser(this.course, u)
-        }
-      });
-      deregisterUser.map(id => {
-        return this.users.find(u => u.academiegolf_index === id);
-      }).forEach( u => {
-        if (u) {
-          this._planningUserService.deregisterUser(this.course, u)
-        }
-      });
+      registerUser
+        .map((id) => {
+          return this.users.find((u) => u.academiegolf_index === id);
+        })
+        .forEach((u) => {
+          if (u) {
+            this._planningUserService.registerUser(this.course, u);
+          }
+        });
+      deregisterUser
+        .map((id) => {
+          return this.users.find((u) => u.academiegolf_index === id);
+        })
+        .forEach((u) => {
+          if (u) {
+            this._planningUserService.deregisterUser(this.course, u);
+          }
+        });
     });
   }
 }

@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit, Optional } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatLegacyDialogRef as MatDialogRef, MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
 import { Course, User } from '@golf-planning/api-interfaces';
 
 @Component({
@@ -20,7 +20,6 @@ export class RegisterCourseDialogComponent implements OnInit {
       if (u.academiegolf_index) this.selectedUser[u.academiegolf_index] = true;
     });
   }
-
 
   getRegisterError(): void | string {
     let countNewSelectedUser = 0;
@@ -83,11 +82,16 @@ export class RegisterCourseDialogComponent implements OnInit {
   }
 
   register() {
-    this.dialogRef.close({register: this.selectedUser.map((b, i) => (b ? i : null)).filter((b) => b).filter(i => i && !this.isUserAlreadyRegistered(i))});
+    this.dialogRef.close({
+      register: this.selectedUser
+        .map((b, i) => (b ? i : null))
+        .filter((b) => b)
+        .filter((i) => i && !this.isUserAlreadyRegistered(i)),
+    });
   }
 
   deregister() {
-    this.dialogRef.close({deregister: this.selectedUser.map((b, i) => (!b ? i : null)).filter((b) => b)});
+    this.dialogRef.close({ deregister: this.selectedUser.map((b, i) => (!b ? i : null)).filter((b) => b) });
   }
 
   cancel() {

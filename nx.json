@@ -7,23 +7,12 @@
     "defaultCollection": "@nrwl/angular",
     "packageManager": "npm"
   },
-  "implicitDependencies": {
-    "package.json": {
-      "dependencies": "*",
-      "devDependencies": "*"
-    },
-    ".eslintrc.json": "*"
-  },
   "tasksRunnerOptions": {
     "default": {
-      "runner": "@nrwl/workspace/tasks-runners/default",
+      "runner": "@nrwl/nx-cloud",
       "options": {
-        "cacheableOperations": [
-          "build",
-          "lint",
-          "test",
-          "e2e"
-        ]
+        "cacheableOperations": ["build", "lint", "test", "e2e"],
+        "accessToken": "YjcxZGE2N2YtMDNmYS00ZWI1LTlhOGQtMDgwMjQ2NjZhNmIzfHJlYWQtd3JpdGU="
       }
     }
   },
@@ -50,5 +39,18 @@
       "style": "scss"
     }
   },
-  "defaultProject": "frontend"
+  "defaultProject": "frontend",
+  "namedInputs": {
+    "default": ["{projectRoot}/**/*", "sharedGlobals"],
+    "sharedGlobals": [],
+    "production": ["default", "!{projectRoot}/.eslintrc.json"]
+  },
+  "targetDefaults": {
+    "build": {
+      "inputs": ["production", "^production"]
+    },
+    "lint": {
+      "inputs": ["default", "{workspaceRoot}/.eslintrc.json"]
+    }
+  }
 }

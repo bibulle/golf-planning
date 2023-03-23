@@ -5,7 +5,6 @@ WORKDIR /usr/src
 
 COPY package*.json ./
 COPY decorate-angular-cli.js ./
-COPY angular.json ./
 COPY nx.json ./
 COPY tsconfig.base.json ./
 
