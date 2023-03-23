@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.8.1](https://github.com/bibulle/golf-planning/compare/v0.8.0...v0.8.1) (2023-03-23)
+
+
+### Features
+
+* add commit message check ([7bbc0e6](https://github.com/bibulle/golf-planning/commit/7bbc0e6da68484e70a31b1f794aa3ff359f9b1a6))
+
 ## 0.8.0 (2023-03-23)
 
 
