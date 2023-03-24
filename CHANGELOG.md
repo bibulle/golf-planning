@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.8.2](https://github.com/bibulle/golf-planning/compare/v0.8.1...v0.8.2) (2023-03-24)
+
+
+### Bug Fixes
+
+* force pwa ([493cfff](https://github.com/bibulle/golf-planning/commit/493cfff2db6d3035ae35fa7b6a2dfe48a093a64e))
+
 ### [0.8.1](https://github.com/bibulle/golf-planning/compare/v0.8.0...v0.8.1) (2023-03-23)
 
 
