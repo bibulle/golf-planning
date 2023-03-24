@@ -5,54 +5,12 @@
   "background_color": "#4FD1C5",
   "display": "standalone",
   "scope": "./",
-  "start_url": "./",
+  "start_url": "./courses",
   "icons": [
     {
       "src": "assets/icon small.svg",
-      "sizes": "72x72",
-      "type": "application/svg+xml",
-      "purpose": "maskable any"
-    },
-    {
-      "src": "assets/icon small.svg",
-      "sizes": "96x96",
-      "type": "application/svg+xml",
-      "purpose": "maskable any"
-    },
-    {
-      "src": "assets/icon small.svg",
-      "sizes": "128x128",
-      "type": "application/svg+xml",
-      "purpose": "maskable any"
-    },
-    {
-      "src": "assets/icon small.svg",
-      "sizes": "144x144",
-      "type": "application/svg+xml",
-      "purpose": "maskable any"
-    },
-    {
-      "src": "assets/icon small.svg",
-      "sizes": "152x152",
-      "type": "application/svg+xml",
-      "purpose": "maskable any"
-    },
-    {
-      "src": "assets/icon small.svg",
-      "sizes": "192x192",
-      "type": "application/svg+xml",
-      "purpose": "maskable any"
-    },
-    {
-      "src": "assets/icon small.svg",
-      "sizes": "384x384",
-      "type": "application/svg+xml",
-      "purpose": "maskable any"
-    },
-    {
-      "src": "assets/icon small.svg",
-      "sizes": "512x512",
-      "type": "application/svg+xml",
+      "sizes": "72x72 96x96 128x128 512x512",
+      "type": "image/svg+xml",
       "purpose": "maskable any"
     }
   ]

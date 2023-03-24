@@ -19,7 +19,6 @@ import { environment } from '../environments/environment';
 
 registerLocaleData(localeFr);
 
-
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -31,23 +30,20 @@ registerLocaleData(localeFr);
     JwtModule.forRoot({
       config: {
         tokenGetter: UserService.tokenGetter,
-        allowedDomains: [
-          ('localhost:4002' as string | 'localhost:4002') as string | RegExp,
-          'golf.bibulle.fr',
-          new RegExp('^null$'),
-        ],
+        allowedDomains: ['localhost:4002' as string | 'localhost:4002' as string | RegExp, 'golf.bibulle.fr', new RegExp('^null$')],
       },
     }),
     NavbarModule,
     FilterModule,
     MaterialModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
-      enabled: environment.production,
+      //enabled: environment.production,
+      enabled: true,
       // Register the ServiceWorker as soon as the application is stable
       // or after 30 seconds (whichever comes first).
-      registrationStrategy: 'registerWhenStable:30000'
+      registrationStrategy: 'registerWhenStable:30000',
     }),
-    ],
+  ],
   providers: [
     AuthGuard,
     // AuthGuardAdmin,
@@ -57,7 +53,7 @@ registerLocaleData(localeFr);
       multi: true,
     },
     // { provide: HTTP_INTERCEPTORS, useClass: VersionInterceptor, multi: true },
-    { provide: LOCALE_ID, useValue: 'fr-FR'}
+    { provide: LOCALE_ID, useValue: 'fr-FR' },
   ],
   bootstrap: [AppComponent],
 })
