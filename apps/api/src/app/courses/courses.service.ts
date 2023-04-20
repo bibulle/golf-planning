@@ -6,6 +6,7 @@ import { UsersService } from '../users/users.service';
 import { AcademiegolfService } from './academiegolf.service';
 import { ConfigService } from '@nestjs/config';
 import { CronJob } from 'cron';
+import { PushNotificationService } from '../utils/push-notification.service';
 
 @Injectable()
 export class CoursesService {
@@ -16,7 +17,7 @@ export class CoursesService {
   private static cronGolfForce = CoursesService.CRON_GOLF_FORCE_DEFAULT;
   private static cronGolfRecurrent = CoursesService.CRON_GOLF_RECURRING_DEFAULT;
 
-  NB_DAYS_PLANNING = 20;
+  NB_DAYS_PLANNING = 25;
 
   planning: Course[] = [];
   courses: Course[] = [];
@@ -31,7 +32,8 @@ export class CoursesService {
     private academiegolfService: AcademiegolfService,
     private eventService: EventsService,
     private _configService: ConfigService,
-    private _schedulerRegistry: SchedulerRegistry
+    private _schedulerRegistry: SchedulerRegistry,
+    private _pushNotificationService: PushNotificationService
   ) {
     CoursesService.cronGolfForce = this._configService.get('CRON_GOLF_FORCE', CoursesService.CRON_GOLF_FORCE_DEFAULT);
     CoursesService.cronGolfRecurrent = this._configService.get('CRON_GOLF_RECURRING', CoursesService.CRON_GOLF_RECURRING_DEFAULT);
@@ -106,6 +108,9 @@ export class CoursesService {
       const planningTabs: { [key: string]: Course } = {};
       const coursesTabs: { [key: string]: Course } = {};
 
+      let lastDayPlanning: Date;
+      let lastDayCourse = new Date(0);
+
       // get courses catalogue from the golfs
       loop1: for (let i = 0; i < this.NB_DAYS_PLANNING; i++) {
         const date = new Date();
@@ -114,6 +119,7 @@ export class CoursesService {
         date.setSeconds(0);
         date.setMilliseconds(0);
         date.setDate(date.getDate() + i);
+        // this.logger.debug(`${i} : ${date}`);
 
         for (let j = 0; j < this.users.length; j++) {
           const u = this.users[j];
@@ -123,6 +129,8 @@ export class CoursesService {
             this.courseStatus.error = reason;
           });
           if (!lessons) {
+            lastDayPlanning = new Date(date);
+            lastDayPlanning.setDate(lastDayPlanning.getDate() - 1);
             break loop1;
           }
 
@@ -131,6 +139,8 @@ export class CoursesService {
           });
         }
       }
+
+      // this.logger.debug(`last day : ${lastDayPlanning.getDay()} ${lastDayPlanning}`);
 
       if (Object.keys(planningTabs).length != 0) {
         this.courseStatus.ok = true;
@@ -170,10 +180,25 @@ export class CoursesService {
                 coursesTabs[Course.getKey(l)] = l;
               }
               coursesTabs[Course.getKey(l)].users.push(new User(u.displayName, u.academiegolf_index));
+
+              if (coursesTabs[Course.getKey(l)].date > lastDayCourse) {
+                lastDayCourse = coursesTabs[Course.getKey(l)].date;
+                // this.logger.debug(`lastDayCourse ${lastDayCourse}`)
+              }
             });
           }
         })
       );
+
+      // Si les cours du samedi ou du dimanche viennent d’apparaître
+      if (lastDayPlanning.getDay() === 0 || lastDayPlanning.getDay() === 6) {
+        // si le dernier cours enregistré est a moins d'un jour du last, on ne fait rien
+        const diff = Math.abs(lastDayCourse.getTime() - lastDayPlanning.getTime());
+        this.logger.debug(`${lastDayPlanning.toDateString()} ${lastDayCourse.toDateString()} ${diff} ${diff / (24 * 60 * 60 * 1000)}`);
+        if (diff > 24 * 60 * 60 * 1000) {
+          this._pushNotificationService.sendNotification(`Les cours du ${lastDayPlanning.toLocaleDateString()} sont disponibles`);
+        }
+      }
 
       this.fillAndCompareCourses(Object.values(planningTabs), Object.values(coursesTabs));
       // console.log(JSON.stringify(this.users));
@@ -342,7 +367,7 @@ export class CoursesService {
 
     if (this._configService.get(`USE_COURSE_MOCK`) && /true/i.test(this._configService.get(`USE_COURSE_MOCK`))) {
       this.logger.warn('Using course mock !!!');
-      course.users = course.users.filter(u => u.academiegolf_index !== user.academiegolf_index);
+      course.users = course.users.filter((u) => u.academiegolf_index !== user.academiegolf_index);
       this.eventService.planningUpdated();
       this.eventService.courseUpdated();
       this.loadAllGolfCourses();
@@ -363,7 +388,7 @@ export class CoursesService {
         if (dom.window.document.querySelector('.reveal-modal-err')) {
           return Promise.reject(dom.window.document.querySelector('.reveal-modal-err').textContent);
         } else if (dom.window.document.querySelector('.reveal-modal-ok')) {
-          course.users = course.users.filter(u => u.academiegolf_index !== user.academiegolf_index);
+          course.users = course.users.filter((u) => u.academiegolf_index !== user.academiegolf_index);
           this.eventService.planningUpdated();
           this.eventService.courseUpdated();
           this.loadAllGolfCourses();
@@ -376,7 +401,6 @@ export class CoursesService {
         // this.logger.debug(dom.window.document.body.textContent);
         // Promise.resolve();
       });
-
   }
 
   getUsersStatus(): Promise<{ [user_name: string]: ServiceStatus }> {
@@ -386,4 +410,3 @@ export class CoursesService {
     return Promise.resolve(this.courseStatus);
   }
 }
-

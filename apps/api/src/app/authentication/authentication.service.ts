@@ -24,8 +24,8 @@ export class AuthenticationService {
     }
 
     try {
-      //sign(sthis.logger.debug(thirdPartyUser._json);
-      const user: User = this._userService.setGoogletoUser(
+      //sign(this.logger.debug(thirdPartyUser._json);
+      const user: User = this._userService.setGoogleToUser(
         thirdPartyUser.displayName,
         thirdPartyUser._json.given_name,
         thirdPartyUser._json.family_name,

@@ -2,6 +2,7 @@ import { User } from '@golf-planning/api-interfaces';
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Provider } from '../authentication/authentication.service';
+import { DbService } from '../utils/db.service';
 
 @Injectable()
 export class UsersService {
@@ -9,7 +10,7 @@ export class UsersService {
 
   users: { [id: string]: User } = {};
 
-  constructor(private configService: ConfigService) {}
+  constructor(private configService: ConfigService, private _dbService: DbService) {}
 
   /**
    * Read users from environment
@@ -56,8 +57,8 @@ export class UsersService {
 
     return this.getUser(displayName);
   }
-  setGoogletoUser(displayName: string, given_name: string, family_name: string, locale: string, name: string, picture: string, provider: Provider, providerId: string): User {
-    this.logger.debug(`setGoogletoUser : '${displayName}'`);
+  setGoogleToUser(displayName: string, given_name: string, family_name: string, locale: string, name: string, picture: string, provider: Provider, providerId: string): User {
+    this.logger.debug(`setGoogleToUser : '${displayName}'`);
     this.getUser(displayName).displayName = displayName;
     this.getUser(displayName).family_name = family_name;
     this.getUser(displayName).given_name = given_name;

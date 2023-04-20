@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Config, Filter } from '@golf-planning/api-interfaces';
+import { FrontendConfig, Filter } from '@golf-planning/api-interfaces';
 import { Subscription } from 'rxjs';
 import { FilterService } from './filter.service';
 
@@ -19,21 +19,16 @@ import { FilterService } from './filter.service';
   ],
 })
 export class FilterComponent implements OnInit, OnDestroy {
-
-  config: Config|null = null;
+  config: FrontendConfig | null = null;
   private _currentConfigSubscription: Subscription | null = null;
 
-
-  constructor(private readonly _filterService: FilterService) { 
-
-  }
+  constructor(private readonly _filterService: FilterService) {}
 
   ngOnInit(): void {
     this._currentConfigSubscription = this._filterService.configObservable().subscribe((config) => {
       // console.log(filters);
       this.config = config;
     });
-
   }
 
   ngOnDestroy() {
@@ -49,9 +44,9 @@ export class FilterComponent implements OnInit, OnDestroy {
   }
   sortChange() {
     // console.log(filter);
-    if (this.config)  {
+    if (this.config) {
       this.config.ascendingSort = !this.config.ascendingSort;
       this._filterService.updateSortOrder(this.config.ascendingSort);
-      }
+    }
   }
 }

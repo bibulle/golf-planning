@@ -2,12 +2,13 @@ import { CALENDAR_MOCK, GoogleEvent, GoogleInfos, ServiceStatus } from '@golf-pl
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { CronExpression, SchedulerRegistry } from '@nestjs/schedule';
-import { readFile, writeFile } from 'fs';
+// import { readFile, writeFile } from 'fs';
 import { google } from 'googleapis';
 import { CoursesService } from '../courses/courses.service';
 import { EventsService } from '../events/events.service';
 import { CronJob } from 'cron';
 import { ParcoursService } from '../parcours/parcours.service';
+import { DbService } from '../utils/db.service';
 
 @Injectable()
 export class CalendarService {
@@ -19,7 +20,7 @@ export class CalendarService {
   private static cronGoogleRecurrent = CalendarService.CRON_GOOGLE_RECURRING_DEFAULT;
 
   private static users: { [user_name: string]: GoogleInfos } = {};
-  private readonly TOKENS_PATH = 'tokens.json';
+  // private readonly TOKENS_PATH = 'tokens.json';
 
   usersStatus: { [user_name: string]: ServiceStatus } = {};
 
@@ -28,7 +29,8 @@ export class CalendarService {
     private readonly _courseService: CoursesService,
     private readonly _parcoursService: ParcoursService,
     private _eventService: EventsService,
-    private _schedulerRegistry: SchedulerRegistry
+    private _schedulerRegistry: SchedulerRegistry,
+    private _dbService: DbService
   ) {
     CalendarService.cronGoogleForce = this._configService.get('CRON_GOOGLE_FORCE', CalendarService.CRON_GOOGLE_FORCE_DEFAULT);
     CalendarService.cronGoogleRecurrent = this._configService.get('CRON_GOOGLE_RECURRING', CalendarService.CRON_GOOGLE_RECURRING_DEFAULT);
@@ -46,12 +48,15 @@ export class CalendarService {
     this._schedulerRegistry.addCronJob('cronGoogleForce', job2);
     job2.start();
 
-    readFile(this.TOKENS_PATH, (err, tokens) => {
-      if (err) return;
-      CalendarService.users = JSON.parse(tokens.toString());
-
-      setTimeout(this.loadAllGooogleCourses.bind(this), 15 * 1000);
-    });
+    this._dbService
+      .getGoogleTokens()
+      .then((tokens) => {
+        CalendarService.users = tokens;
+        setTimeout(this.loadAllGoogleCourses.bind(this), 15 * 1000);
+      })
+      .catch((reason) => {
+        CalendarService.logger.error(reason);
+      });
   }
 
   addUserGoogleInfos(userName: string, tokens: GoogleInfos | void) {
@@ -60,21 +65,17 @@ export class CalendarService {
     }
     CalendarService.users[userName] = tokens;
 
-    writeFile(this.TOKENS_PATH, JSON.stringify(CalendarService.users), (err) => {
-      if (err) {
-        CalendarService.logger.error('Tokens cannot be stored to', this.TOKENS_PATH);
-        CalendarService.logger.error(err);
-      }
+    this._dbService.setGoogleTokens(CalendarService.users).catch((reason) => {
+      CalendarService.logger.error('Tokens cannot be stored ');
+      CalendarService.logger.error(reason);
     });
   }
   removeUserGoogleInfos(userName: string) {
     delete CalendarService.users[userName];
 
-    writeFile(this.TOKENS_PATH, JSON.stringify(CalendarService.users), (err) => {
-      if (err) {
-        CalendarService.logger.error('Tokens cannot be stored to', this.TOKENS_PATH);
-        CalendarService.logger.error(err);
-      }
+    this._dbService.setGoogleTokens(CalendarService.users).catch((reason) => {
+      CalendarService.logger.error('Tokens cannot be stored ');
+      CalendarService.logger.error(reason);
     });
   }
 
@@ -105,19 +106,19 @@ export class CalendarService {
 
   // @Cron(CalendarService.cronGoogleForce)
   handleDailyCron() {
-    this.loadAllGooogleCourses();
+    this.loadAllGoogleCourses();
   }
 
   // @Cron(CalendarService.cronGoogleRecurrent)
   handle10MinutesCron() {
     // If there is someone connected, update
     if (this._eventService.geConnectedClientCount() > 0) {
-      this.loadAllGooogleCourses();
+      this.loadAllGoogleCourses();
     }
   }
 
-  loadAllGooogleCourses() {
-    CalendarService.logger.log('loadAllGooogleCourses');
+  loadAllGoogleCourses() {
+    CalendarService.logger.log('loadAllGoogleCourses');
 
     Object.entries(CalendarService.users).forEach(async ([userName, googleInfos]) => {
       if (!this.usersStatus[userName]) {
@@ -314,8 +315,13 @@ export class CalendarService {
 
       if (this._configService.get(`USE_GOOGLE_MOCK`) && /true/i.test(this._configService.get(`USE_GOOGLE_MOCK`))) {
         CalendarService.logger.warn('Using google mock !!!');
-        const cals: GoogleEvent[] = CALENDAR_MOCK;
-        return resolve(cals);
+        if (userName === 'Bibulle Martin') {
+          const cals: GoogleEvent[] = CALENDAR_MOCK;
+          return resolve(cals);
+        } else {
+          this.removeUserGoogleInfos(userName);
+          return reject(`User '${userName}' not in mocks`);
+        }
       }
 
       const calendar = google.calendar({

@@ -8,6 +8,8 @@ export interface ApiReturn {
   //version: Version;
   data: Course[] | ParcoursResa[] | ParcoursResa[] | User[] | MyToken | GlobalStatus;
   refreshToken?: string;
+  config?: Config;
+  stream?: any;
 }
 
 export interface MyToken {
@@ -15,17 +17,22 @@ export interface MyToken {
 }
 
 export class GlobalStatus {
-  golfStatus = 'OK'
+  golfStatus = 'OK';
   course?: ServiceStatus;
   courseUser?: { [user_name: string]: ServiceStatus };
-  googleUser?: { [user_name: string]: ServiceStatus; };
-  parcourtUser?: { [user_name: string]: ServiceStatus; };
+  googleUser?: { [user_name: string]: ServiceStatus };
+  parcourtUser?: { [user_name: string]: ServiceStatus };
 }
 export class ServiceStatus {
   ok = false;
   lastLoad?: Date;
   count? = 0;
   error?: string;
+}
+
+export class Config {
+  backendVersion = '';
+  vapidPublicKey = '';
 }
 
 /**
@@ -97,7 +104,6 @@ export class ParcoursResa {
     this.course_id = value.teetime.course_id;
 
     this.users = [];
-
   }
 
   static getKey(parcours: ParcoursResa) {
@@ -170,6 +176,7 @@ export class User {
   picture?: string;
   provider?: string;
   providerId?: string;
+  hasSubscribeToNotification? = false;
 
   academiegolf_index?: number;
   academiegolf_login?: string;
@@ -210,7 +217,7 @@ export class Event {
 /**
  * Config (only use on frontend)
  */
-export class Config {
+export class FrontendConfig {
   ascendingSort = false;
   filters: Filter[];
 
@@ -309,7 +316,5 @@ export class Filter {
         return this.selected && this.matchParcours(c as ParcoursResa);
       }
     }
-
-    
   }
 }

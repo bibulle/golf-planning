@@ -3,6 +3,7 @@
   "cSpell.words": [
     "Abdou",
     "academiegolf",
+    "apng",
     "authent",
     "bibulle",
     "Bibulle",
@@ -11,17 +12,25 @@
     "commitlint",
     "devkit",
     "dispo",
+    "filtred",
     "LECON",
     "nestjs",
+    "ngcc",
     "ngsw",
     "nrwl",
+    "postbump",
     "REGLES",
     "Resa",
+    "resave",
     "Separateur",
+    "tailwindcss",
     "teetime",
     "titlecase",
     "UGOLF",
-    "Vaccinodrome"
+    "Vaccinodrome",
+    "webp",
+    "webpush",
+    "websockets"
   ],
   "cSpell.language": "en,fr"
 }
