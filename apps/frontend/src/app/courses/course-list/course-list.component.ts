@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
-import { Config, Course, FilterType, ParcoursResa, User } from '@golf-planning/api-interfaces';
+import { FrontendConfig, Course, FilterType, ParcoursResa, User } from '@golf-planning/api-interfaces';
 import { Subscription } from 'rxjs';
 import { FilterService } from '../../filter/filter.service';
 
@@ -16,7 +16,7 @@ export class CourseListComponent implements OnInit, OnDestroy, OnChanges {
   @Input()
   users: User[] = [];
 
-  config: Config | null = null;
+  config: FrontendConfig | null = null;
   private _currentConfigSubscription: Subscription | null = null;
 
   constructor(private readonly _filterService: FilterService) {}

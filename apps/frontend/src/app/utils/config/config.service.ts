@@ -1,26 +1,32 @@
-import { Injectable, Version } from '@angular/core';
+import { Injectable } from '@angular/core';
+import { Config, Version } from '@golf-planning/api-interfaces';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-export class VersionService {
+export class ConfigService {
   constructor() {
     this.versionChangedSubject = new BehaviorSubject<boolean>(false);
   }
 
-  static backendVersion: string;
+  static config: Config;
+  static version = new Version();
 
   private versionChangedSubject: BehaviorSubject<boolean>;
 
-  checkVersion() {
-    //console.log('VersionService checkVersion');
+  setConfig(config: Config) {
+    // console.log("ConfigService : setConfig")
+    ConfigService.config = config;
 
-    if (VersionService.backendVersion) {
+    if (ConfigService.config.backendVersion) {
       //console.log('Version changed '+new Version().version+' != '+VersionService.backendVersion);
-      //this.versionChangedSubject.next(new Version().version !== VersionService.backendVersion);
+      this.versionChangedSubject.next(ConfigService.version.version !== ConfigService.config.backendVersion);
     }
+  }
+  getConfig(): Config {
+    return ConfigService.config;
   }
 
   /**

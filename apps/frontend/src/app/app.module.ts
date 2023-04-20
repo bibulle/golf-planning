@@ -16,6 +16,7 @@ import { NavbarModule } from './navbar/navbar.module';
 import { UserService } from './user/user.service';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
+import { ConfigInterceptor } from './utils/config/config.interceptor';
 
 registerLocaleData(localeFr);
 
@@ -52,7 +53,11 @@ registerLocaleData(localeFr);
       useClass: RefreshTokenInterceptor,
       multi: true,
     },
-    // { provide: HTTP_INTERCEPTORS, useClass: VersionInterceptor, multi: true },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ConfigInterceptor,
+      multi: true,
+    },
     { provide: LOCALE_ID, useValue: 'fr-FR' },
   ],
   bootstrap: [AppComponent],

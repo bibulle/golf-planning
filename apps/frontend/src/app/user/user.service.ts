@@ -2,10 +2,11 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { Config, Filter, MyToken, User } from '@golf-planning/api-interfaces';
+import { FrontendConfig, Filter, MyToken, User } from '@golf-planning/api-interfaces';
 import { BehaviorSubject, distinctUntilChanged, Observable, timer } from 'rxjs';
 import { WindowService } from '../utils/window/window.service';
 import { ApiReturn } from '@golf-planning/api-interfaces';
+import { PushNotificationService } from '../services/push-notification.service';
 
 enum LoginProvider {
   GOOGLE,
@@ -33,8 +34,8 @@ export class UserService {
   private userSubject: BehaviorSubject<User>;
   private user = {} as User;
 
-  private config: Config;
-  private readonly configSubject: BehaviorSubject<Config>;
+  private config: FrontendConfig;
+  private readonly configSubject: BehaviorSubject<FrontendConfig>;
 
   private loopCount = 600;
   private intervalLength = 100;
@@ -44,8 +45,11 @@ export class UserService {
 
   timer1;
 
-  constructor(private readonly _http: HttpClient, private readonly _jwtHelperServiceService: JwtHelperServiceService) 
-  // TODO: Work on notification service
+  constructor(
+    private readonly _http: HttpClient,
+    private readonly _jwtHelperServiceService: JwtHelperServiceService,
+    private readonly _pushNotificationService: PushNotificationService
+  ) // TODO: Work on notification service
   // private readonly _notificationService: NotificationService,
   // private readonly logger: NGXLogger,
   {
@@ -59,22 +63,21 @@ export class UserService {
     });
 
     try {
-      this.config = new Config();
+      this.config = new FrontendConfig();
       const l = localStorage.getItem(UserService.KEY_CONFIG_LOCAL_STORAGE);
       if (l) {
-        const newConfig: Config = JSON.parse(l);
-        const table:{[id:string]: Filter } = newConfig.filters.reduce((a,f) => ({...a, [f.id]: f}), {}) ;
-        this.config.filters.forEach(f => {
+        const newConfig: FrontendConfig = JSON.parse(l);
+        const table: { [id: string]: Filter } = newConfig.filters.reduce((a, f) => ({ ...a, [f.id]: f }), {});
+        this.config.filters.forEach((f) => {
           if (table[f.id]) {
-              f.selected = table[f.id].selected;
-          } 
+            f.selected = table[f.id].selected;
+          }
         });
       }
     } catch {
-      this.config = new Config();
+      this.config = new FrontendConfig();
     }
-    this.configSubject = new BehaviorSubject<Config>(this.config);
-
+    this.configSubject = new BehaviorSubject<FrontendConfig>(this.config);
   }
 
   /**
@@ -157,11 +160,18 @@ export class UserService {
    * Is logged ?
    */
   isAuthenticate(): boolean {
-    // this.logger.debug('isAuthenticate');
+    // console.log('isAuthenticate');
 
     this.checkAuthentication();
 
-    return !!(this.user && this.user.providerId);
+    const authenticated = this.user && this.user.providerId;
+
+    if (authenticated) {
+      setTimeout(() => {
+        this._pushNotificationService.subscribeToNotifications();
+      }, 3000);
+    }
+    return !!authenticated;
   }
 
   // isAdminAuthenticate() {
@@ -384,16 +394,15 @@ export class UserService {
   }
 
   // Configuration management
-  configObservable(): Observable<Config> {
+  configObservable(): Observable<FrontendConfig> {
     return this.configSubject;
   }
 
-  updateConfig(config: Config) {
+  updateConfig(config: FrontendConfig) {
     this.config = config;
     localStorage.setItem(UserService.KEY_CONFIG_LOCAL_STORAGE, JSON.stringify(this.config));
     this.configSubject.next(this.config);
   }
-
 
   // changeLanguage(language: string) {
   //   // this.setSearch('');

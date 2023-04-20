@@ -11,6 +11,8 @@ import * as expressSession from 'express-session';
 
 import { AppModule } from './app/app.module';
 import { LoggingInterceptor } from './app/interceptors/logging.interceptor';
+import { ConfigInterceptor } from './app/interceptors/config.interceptor';
+import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   let logger_levels: LogLevel[] = ['error', 'warn', 'log'];
@@ -37,7 +39,8 @@ async function bootstrap() {
 
   console.log(`LOG_LEVEL : ${process.env.LOG_LEVEL ? process.env.LOG_LEVEL : 'LOG (by default)'}`);
 
-  app.useGlobalInterceptors(new LoggingInterceptor());
+  const config = app.get<ConfigService>(ConfigService);
+  app.useGlobalInterceptors(new LoggingInterceptor(), new ConfigInterceptor(config));
 
   // add websocket
   app.useWebSocketAdapter(new WsAdapter(app));

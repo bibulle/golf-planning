@@ -1,32 +1,28 @@
 import { Injectable } from '@angular/core';
-import { Config, Filter } from '@golf-planning/api-interfaces';
+import { FrontendConfig, Filter } from '@golf-planning/api-interfaces';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { UserService } from '../user/user.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class FilterService {
+  private configSubject: BehaviorSubject<FrontendConfig | null>;
 
-  private configSubject: BehaviorSubject<Config | null>;
-
-  config: Config | null = null;
+  config: FrontendConfig | null = null;
   private _currentConfigSubscription: Subscription | null = null;
 
-
   constructor(private readonly _userService: UserService) {
-
-    this.configSubject = new BehaviorSubject<Config | null>(null);
+    this.configSubject = new BehaviorSubject<FrontendConfig | null>(null);
 
     this._currentConfigSubscription = _userService.configObservable().subscribe((config) => {
       this.config = config;
       this.configSubject.next(config);
     });
-
   }
 
   // Configuration management
-  configObservable(): Observable<Config | null> {
+  configObservable(): Observable<FrontendConfig | null> {
     return this.configSubject;
   }
 
@@ -44,5 +40,4 @@ export class FilterService {
       this._userService.updateConfig(this.config);
     }
   }
-
 }
