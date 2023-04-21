@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.8.7](https://github.com/bibulle/golf-planning/compare/v0.8.6...v0.8.7) (2023-04-21)
+
+
+### Features
+
+* add notification limitation (once a day) ([195f118](https://github.com/bibulle/golf-planning/commit/195f118b0de848838199a33d82c63bbf89136a45))
+* add push notification ([de78618](https://github.com/bibulle/golf-planning/commit/de786189a67cfe728cb7d8c5f39195075da539e3))
+* push notification when weekend course are clickable ([1033464](https://github.com/bibulle/golf-planning/commit/1033464f4c325f557d059e894f943747a27d56ca))
+
+
+### Bug Fixes
+
+* remove  push notification test ([251744f](https://github.com/bibulle/golf-planning/commit/251744f8363e81892ed14df448357b995460c76c))
+
 ### [0.8.6](https://github.com/bibulle/golf-planning/compare/v0.8.3...v0.8.6) (2023-04-19)
 
 ### [0.8.3](https://github.com/bibulle/golf-planning/compare/v0.8.2...v0.8.3) (2023-03-28)
