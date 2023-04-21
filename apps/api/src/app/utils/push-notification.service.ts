@@ -18,6 +18,12 @@ export class PushNotificationService {
   }
   async sendNotification(message: string) {
     this.logger.debug('sendNotification');
+
+    if (await this._dbService.messageAlreadySent(message)) {
+      this.logger.debug('sendNotification message alreadySent');
+      return;
+    }
+
     const notificationPayload = {
       notification: {
         title: "Bibulle's golf",
@@ -41,7 +47,7 @@ export class PushNotificationService {
     };
     // const notificationPayload = undefined;
     // const notificationPayload = "hello";
-    console.log(notificationPayload);
+    // console.log(notificationPayload);
 
     const allSubscriptions = await this._dbService.getSubscriptions();
 
@@ -51,6 +57,7 @@ export class PushNotificationService {
         .sendNotification(sub, JSON.stringify(notificationPayload))
         .then(() => {
           this.logger.debug('subscriptions sent');
+          this._dbService.saveMessage(message);
         })
         .catch((err) => {
           this.logger.error('Error sending notification', err);

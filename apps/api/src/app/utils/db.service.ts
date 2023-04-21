@@ -76,4 +76,31 @@ export class DbService {
     const query = { endpoint: sub.endpoint };
     return this._getMongoDb().collection<PushSubscription>('push-subscription').deleteOne(query);
   }
+
+  async saveMessage(message: string) {
+    // this.logger.debug(`saveMessage("${message}")`)
+
+    const query = { message: message };
+    const update = { $set: { message: message, date: new Date(Date.now()) } };
+    const options = { upsert: true };
+
+    await this._removeOldMessage();
+
+    return this._getMongoDb().collection('push-subscription-messages').updateOne(query, update, options);
+  }
+  async messageAlreadySent(message: string) {
+    // this.logger.debug(`messageAlreadySent("${message}")`)
+    await this._removeOldMessage();
+
+    const query = { message: message };
+    return (await this._getMongoDb().collection('push-subscription-messages').countDocuments(query, { limit: 1 })) > 0;
+  }
+
+  private _removeOldMessage() {
+    const old = 1 * 24 * 60 * 60 * 1000;
+    // const old = 60 * 1000;
+    const query = { date: { $lt: new Date(Date.now() - old) } };
+
+    return this._getMongoDb().collection('push-subscription-messages').deleteMany(query);
+  }
 }
