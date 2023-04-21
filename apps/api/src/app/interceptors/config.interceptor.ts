@@ -15,7 +15,7 @@ export class ConfigInterceptor implements NestInterceptor {
     return next.handle().pipe(
       map((data) => {
         // in case of stream
-        if (data.stream) {
+        if (data && data.stream) {
           return data;
         }
 

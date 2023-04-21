@@ -22,7 +22,6 @@ export class UsersController {
         return Promise.reject({ statusCode: 400, message: err });
       })
       .then(() => {
-        this._pushNotificationService.sendNotification('Message de test');
         // this.logger.debug(v);
         // this.logger.debug('200');
         return { statusCode: 200, message: 'Done' };
